@@ -16,6 +16,7 @@
  */
 
 #pragma once
+#include "stm32h7xx_hal.h"
 
 #define UART_AF(uart, af) CONCAT3(GPIO_AF, af, _ ## uart)
 

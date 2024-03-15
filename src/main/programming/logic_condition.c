@@ -828,11 +828,11 @@ static int logicConditionGetFlightOperandValue(int operand) {
         case LOGIC_CONDITION_OPERAND_FLIGHT_AGL:
             return getEstimatedAglPosition();
             break;    
-        
+#ifdef USE_RANGEFINDER
         case LOGIC_CONDITION_OPERAND_FLIGHT_RANGEFINDER_RAW:
             return rangefinderGetLatestRawAltitude();
             break; 
-
+#endif
         default:
             return 0;
             break;

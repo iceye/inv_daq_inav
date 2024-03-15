@@ -25,6 +25,8 @@
 
 #include "sensors/battery_config_structs.h"
 
+#define SETTING_CONSTANT_MAX_BATTERY_PROFILE_COUNT 3
+
 #ifndef VBAT_SCALE_DEFAULT
 #define VBAT_SCALE_DEFAULT 1100
 #endif

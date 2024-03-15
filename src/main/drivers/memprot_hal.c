@@ -17,6 +17,7 @@
  *
  * If not, see <http://www.gnu.org/licenses/>.
  */
+#include "stm32h7xx_hal.h"
 
 #include <string.h>
 

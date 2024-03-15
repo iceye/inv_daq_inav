@@ -1800,7 +1800,7 @@ __STATIC_INLINE void LL_DBGMCU_DisableD2DebugInStandbyMode(void)
 }
 #endif /* DUAL_CORE */
 
-
+#if defined(DBGMCU_CR_DBG_STOPD3)
 /**
   * @brief  Enable D3 Domain/SRDomain debug during STOP mode
   * @rmtoll DBGMCU_CR    DBGSTOP_D3/DBGSTOP_SRD    LL_DBGMCU_EnableD3DebugInStopMode
@@ -1820,7 +1820,9 @@ __STATIC_INLINE void LL_DBGMCU_DisableD3DebugInStopMode(void)
 {
   CLEAR_BIT(DBGMCU->CR, DBGMCU_CR_DBG_STOPD3);
 }
+#endif /*DBGMCU_CR_DBG_STOPD3*/
 
+#if defined(DBGMCU_CR_DBG_STANDBYD3)
 /**
   * @brief  Enable D3 Domain/SRDomain debug during STANDBY mode
   * @rmtoll DBGMCU_CR    DBGSTBY_D3/DBGSTBY_SRD     LL_DBGMCU_EnableD3DebugInStandbyMode
@@ -1840,6 +1842,7 @@ __STATIC_INLINE void LL_DBGMCU_DisableD3DebugInStandbyMode(void)
 {
   CLEAR_BIT(DBGMCU->CR, DBGMCU_CR_DBG_STANDBYD3);
 }
+#endif /*DBGMCU_CR_DBG_STANDBYD3*/
 
 /**
   * @brief  Enable the trace port clock

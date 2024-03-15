@@ -8,6 +8,25 @@
 *****************************************************************************
 */
 
+MEMORY
+{
+    FLASH (rx)        : ORIGIN = 0x08000000, LENGTH = 128K
+    FLASH_CONFIG (r)  : ORIGIN = 0x08020000, LENGTH = 128K
+    FLASH1 (rx)       : ORIGIN = 0x08040000, LENGTH = 1792K
+
+    ITCM_RAM (rwx)    : ORIGIN = 0x00000000, LENGTH = 64K
+    DTCM_RAM (rwx)    : ORIGIN = 0x20000000, LENGTH = 128K
+    RAM (rwx)         : ORIGIN = 0x24000000, LENGTH = 512K
+
+    D2_RAM (rwx)      : ORIGIN = 0x30000000, LENGTH = 256K /* SRAM1 + SRAM2 */
+
+    MEMORY_B1 (rx)    : ORIGIN = 0x60000000, LENGTH = 0K
+}
+
+REGION_ALIAS("STACKRAM", DTCM_RAM)
+REGION_ALIAS("FASTRAM",  DTCM_RAM)
+REGION_ALIAS("SLOWRAM",  D2_RAM)
+
 /* Entry Point */
 ENTRY(Reset_Handler)
 

@@ -32,6 +32,7 @@
 #include "drivers/pitotmeter/pitotmeter.h"
 #include "drivers/pitotmeter/pitotmeter_ms4525.h"
 #include "drivers/pitotmeter/pitotmeter_dlvr_l10d.h"
+#include "drivers/pitotmeter/pitotmeter_dlhr_l30g.h"
 #include "drivers/pitotmeter/pitotmeter_adc.h"
 #include "drivers/pitotmeter/pitotmeter_msp.h"
 #include "drivers/pitotmeter/pitotmeter_virtual.h"
@@ -48,6 +49,7 @@
 #include "sensors/barometer.h"
 #include "sensors/sensors.h"
 
+#include "innovavionics/inv_data.h"
 
 //#include "build/debug.h"
 
@@ -95,14 +97,23 @@ bool pitotDetect(pitotDev_t *dev, uint8_t pitotHardwareToUse)
             FALLTHROUGH;
 
         case PITOT_DLVR:
-
+#ifdef USE_PITOT_DLVR
 			// Skip autodetection for DLVR (it is indistinguishable from MS4525) and allow only manual config
             if (pitotHardwareToUse != PITOT_AUTODETECT && dlvrDetect(dev)) {
                 pitotHardware = PITOT_DLVR;
                 break;
             }
+#endif            
             FALLTHROUGH;
-
+        case PITOT_DLHR30G:
+#ifdef USE_PITOT_DLHRL30G
+			// Skip autodetection for DLHR (it is indistinguishable from others) and allow only manual config
+            if (pitotHardwareToUse != PITOT_AUTODETECT && dlhrl30gDetect(dev)) {
+                pitotHardware = PITOT_DLHR30G;
+                break;
+            }
+#endif            
+            FALLTHROUGH;
         case PITOT_ADC:
 #if defined(USE_ADC) && defined(USE_PITOT_ADC)
             if (adcPitotDetect(dev)) {
@@ -265,14 +276,21 @@ STATIC_PROTOTHREAD(pitotThread)
             currentTimeUs = micros();
             pitot.pressure = pt1FilterApply3(&pitot.lpfState, pitotPressureTmp, US2S(currentTimeUs - pitot.lastMeasurementUs));
             pitot.lastMeasurementUs = currentTimeUs;
+            //invDataStoreValUInt(INV_IAS_PRESSURE, pitot.pressure);
 
             pitot.airSpeed = pitotmeterConfig()->pitot_scale * fast_fsqrtf(2.0f * fabsf(pitot.pressure - pitot.pressureZero) / SSL_AIR_DENSITY) * 100;  // cm/s
+           // invDataStoreValUInt(INV_IAS, pitot.airSpeed*10);
             pitot.temperature = pitotTemperatureTmp;   // Kelvin
+
+           // invDataStoreValInt(INV_IAS_TEMPERATURE, (pitot.temperature*100));
+
 
         } else {
             pitot.pressure = pitotPressureTmp;
             performPitotCalibrationCycle();
             pitot.airSpeed = 0.0f;
+           // invDataStoreValUInt(INV_IAS_PRESSURE, 0);
+           // invDataStoreValUInt(INV_IAS, 0);
         }
 
 #if defined(USE_PITOT_FAKE)
@@ -298,6 +316,11 @@ void pitotUpdate(void)
 float getAirspeedEstimate(void)
 {
     return pitot.airSpeed;
+}
+
+float getAirspeedEstimateAux(void)
+{
+    return pitot.airSpeedAux;
 }
 
 bool pitotIsHealthy(void)

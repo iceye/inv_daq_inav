@@ -48,6 +48,7 @@ typedef struct __attribute__ ((__packed__)) lsm6DContextData_s {
 
 #define LSM6DSO_CHIP_ID 0x6C
 #define LSM6DSL_CHIP_ID 0x6A
+#define LSM6DSR_CHIP_ID 0x6B
 #define LSM6DS3_CHIP_ID 0x69
 
 static uint8_t lsm6dID = 0x6C;
@@ -153,6 +154,7 @@ static bool lsm6dxxDetect(busDevice_t * dev)
 
         switch (tmp) {
             case LSM6DSO_CHIP_ID:
+            case LSM6DSR_CHIP_ID:
             case LSM6DSL_CHIP_ID: 
                  lsm6dID = tmp;
                 // Compatible chip detected
@@ -184,6 +186,7 @@ static bool lsm6dxxAccRead(accDev_t *acc)
     if (!ack) {
         return false;
     }
+
     acc->ADCRaw[X] = (float) int16_val_little_endian(data, 0);
     acc->ADCRaw[Y] = (float) int16_val_little_endian(data, 1);
     acc->ADCRaw[Z] = (float) int16_val_little_endian(data, 2);

@@ -46,10 +46,10 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "platform.h"
+#include <usbd_desc.h>
+#include "../platform.h"
 
 #include "usbd_core.h"
-#include "usbd_desc.h"
 #include "usbd_cdc.h"
 #include "usbd_cdc_interface.h"
 #include "stdbool.h"
@@ -98,7 +98,17 @@ static int8_t CDC_Itf_Control(uint8_t cmd, uint8_t* pbuf, uint16_t length);
 static int8_t CDC_Itf_Receive(uint8_t* pbuf, uint32_t *Len);
 
 static void TIM_Config(void);
-static void Error_Handler(void);
+
+/**
+  * @brief  This function is executed in case of error occurrence.
+  * @param  None
+  * @retval None
+  */
+void Error_Handler(void)
+{
+  /* Add your own code here */
+}
+
 
 USBD_CDC_ItfTypeDef USBD_CDC_fops =
 {
@@ -331,15 +341,7 @@ static void TIM_Config(void)
   HAL_NVIC_EnableIRQ(TIMx_IRQn);
 }
 
-/**
-  * @brief  This function is executed in case of error occurrence.
-  * @param  None
-  * @retval None
-  */
-static void Error_Handler(void)
-{
-  /* Add your own code here */
-}
+
 
 uint32_t CDC_Receive_DATA(uint8_t* recvBuf, uint32_t len)
 {
@@ -386,7 +388,7 @@ uint32_t CDC_Send_FreeBytes(void)
  */
 uint32_t CDC_Send_DATA(const uint8_t *ptrBuffer, uint32_t sendLength)
 {
-    USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef*)USBD_Device.pCDC_ClassData;
+    USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef*)USBD_Device.pClassData;
     while (hcdc->TxState != 0);
 
     for (uint32_t i = 0; i < sendLength; i++)

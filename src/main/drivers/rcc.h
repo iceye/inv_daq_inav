@@ -1,7 +1,8 @@
 #pragma once
-
+#include "stm32h7xx_hal.h"
 #include "rcc_types.h"
-#include "rcc_at32f43x_periph.h"
+#include "platform.h"
+
 
 enum rcc_reg {
     RCC_EMPTY = 0,   // make sure that default value (0) does not enable anything

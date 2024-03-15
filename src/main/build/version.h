@@ -33,3 +33,7 @@ extern const char* const buildDate;  // "MMM DD YYYY" MMM = Jan/Feb/...
 
 #define BUILD_TIME_LENGTH 8
 extern const char* const buildTime;  // "HH:MM:SS"
+
+#define FC_VERSION_MAJOR 7
+#define FC_VERSION_MINOR 0
+#define FC_VERSION_PATCH_LEVEL 0

@@ -18,7 +18,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
-
+#include "stm32h7xx_hal.h"
 #include "platform.h"
 
 #include "build/build_config.h"

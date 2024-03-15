@@ -24,6 +24,9 @@
 
 #include "common/time.h"
 
+
+#define GPS_RESET_PIN_CFG           IO_CONFIG(GPIO_MODE_OUTPUT_PP, GPIO_SPEED_FREQ_LOW, GPIO_PULLUP)
+
 #define GPS_DBHZ_MIN 0
 #define GPS_DBHZ_MAX 55
 

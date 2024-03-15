@@ -1,6 +1,7 @@
 #pragma once
 
 // TODO - GPIO_TypeDef include
+#include "stm32h7xx_hal.h"
 #include "drivers/io.h"
 #include "platform.h"
 

@@ -25,13 +25,16 @@
   ******************************************************************************
   */
 
+#ifndef STM32IDE  
+
 /* Define to prevent recursive inclusion -------------------------------------*/
 
 #ifndef __USB_DESC_H
 #define __USB_DESC_H
 
 /* Includes ------------------------------------------------------------------*/
-#include "usbd_req.h"
+#include "usbd_ioreq.h"
+#include "usbd_def.h"
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
   * @{
@@ -76,7 +79,20 @@
 /**
   * @}
   */
+typedef struct _Device_TypeDef
+{
+  uint8_t  *(*GetDeviceDescriptor)( uint8_t speed , uint16_t *length);
+  uint8_t  *(*GetLangIDStrDescriptor)( uint8_t speed , uint16_t *length);
+  uint8_t  *(*GetManufacturerStrDescriptor)( uint8_t speed , uint16_t *length);
+  uint8_t  *(*GetProductStrDescriptor)( uint8_t speed , uint16_t *length);
+  uint8_t  *(*GetSerialStrDescriptor)( uint8_t speed , uint16_t *length);
+  uint8_t  *(*GetConfigurationStrDescriptor)( uint8_t speed , uint16_t *length);
+  uint8_t  *(*GetInterfaceStrDescriptor)( uint8_t speed , uint16_t *length);
 
+#if (USBD_LPM_ENABLED == 1)
+  uint8_t  *(*GetBOSDescriptor)( uint8_t speed , uint16_t *length);
+#endif
+} USBD_DEVICE, *pUSBD_DEVICE;
 
 
 /** @defgroup USBD_DESC_Exported_Macros
@@ -90,7 +106,7 @@
   * @{
   */
 extern  uint8_t USBD_DeviceDesc  [USB_SIZ_DEVICE_DESC];
-extern  uint8_t USBD_StrDesc[USB_MAX_STR_DESC_SIZ];
+extern  uint8_t USBD_StrDesc[USBD_MAX_STR_DESC_SIZ];
 extern  uint8_t USBD_OtherSpeedCfgDesc[USB_LEN_CFG_DESC];
 extern  uint8_t USBD_DeviceQualifierDesc[USB_LEN_DEV_QUALIFIER_DESC];
 extern  uint8_t USBD_LangIDDesc[USB_SIZ_STRING_LANGID];
@@ -129,4 +145,6 @@ uint8_t *     USBD_USR_USRStringDesc (uint8_t speed, uint8_t idx , uint16_t *len
 /**
 * @}
 */
+
+#endif
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

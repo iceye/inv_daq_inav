@@ -1,0 +1,1 @@
+target_stm32h743ii(INNOVAVIONICSH743_3_1_1)

@@ -440,7 +440,7 @@ void init(void)
 #endif
 #endif
 
-#ifdef USE_ADC
+#if definde USE_ADC && !defined USE_INNOVAVIONICS_ADC
     drv_adc_config_t adc_params;
     memset(&adc_params, 0, sizeof(adc_params));
 

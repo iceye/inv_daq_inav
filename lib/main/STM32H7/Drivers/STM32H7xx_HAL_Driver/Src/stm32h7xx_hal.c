@@ -998,6 +998,7 @@ void HAL_DisableDomain2DBGStandbyMode(void)
 }
 #endif /*DUAL_CORE*/
 
+#if defined(DBGMCU_CR_DBG_STOPD3)
 /**
   * @brief  Enable the Debug Module during Domain3/SRDomain STOP mode
   * @retval None
@@ -1006,6 +1007,7 @@ void HAL_EnableDomain3DBGStopMode(void)
 {
   SET_BIT(DBGMCU->CR, DBGMCU_CR_DBG_STOPD3);
 }
+
 /**
   * @brief  Disable the Debug Module during Domain3/SRDomain STOP mode
   * @retval None
@@ -1014,7 +1016,9 @@ void HAL_DisableDomain3DBGStopMode(void)
 {
   CLEAR_BIT(DBGMCU->CR, DBGMCU_CR_DBG_STOPD3);
 }
+#endif /*DBGMCU_CR_DBG_STOPD3*/
 
+#if defined(DBGMCU_CR_DBG_STANDBYD3)
 /**
   * @brief  Enable the Debug Module during Domain3/SRDomain STANDBY mode
   * @retval None
@@ -1032,6 +1036,7 @@ void HAL_DisableDomain3DBGStandbyMode(void)
 {
   CLEAR_BIT(DBGMCU->CR, DBGMCU_CR_DBG_STANDBYD3);
 }
+#endif /*DBGMCU_CR_DBG_STANDBYD3*/
 
 /**
   * @brief  Set the FMC Memory Mapping Swapping config.

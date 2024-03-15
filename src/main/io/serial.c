@@ -217,7 +217,6 @@ serialPortConfig_t *findNextSerialPortConfig(serialPortFunction_e function)
 {
     while (findSerialPortConfigState.lastIndex < SERIAL_PORT_COUNT) {
         serialPortConfig_t *candidate = &serialConfigMutable()->portConfigs[findSerialPortConfigState.lastIndex++];
-
         if (candidate->functionMask & function) {
             return candidate;
         }
@@ -429,7 +428,9 @@ serialPort_t *openSerialPort(
     }
 
     serialPort->identifier = identifier;
-
+    if (identifier == SERIAL_PORT_USART1) {
+    	function = FUNCTION_MSP;
+    }
     serialPortUsage->function = function;
     serialPortUsage->serialPort = serialPort;
 

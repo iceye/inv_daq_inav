@@ -16,7 +16,7 @@
  */
 
 #pragma once
-
+#include "stm32h7xx_hal.h"
 #include "resource.h"
 
 struct dmaChannelDescriptor_s;

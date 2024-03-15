@@ -16,7 +16,7 @@
  */
 
 #pragma once
-
+#include "stm32h7xx_hal.h"
 #include "drivers/io_types.h"
 #include "rcc_types.h"
 

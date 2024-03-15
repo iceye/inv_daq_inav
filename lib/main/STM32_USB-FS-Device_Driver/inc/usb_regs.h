@@ -29,6 +29,8 @@
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __USB_REGS_H
 #define __USB_REGS_H
+#include "stm32h7xx_hal.h"
+#include <stdint.h>
 
 /* Includes ------------------------------------------------------------------*/
 /* Exported types ------------------------------------------------------------*/
@@ -232,8 +234,7 @@ enum EP_BUF_NUM
 #define _GetBTABLE() (((__IO uint16_t) *BTABLE) & ~0x07)
 
 /* SetENDPOINT */
-#define _SetENDPOINT(bEpNum,wRegValue)  (*(EP0REG + bEpNum)= \
-    (uint16_t)wRegValue)
+#define _SetENDPOINT(bEpNum,wRegValue)  (*(EP0REG + bEpNum)= (uint16_t)wRegValue)
 
 /* GetENDPOINT */
 #define _GetENDPOINT(bEpNum)        ((__IO uint16_t)(*(EP0REG + bEpNum)))

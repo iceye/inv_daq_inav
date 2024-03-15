@@ -16,7 +16,7 @@
  */
 
 #pragma once
-
+#include "stm32h7xx_hal.h"
 typedef enum {
     UART_INVERTER_LINE_NONE = 0,
     UART_INVERTER_LINE_RX = 1 << 0,

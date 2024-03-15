@@ -26,7 +26,11 @@
 
 // Automatically trigger a flush when this much data is in the buffer
 #define FLASHFS_WRITE_BUFFER_AUTO_FLUSH_LEN 64
+#ifdef cplusplus
+extern "C" {
 
+}
+#endif
 void flashfsEraseCompletely(void);
 void flashfsEraseRange(uint32_t start, uint32_t end);
 
@@ -53,3 +57,6 @@ void flashfsInit(void);
 
 bool flashfsIsReady(void);
 bool flashfsIsEOF(void);
+#ifdef cplusplus
+}
+#endif

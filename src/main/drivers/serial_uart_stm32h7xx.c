@@ -50,10 +50,12 @@ typedef struct uartDevice_s {
 #ifdef USE_UART1
 #define UART_PIN_AF_UART1_PA9       GPIO_AF7_USART1
 #define UART_PIN_AF_UART1_PA10      GPIO_AF7_USART1
+#define UART_PIN_AF_UART1_PA12      GPIO_AF7_USART1
 #define UART_PIN_AF_UART1_PB6       GPIO_AF7_USART1
 #define UART_PIN_AF_UART1_PB7       GPIO_AF7_USART1
 #define UART_PIN_AF_UART1_PB14      GPIO_AF4_USART1
 #define UART_PIN_AF_UART1_PB15      GPIO_AF4_USART1
+
 
 static uartDevice_t uart1 =
 {
@@ -68,6 +70,14 @@ static uartDevice_t uart1 =
 #endif
 
 #ifdef USE_UART2
+
+#define UART_PIN_AF_UART2_PA3       GPIO_AF7_USART2
+#define UART_PIN_AF_UART2_PD6       GPIO_AF7_USART2
+#define UART_PIN_AF_UART2_PA1       GPIO_AF7_USART2
+#define UART_PIN_AF_UART2_PD4       GPIO_AF7_USART2
+#define UART_PIN_AF_UART2_PA0       GPIO_AF7_USART2
+#define UART_PIN_AF_UART2_PD3       GPIO_AF7_USART2
+
 static uartDevice_t uart2 =
 {
     .dev = USART2,
@@ -81,6 +91,16 @@ static uartDevice_t uart2 =
 #endif
 
 #ifdef USE_UART3
+
+#define UART_PIN_AF_UART3_PB11       GPIO_AF7_USART3
+#define UART_PIN_AF_UART3_PC11       GPIO_AF7_USART3
+#define UART_PIN_AF_UART3_PD9        GPIO_AF7_USART3
+#define UART_PIN_AF_UART3_PB14       GPIO_AF7_USART3
+#define UART_PIN_AF_UART3_PD12       GPIO_AF7_USART3
+#define UART_PIN_AF_UART3_PB13       GPIO_AF7_USART3
+#define UART_PIN_AF_UART3_PD11       GPIO_AF7_USART3
+
+
 static uartDevice_t uart3 =
 {
     .dev = USART3,
@@ -104,6 +124,11 @@ static uartDevice_t uart3 =
 #define UART_PIN_AF_UART4_PC11      GPIO_AF8_UART4
 #define UART_PIN_AF_UART4_PD0       GPIO_AF8_UART4
 #define UART_PIN_AF_UART4_PD1       GPIO_AF8_UART4
+#define UART_PIN_AF_UART4_PH14      GPIO_AF8_UART4
+#define UART_PIN_AF_UART4_PH13      GPIO_AF8_UART4
+#define UART_PIN_AF_UART4_PI9       GPIO_AF8_UART4
+#define UART_PIN_AF_UART4_PB0       GPIO_AF8_UART4
+#define UART_PIN_AF_UART4_PB15      GPIO_AF8_UART4
 
 static uartDevice_t uart4 =
 {
@@ -124,6 +149,8 @@ static uartDevice_t uart4 =
 #define UART_PIN_AF_UART5_PB13      GPIO_AF14_UART5
 #define UART_PIN_AF_UART5_PD2       GPIO_AF8_UART5
 #define UART_PIN_AF_UART5_PC12      GPIO_AF8_UART5
+#define UART_PIN_AF_UART5_PC8       GPIO_AF8_UART5
+#define UART_PIN_AF_UART5_PC9       GPIO_AF8_UART5
 
 static uartDevice_t uart5 =
 {
@@ -138,6 +165,17 @@ static uartDevice_t uart5 =
 #endif
 
 #ifdef USE_UART6
+
+#define UART_PIN_AF_UART3_PC6       GPIO_AF7_USART6
+#define UART_PIN_AF_UART3_PG14      GPIO_AF7_USART6
+#define UART_PIN_AF_UART3_PC7       GPIO_AF7_USART6
+#define UART_PIN_AF_UART3_PG9       GPIO_AF7_USART6
+#define UART_PIN_AF_UART3_PG8       GPIO_AF7_USART6
+#define UART_PIN_AF_UART3_PG12      GPIO_AF7_USART6
+#define UART_PIN_AF_UART3_PG13      GPIO_AF7_USART6
+#define UART_PIN_AF_UART3_PG15      GPIO_AF7_USART6
+
+
 static uartDevice_t uart6 =
 {
     .dev = USART6,
@@ -159,6 +197,10 @@ static uartDevice_t uart6 =
 #define UART_PIN_AF_UART7_PE8       GPIO_AF7_UART7
 #define UART_PIN_AF_UART7_PF6       GPIO_AF7_UART7
 #define UART_PIN_AF_UART7_PF7       GPIO_AF7_UART7
+#define UART_PIN_AF_UART7_PE9       GPIO_AF7_UART7
+#define UART_PIN_AF_UART7_PF8       GPIO_AF7_UART7
+#define UART_PIN_AF_UART7_PE10      GPIO_AF7_UART7
+#define UART_PIN_AF_UART7_PF9       GPIO_AF7_UART7
 
 static uartDevice_t uart7 =
 {
@@ -177,6 +219,13 @@ static uartDevice_t uart7 =
 #endif
 
 #ifdef USE_UART8
+
+#define UART_PIN_AF_UART7_PE1       GPIO_AF8_UART8
+#define UART_PIN_AF_UART7_PE0       GPIO_AF8_UART8
+#define UART_PIN_AF_UART7_PD15      GPIO_AF8_UART8
+#define UART_PIN_AF_UART7_PD14      GPIO_AF8_UART8
+
+
 static uartDevice_t uart8 =
 {
     .dev = UART8,
@@ -421,9 +470,10 @@ void UART4_IRQHandler(void)
 #endif
 
 #ifdef USE_UART5
+
 uartPort_t *serialUART5(uint32_t baudRate, portMode_t mode, portOptions_t options)
 {
-    return serialUART(UARTDEV_5, baudRate, mode, options);
+	return serialUART(UARTDEV_5, baudRate, mode, options);
 }
 
 // UART5 Rx/Tx IRQ Handler

@@ -1,18 +1,22 @@
 #include <string.h>
 #include <stdint.h>
 
+#include "settings.h"
+
 #include "platform.h"
 
 #include "common/string_light.h"
 #include "common/utils.h"
 
-#include "settings_generated.h"
-
-#include "fc/settings.h"
-
 #include "config/general_settings.h"
 #include "flight/rpm_filter.h"
-#include "settings_generated.c"
+#include "flight/pid.h"
+#include "flight/mixer_profile.h"
+#include "flight/ez_tune.h"
+#include "fc/controlrate_profile_config_struct.h"
+#include "sensors/battery_config_structs.h"
+#include "common/maths.h"
+
 
 static bool settingGetWord(char *buf, int idx)
 {

@@ -8,6 +8,7 @@
 
 #include "settings_generated.h"
 
+
 typedef struct lookupTableEntry_s {
     const char * const *values;
     const uint8_t valueCount;
@@ -74,6 +75,16 @@ static inline setting_type_e SETTING_TYPE(const setting_t *s) { return (setting_
 static inline setting_section_e SETTING_SECTION(const setting_t *s) { return (setting_section_e)(s->type & SETTING_SECTION_MASK); }
 static inline setting_mode_e SETTING_MODE(const setting_t *s) { return (setting_mode_e)(s->type & SETTING_MODE_MASK); }
 
+
+extern const uint8_t settingNamesWords[];
+extern const pgn_t settingsPgn[];
+extern const char wordSymbols[];
+extern const setting_t settingsTable[];
+extern const uint8_t settingsPgnCounts[];
+extern const uint32_t settingMinMaxTable[];
+extern const lookupTableEntry_t settingLookupTables[];
+
+
 void settingGetName(const setting_t *val, char *buf);
 bool settingNameContains(const setting_t *val, char *buf, const char *cmdline);
 bool settingNameIsExactMatch(const setting_t *val, char *buf, const char *cmdline, uint8_t var_name_length);
@@ -132,3 +143,5 @@ setting_max_t settingGetStringMaxLength(const setting_t *val);
 // Retrieve the setting indexes for the given PG. If the PG is not
 // found, these function returns false.
 bool settingsGetParameterGroupIndexes(pgn_t pg, uint16_t *start, uint16_t *end);
+
+

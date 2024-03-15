@@ -1,3 +1,5 @@
+#ifndef STM32IDE
+
 /**
   ******************************************************************************
   * @file    USB_Device/CDC_Standalone/Inc/usbd_conf.h
@@ -50,7 +52,7 @@
 #define __USBD_CONF_H
 
 /* Includes ------------------------------------------------------------------*/
-#include "platform.h"      // Required for inclusion of stm32Yxx_hal.h below within USB device library code
+#include "../platform.h"      // Required for inclusion of stm32Yxx_hal.h below within USB device library code
 #include "common/maths.h"  // Required for MIN & MAX within USB device library code
 
 #if defined(STM32F7)
@@ -115,3 +117,5 @@
 #endif /* __USBD_CONF_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
+#endif

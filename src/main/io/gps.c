@@ -124,6 +124,8 @@ static gpsProviderDescriptor_t gpsProviders[GPS_PROVIDER_COUNT] = {
 
 };
 
+static IO_t gpsReset;
+
 PG_REGISTER_WITH_RESET_TEMPLATE(gpsConfig_t, gpsConfig, PG_GPS_CONFIG, 5);
 
 PG_RESET_TEMPLATE(gpsConfig_t, gpsConfig,
@@ -450,6 +452,11 @@ void gpsPreInit(void)
 
 void gpsInit(void)
 {
+	gpsReset = IOGetByTag(DEFIO_TAG__PG12);
+	IOInit(gpsReset, OWNER_SYSTEM, RESOURCE_OUTPUT, RESOURCE_INDEX(20));
+	IOConfigGPIO(gpsReset, GPS_RESET_PIN_CFG);
+
+
     gpsState.serialConfig = serialConfig();
     gpsState.gpsConfig = gpsConfig();
 
@@ -497,6 +504,7 @@ void gpsInit(void)
     portMode_t mode = gpsProviders[gpsState.gpsConfig->provider].portMode;
     gpsState.gpsPort = openSerialPort(gpsPortConfig->identifier, FUNCTION_GPS, NULL, NULL, baudRates[gpsToSerialBaudRate[gpsState.baudrateIndex]], mode, SERIAL_NOT_INVERTED);
 
+    IOHi(gpsReset);
     // Check if we have a serial port opened
     if (!gpsState.gpsPort) {
         featureClear(FEATURE_GPS);

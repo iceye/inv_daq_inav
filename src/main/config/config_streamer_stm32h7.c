@@ -16,6 +16,7 @@
  */
 
 #include <string.h>
+#include "stm32h7xx_hal.h"
 #include "platform.h"
 #include "drivers/system.h"
 #include "config/config_streamer.h"

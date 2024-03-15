@@ -23,6 +23,7 @@
  * Retains values written across software resets and boot loader activities.
  */
 
+#include "stm32h7xx_hal.h"
 #include <stdint.h>
 #include "platform.h"
 

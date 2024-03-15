@@ -330,7 +330,6 @@ bool compassInit(void)
             mag.dev.magAlign.onBoard = CW270_DEG_FLIP;  // The most popular default is 270FLIP for external mags
         }
     }
-
     return ret;
 }
 

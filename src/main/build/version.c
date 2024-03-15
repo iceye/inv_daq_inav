@@ -16,6 +16,7 @@
  */
 
 #include "version.h"
+#include "target.h"
 
 const char * const targetName = __TARGET__;
 const char * const compilerVersion = __VERSION__;

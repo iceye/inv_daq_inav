@@ -276,9 +276,12 @@ static const blackboxDeltaFieldDefinition_t blackboxMainFields[] = {
 #endif
 #ifdef USE_BARO
     {"BaroAlt",    -1, SIGNED,   .Ipredict = PREDICT(0),       .Iencode = ENCODING(SIGNED_VB),   .Ppredict = PREDICT(PREVIOUS),      .Pencode = ENCODING(TAG8_8SVB), FLIGHT_LOG_FIELD_CONDITION_BARO},
+	{"BaroAltQnh",    -1, SIGNED,   .Ipredict = PREDICT(0),       .Iencode = ENCODING(SIGNED_VB),   .Ppredict = PREDICT(PREVIOUS),      .Pencode = ENCODING(TAG8_8SVB), FLIGHT_LOG_FIELD_CONDITION_BARO},
+	{"Qnh",    -1, SIGNED,   .Ipredict = PREDICT(0),       .Iencode = ENCODING(SIGNED_VB),   .Ppredict = PREDICT(PREVIOUS),      .Pencode = ENCODING(TAG8_8SVB), FLIGHT_LOG_FIELD_CONDITION_BARO},
 #endif
 #ifdef USE_PITOT
     {"AirSpeed",   -1, SIGNED,   .Ipredict = PREDICT(0),       .Iencode = ENCODING(SIGNED_VB),   .Ppredict = PREDICT(PREVIOUS),      .Pencode = ENCODING(TAG8_8SVB), FLIGHT_LOG_FIELD_CONDITION_PITOT},
+	{"AirSpeedAux",   -1, SIGNED,   .Ipredict = PREDICT(0),       .Iencode = ENCODING(SIGNED_VB),   .Ppredict = PREDICT(PREVIOUS),      .Pencode = ENCODING(TAG8_8SVB), FLIGHT_LOG_FIELD_CONDITION_PITOT},
 #endif
 #ifdef USE_RANGEFINDER
     {"surfaceRaw",   -1, SIGNED,   .Ipredict = PREDICT(0),       .Iencode = ENCODING(SIGNED_VB),   .Ppredict = PREDICT(PREVIOUS),      .Pencode = ENCODING(TAG8_8SVB), FLIGHT_LOG_FIELD_CONDITION_SURFACE},
@@ -500,9 +503,12 @@ typedef struct blackboxMainState_s {
 
 #ifdef USE_BARO
     int32_t BaroAlt;
+    int32_t BaroAltQnh;
+    int32_t BaroQnh;
 #endif
 #ifdef USE_PITOT
     int32_t airSpeed;
+    int32_t airSpeedAux;
 #endif
 #ifdef USE_MAG
     int16_t magADC[XYZ_AXIS_COUNT];
@@ -876,6 +882,8 @@ static void writeIntraframe(void)
 #ifdef USE_BARO
     if (testBlackboxCondition(FLIGHT_LOG_FIELD_CONDITION_BARO)) {
         blackboxWriteSignedVB(blackboxCurrent->BaroAlt);
+        blackboxWriteSignedVB(blackboxCurrent->BaroAltQnh);
+        blackboxWriteSignedVB(blackboxCurrent->BaroQnh);
     }
 #endif
 
@@ -1145,6 +1153,8 @@ static void writeInterframe(void)
 #ifdef USE_BARO
     if (testBlackboxCondition(FLIGHT_LOG_FIELD_CONDITION_BARO)) {
         deltas[optionalFieldCount++] = blackboxCurrent->BaroAlt - blackboxLast->BaroAlt;
+        deltas[optionalFieldCount++] = blackboxCurrent->BaroAltQnh - blackboxLast->BaroAltQnh;
+        deltas[optionalFieldCount++] = blackboxCurrent->BaroQnh - blackboxLast->BaroQnh;
     }
 #endif
 
@@ -1655,10 +1665,13 @@ static void loadMainState(timeUs_t currentTimeUs)
 
 #ifdef USE_BARO
     blackboxCurrent->BaroAlt = baro.BaroAlt;
+    blackboxCurrent->BaroAltQnh = baro.BaroAltQnh;
+    blackboxCurrent->BaroQnh = baro.BaroQnh;
 #endif
 
 #ifdef USE_PITOT
     blackboxCurrent->airSpeed = getAirspeedEstimate();
+    blackboxCurrent->airSpeedAux = getAirspeedEstimateAux();
 #endif
 
 #ifdef USE_RANGEFINDER
@@ -1849,7 +1862,7 @@ static bool blackboxWriteSysinfo(void)
         BLACKBOX_PRINT_HEADER_LINE("motorOutput", "%d,%d",                  getThrottleIdleValue(),motorConfig()->maxthrottle);
         BLACKBOX_PRINT_HEADER_LINE("acc_1G", "%u",                          acc.dev.acc_1G);
 
-#ifdef USE_ADC
+#if definde USE_ADC && !defined USE_INNOVAVIONICS_ADC
         BLACKBOX_PRINT_HEADER_LINE_CUSTOM(
             if (testBlackboxCondition(FLIGHT_LOG_FIELD_CONDITION_VBAT)) {
                 blackboxPrintfHeaderLine("vbat_scale", "%u", batteryMetersConfig()->voltage.scale / 10);

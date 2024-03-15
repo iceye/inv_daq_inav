@@ -97,7 +97,7 @@ static const OSD_Entry menuBattSettingsEntries[]=
 {
     OSD_LABEL_DATA_ENTRY("-- BATT SETTINGS --", battProfileIndexString),
 
-#ifdef USE_ADC
+#if defined USE_ADC && !defined USE_INNOVAVIONICS_ADC
     OSD_SETTING_ENTRY("CELLS", SETTING_BAT_CELLS),
     OSD_SETTING_ENTRY("CELL DET.", SETTING_VBAT_CELL_DETECT_VOLTAGE),
     OSD_SETTING_ENTRY("CELL MAX", SETTING_VBAT_MAX_CELL_VOLTAGE),
@@ -127,7 +127,7 @@ static OSD_Entry menuBatteryEntries[]=
 {
     OSD_LABEL_ENTRY("-- BATTERY --"),
 
-#ifdef USE_ADC
+#if defined USE_ADC && !defined USE_INNOVAVIONICS_ADC
     OSD_BOOL_ENTRY("PROF AUTOSWITCH", &featureProfAutoswitchEnabled),
 #endif
     OSD_UINT8_CALLBACK_ENTRY("PROF", cmsx_onBatteryProfileIndexChange, (&(const OSD_UINT8_t){ &battDispProfileIndex, 1, MAX_BATTERY_PROFILE_COUNT, 1})),

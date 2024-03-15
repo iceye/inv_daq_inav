@@ -38,6 +38,10 @@
 #include "stm32f7xx.h"
 #endif
 
+#ifdef STM32H7
+#include "stm32h7xx_hal.h"
+#endif
+
  /* SDCARD pinouts
  *
  * SD CARD PINS

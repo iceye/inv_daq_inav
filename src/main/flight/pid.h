@@ -20,6 +20,7 @@
 #include "config/parameter_group.h"
 #include "fc/runtime_config.h"
 #include "common/time.h"
+#include "common/axis.h"
 
 #define GYRO_SATURATION_LIMIT       1800        // 1800dps
 #define PID_SUM_LIMIT_MIN           100

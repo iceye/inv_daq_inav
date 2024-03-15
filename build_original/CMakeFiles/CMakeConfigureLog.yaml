@@ -1,0 +1,433 @@
+
+---
+events:
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeDetermineSystem.cmake:206 (message)"
+      - "CMakeLists.txt:54 (project)"
+    message: |
+      The target system is: Generic -  - arm
+      The host system is: Darwin - 21.6.0 - x86_64
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeDetermineCCompiler.cmake:123 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:54 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+      Compiler: /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/arm-none-eabi-gcc 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      1
+      /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/bin/ld: /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/lib/libc.a(libc_a-exit.o): in function `exit':
+      exit.c:(.text.exit+0x28): undefined reference to `_exit'
+      /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/bin/ld: /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/lib/libc.a(libc_a-closer.o): in function `_close_r':
+      closer.c:(.text._close_r+0x18): undefined reference to `_close'
+      /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/bin/ld: /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/lib/libc.a(libc_a-lseekr.o): in function `_lseek_r':
+      lseekr.c:(.text._lseek_r+0x24): undefined reference to `_lseek'
+      /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/bin/ld: /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/lib/libc.a(libc_a-readr.o): in function `_read_r':
+      readr.c:(.text._read_r+0x24): undefined reference to `_read'
+      /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/bin/ld: /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/lib/libc.a(libc_a-sbrkr.o): in function `_sbrk_r':
+      sbrkr.c:(.text._sbrk_r+0x18): undefined reference to `_sbrk'
+      /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/bin/ld: /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/lib/libc.a(libc_a-writer.o): in function `_write_r':
+      writer.c:(.text._write_r+0x24): undefined reference to `_write'
+      collect2: error: ld returned 1 exit status
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeDetermineCCompiler.cmake:123 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:54 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+      Compiler: /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/arm-none-eabi-gcc 
+      Build flags: 
+      Id flags: -c 
+      
+      The output was:
+      0
+      
+      
+      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.o"
+      
+      The C compiler identification is GNU, found in:
+        /Users/sandro.bottoni/Projects/Experiment/inav/build/CMakeFiles/3.27.1/CompilerIdC/CMakeCCompilerId.o
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:54 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+      Compiler: /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/arm-none-eabi-g++ 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      1
+      /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/bin/ld: /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/lib/libc.a(libc_a-exit.o): in function `exit':
+      exit.c:(.text.exit+0x28): undefined reference to `_exit'
+      /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/bin/ld: /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/lib/libc.a(libc_a-closer.o): in function `_close_r':
+      closer.c:(.text._close_r+0x18): undefined reference to `_close'
+      /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/bin/ld: /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/lib/libc.a(libc_a-lseekr.o): in function `_lseek_r':
+      lseekr.c:(.text._lseek_r+0x24): undefined reference to `_lseek'
+      /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/bin/ld: /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/lib/libc.a(libc_a-readr.o): in function `_read_r':
+      readr.c:(.text._read_r+0x24): undefined reference to `_read'
+      /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/bin/ld: /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/lib/libc.a(libc_a-sbrkr.o): in function `_sbrk_r':
+      sbrkr.c:(.text._sbrk_r+0x18): undefined reference to `_sbrk'
+      /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/bin/ld: /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/lib/libc.a(libc_a-writer.o): in function `_write_r':
+      writer.c:(.text._write_r+0x24): undefined reference to `_write'
+      collect2: error: ld returned 1 exit status
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:54 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+      Compiler: /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/arm-none-eabi-g++ 
+      Build flags: 
+      Id flags: -c 
+      
+      The output was:
+      0
+      
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.o"
+      
+      The CXX compiler identification is GNU, found in:
+        /Users/sandro.bottoni/Projects/Experiment/inav/build/CMakeFiles/3.27.1/CompilerIdCXX/CMakeCXXCompilerId.o
+      
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:57 (try_compile)"
+      - "/usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:54 (project)"
+    checks:
+      - "Detecting C compiler ABI info"
+    directories:
+      source: "/Users/sandro.bottoni/Projects/Experiment/inav/build/CMakeFiles/CMakeScratch/TryCompile-mXLZfG"
+      binary: "/Users/sandro.bottoni/Projects/Experiment/inav/build/CMakeFiles/CMakeScratch/TryCompile-mXLZfG"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-Og -g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/sandro.bottoni/Projects/Experiment/inav/cmake"
+    buildResult:
+      variable: "CMAKE_C_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/sandro.bottoni/Projects/Experiment/inav/build/CMakeFiles/CMakeScratch/TryCompile-mXLZfG'
+        
+        Run Build Command(s): /usr/local/Cellar/cmake/3.27.1/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_b9bf1/fast
+        /Applications/Xcode.app/Contents/Developer/usr/bin/make  -f CMakeFiles/cmTC_b9bf1.dir/build.make CMakeFiles/cmTC_b9bf1.dir/build
+        Building C object CMakeFiles/cmTC_b9bf1.dir/CMakeCCompilerABI.c.obj
+        /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/arm-none-eabi-gcc   -v -o CMakeFiles/cmTC_b9bf1.dir/CMakeCCompilerABI.c.obj -c /usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeCCompilerABI.c
+        Using built-in specs.
+        COLLECT_GCC=/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/arm-none-eabi-gcc
+        Target: arm-none-eabi
+        Configured with: /Volumes/data/jenkins/workspace/GNU-toolchain/arm-13/src/gcc/configure --target=arm-none-eabi --prefix=/Volumes/data/jenkins/workspace/GNU-toolchain/arm-13/build-arm-none-eabi/install --with-gmp=/Volumes/data/jenkins/workspace/GNU-toolchain/arm-13/build-arm-none-eabi/host-tools --with-mpfr=/Volumes/data/jenkins/workspace/GNU-toolchain/arm-13/build-arm-none-eabi/host-tools --with-mpc=/Volumes/data/jenkins/workspace/GNU-toolchain/arm-13/build-arm-none-eabi/host-tools --with-isl=/Volumes/data/jenkins/workspace/GNU-toolchain/arm-13/build-arm-none-eabi/host-tools --disable-shared --disable-nls --disable-threads --disable-tls --enable-checking=release --enable-languages=c,c++,fortran --with-newlib --with-gnu-as --with-headers=yes --with-gnu-ld --with-native-system-header-dir=/include --with-sysroot=/Volumes/data/jenkins/workspace/GNU-toolchain/arm-13/build-arm-none-eabi/install/arm-none-eabi --with-multilib-list=aprofile,rmprofile --with-pkgversion='Arm GNU Toolchain 13.2.rel1 (Build arm-13.7)' --with-bugurl=https://bugs.linaro.org/
+        Thread model: single
+        Supported LTO compression algorithms: zlib
+        gcc version 13.2.1 20231009 (Arm GNU Toolchain 13.2.rel1 (Build arm-13.7)) 
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_b9bf1.dir/CMakeCCompilerABI.c.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-mlibarch=armv4t' '-march=armv4t' '-dumpdir' 'CMakeFiles/cmTC_b9bf1.dir/'
+         /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../libexec/gcc/arm-none-eabi/13.2.1/cc1 -quiet -v -iprefix /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/ -isysroot /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../arm-none-eabi -D__USES_INITFINI__ /usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles/cmTC_b9bf1.dir/ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mcpu=arm7tdmi -mfloat-abi=soft -marm -mlibarch=armv4t -march=armv4t -version -o /var/folders/04/zhfk9x6555zfv0zwsp8rwr280000gn/T//ccTZ2oEl.s
+        GNU C17 (Arm GNU Toolchain 13.2.rel1 (Build arm-13.7)) version 13.2.1 20231009 (arm-none-eabi)
+        	compiled by GNU C version Apple LLVM 13.0.0 (clang-1300.0.29.30), GMP version 6.2.1, MPFR version 3.1.6, MPC version 1.0.3, isl version isl-0.15-1-g835ea3a-GMP
+        
+        GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+        ignoring duplicate directory "/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/../../lib/gcc/arm-none-eabi/13.2.1/include"
+        ignoring nonexistent directory "/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../arm-none-eabi/usr/local/include"
+        ignoring duplicate directory "/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/../../lib/gcc/arm-none-eabi/13.2.1/include-fixed"
+        ignoring duplicate directory "/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/../../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/include"
+        ignoring duplicate directory "/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../arm-none-eabi/include"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/include
+         /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/include-fixed
+         /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/include
+        End of search list.
+        Compiler executable checksum: 0824ce55b5209f9339d589ef57403827
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_b9bf1.dir/CMakeCCompilerABI.c.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-mlibarch=armv4t' '-march=armv4t' '-dumpdir' 'CMakeFiles/cmTC_b9bf1.dir/'
+         /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/bin/as -v -march=armv4t -mfloat-abi=soft -meabi=5 -o CMakeFiles/cmTC_b9bf1.dir/CMakeCCompilerABI.c.obj /var/folders/04/zhfk9x6555zfv0zwsp8rwr280000gn/T//ccTZ2oEl.s
+        GNU assembler version 2.41.0 (arm-none-eabi) using BFD version (Arm GNU Toolchain 13.2.rel1 (Build arm-13.7)) 2.41.0.20231009
+        COMPILER_PATH=/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../libexec/gcc/arm-none-eabi/13.2.1/:/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../libexec/gcc/:/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/bin/
+        LIBRARY_PATH=/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/:/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/:/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/lib/:/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../arm-none-eabi/lib/
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_b9bf1.dir/CMakeCCompilerABI.c.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-mlibarch=armv4t' '-march=armv4t' '-dumpdir' 'CMakeFiles/cmTC_b9bf1.dir/CMakeCCompilerABI.c.'
+        Linking C static library libcmTC_b9bf1.a
+        /usr/local/Cellar/cmake/3.27.1/bin/cmake -P CMakeFiles/cmTC_b9bf1.dir/cmake_clean_target.cmake
+        /usr/local/Cellar/cmake/3.27.1/bin/cmake -E cmake_link_script CMakeFiles/cmTC_b9bf1.dir/link.txt --verbose=1
+        /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/arm-none-eabi-ar qc libcmTC_b9bf1.a CMakeFiles/cmTC_b9bf1.dir/CMakeCCompilerABI.c.obj
+        /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/arm-none-eabi-ranlib libcmTC_b9bf1.a
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:127 (message)"
+      - "/usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:54 (project)"
+    message: |
+      Parsed C implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/include]
+          add: [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/include-fixed]
+          add: [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/include]
+        end of search list found
+        collapse include dir [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/include] ==> [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/lib/gcc/arm-none-eabi/13.2.1/include]
+        collapse include dir [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/include-fixed] ==> [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/lib/gcc/arm-none-eabi/13.2.1/include-fixed]
+        collapse include dir [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/include] ==> [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/arm-none-eabi/include]
+        implicit include dirs: [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/lib/gcc/arm-none-eabi/13.2.1/include;/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/lib/gcc/arm-none-eabi/13.2.1/include-fixed;/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/arm-none-eabi/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:152 (message)"
+      - "/usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:54 (project)"
+    message: |
+      Parsed C implicit link information:
+        link line regex: [^( *|.*[/\\])(arm-none-eabi-ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        ignore line: [Change Dir: '/Users/sandro.bottoni/Projects/Experiment/inav/build/CMakeFiles/CMakeScratch/TryCompile-mXLZfG']
+        ignore line: []
+        ignore line: [Run Build Command(s): /usr/local/Cellar/cmake/3.27.1/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_b9bf1/fast]
+        ignore line: [/Applications/Xcode.app/Contents/Developer/usr/bin/make  -f CMakeFiles/cmTC_b9bf1.dir/build.make CMakeFiles/cmTC_b9bf1.dir/build]
+        ignore line: [Building C object CMakeFiles/cmTC_b9bf1.dir/CMakeCCompilerABI.c.obj]
+        ignore line: [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/arm-none-eabi-gcc   -v -o CMakeFiles/cmTC_b9bf1.dir/CMakeCCompilerABI.c.obj -c /usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeCCompilerABI.c]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/arm-none-eabi-gcc]
+        ignore line: [Target: arm-none-eabi]
+        ignore line: [Configured with: /Volumes/data/jenkins/workspace/GNU-toolchain/arm-13/src/gcc/configure --target=arm-none-eabi --prefix=/Volumes/data/jenkins/workspace/GNU-toolchain/arm-13/build-arm-none-eabi/install --with-gmp=/Volumes/data/jenkins/workspace/GNU-toolchain/arm-13/build-arm-none-eabi/host-tools --with-mpfr=/Volumes/data/jenkins/workspace/GNU-toolchain/arm-13/build-arm-none-eabi/host-tools --with-mpc=/Volumes/data/jenkins/workspace/GNU-toolchain/arm-13/build-arm-none-eabi/host-tools --with-isl=/Volumes/data/jenkins/workspace/GNU-toolchain/arm-13/build-arm-none-eabi/host-tools --disable-shared --disable-nls --disable-threads --disable-tls --enable-checking=release --enable-languages=c,c++,fortran --with-newlib --with-gnu-as --with-headers=yes --with-gnu-ld --with-native-system-header-dir=/include --with-sysroot=/Volumes/data/jenkins/workspace/GNU-toolchain/arm-13/build-arm-none-eabi/install/arm-none-eabi --with-multilib-list=aprofile,rmprofile --with-pkgversion='Arm GNU Toolchain 13.2.rel1 (Build arm-13.7)' --with-bugurl=https://bugs.linaro.org/]
+        ignore line: [Thread model: single]
+        ignore line: [Supported LTO compression algorithms: zlib]
+        ignore line: [gcc version 13.2.1 20231009 (Arm GNU Toolchain 13.2.rel1 (Build arm-13.7)) ]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_b9bf1.dir/CMakeCCompilerABI.c.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-mlibarch=armv4t' '-march=armv4t' '-dumpdir' 'CMakeFiles/cmTC_b9bf1.dir/']
+        ignore line: [ /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../libexec/gcc/arm-none-eabi/13.2.1/cc1 -quiet -v -iprefix /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/ -isysroot /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../arm-none-eabi -D__USES_INITFINI__ /usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles/cmTC_b9bf1.dir/ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mcpu=arm7tdmi -mfloat-abi=soft -marm -mlibarch=armv4t -march=armv4t -version -o /var/folders/04/zhfk9x6555zfv0zwsp8rwr280000gn/T//ccTZ2oEl.s]
+        ignore line: [GNU C17 (Arm GNU Toolchain 13.2.rel1 (Build arm-13.7)) version 13.2.1 20231009 (arm-none-eabi)]
+        ignore line: [	compiled by GNU C version Apple LLVM 13.0.0 (clang-1300.0.29.30)  GMP version 6.2.1  MPFR version 3.1.6  MPC version 1.0.3  isl version isl-0.15-1-g835ea3a-GMP]
+        ignore line: []
+        ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+        ignore line: [ignoring duplicate directory "/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/../../lib/gcc/arm-none-eabi/13.2.1/include"]
+        ignore line: [ignoring nonexistent directory "/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../arm-none-eabi/usr/local/include"]
+        ignore line: [ignoring duplicate directory "/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/../../lib/gcc/arm-none-eabi/13.2.1/include-fixed"]
+        ignore line: [ignoring duplicate directory "/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/../../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/include"]
+        ignore line: [ignoring duplicate directory "/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../arm-none-eabi/include"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/include]
+        ignore line: [ /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/include-fixed]
+        ignore line: [ /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/include]
+        ignore line: [End of search list.]
+        ignore line: [Compiler executable checksum: 0824ce55b5209f9339d589ef57403827]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_b9bf1.dir/CMakeCCompilerABI.c.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-mlibarch=armv4t' '-march=armv4t' '-dumpdir' 'CMakeFiles/cmTC_b9bf1.dir/']
+        ignore line: [ /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/bin/as -v -march=armv4t -mfloat-abi=soft -meabi=5 -o CMakeFiles/cmTC_b9bf1.dir/CMakeCCompilerABI.c.obj /var/folders/04/zhfk9x6555zfv0zwsp8rwr280000gn/T//ccTZ2oEl.s]
+        ignore line: [GNU assembler version 2.41.0 (arm-none-eabi) using BFD version (Arm GNU Toolchain 13.2.rel1 (Build arm-13.7)) 2.41.0.20231009]
+        ignore line: [COMPILER_PATH=/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../libexec/gcc/arm-none-eabi/13.2.1/:/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../libexec/gcc/:/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/bin/]
+        ignore line: [LIBRARY_PATH=/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/:/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/:/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/lib/:/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../arm-none-eabi/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_b9bf1.dir/CMakeCCompilerABI.c.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-mlibarch=armv4t' '-march=armv4t' '-dumpdir' 'CMakeFiles/cmTC_b9bf1.dir/CMakeCCompilerABI.c.']
+        ignore line: [Linking C static library libcmTC_b9bf1.a]
+        ignore line: [/usr/local/Cellar/cmake/3.27.1/bin/cmake -P CMakeFiles/cmTC_b9bf1.dir/cmake_clean_target.cmake]
+        ignore line: [/usr/local/Cellar/cmake/3.27.1/bin/cmake -E cmake_link_script CMakeFiles/cmTC_b9bf1.dir/link.txt --verbose=1]
+        ignore line: [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/arm-none-eabi-ar qc libcmTC_b9bf1.a CMakeFiles/cmTC_b9bf1.dir/CMakeCCompilerABI.c.obj]
+        ignore line: [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/arm-none-eabi-ranlib libcmTC_b9bf1.a]
+        ignore line: []
+        ignore line: []
+        implicit libs: []
+        implicit objs: []
+        implicit dirs: []
+        implicit fwks: []
+      
+      
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:57 (try_compile)"
+      - "/usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:54 (project)"
+    checks:
+      - "Detecting CXX compiler ABI info"
+    directories:
+      source: "/Users/sandro.bottoni/Projects/Experiment/inav/build/CMakeFiles/CMakeScratch/TryCompile-LoG63R"
+      binary: "/Users/sandro.bottoni/Projects/Experiment/inav/build/CMakeFiles/CMakeScratch/TryCompile-LoG63R"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-Og -g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/sandro.bottoni/Projects/Experiment/inav/cmake"
+    buildResult:
+      variable: "CMAKE_CXX_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/sandro.bottoni/Projects/Experiment/inav/build/CMakeFiles/CMakeScratch/TryCompile-LoG63R'
+        
+        Run Build Command(s): /usr/local/Cellar/cmake/3.27.1/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_82ee7/fast
+        /Applications/Xcode.app/Contents/Developer/usr/bin/make  -f CMakeFiles/cmTC_82ee7.dir/build.make CMakeFiles/cmTC_82ee7.dir/build
+        Building CXX object CMakeFiles/cmTC_82ee7.dir/CMakeCXXCompilerABI.cpp.obj
+        /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/arm-none-eabi-g++   -v -o CMakeFiles/cmTC_82ee7.dir/CMakeCXXCompilerABI.cpp.obj -c /usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeCXXCompilerABI.cpp
+        Using built-in specs.
+        COLLECT_GCC=/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/arm-none-eabi-g++
+        Target: arm-none-eabi
+        Configured with: /Volumes/data/jenkins/workspace/GNU-toolchain/arm-13/src/gcc/configure --target=arm-none-eabi --prefix=/Volumes/data/jenkins/workspace/GNU-toolchain/arm-13/build-arm-none-eabi/install --with-gmp=/Volumes/data/jenkins/workspace/GNU-toolchain/arm-13/build-arm-none-eabi/host-tools --with-mpfr=/Volumes/data/jenkins/workspace/GNU-toolchain/arm-13/build-arm-none-eabi/host-tools --with-mpc=/Volumes/data/jenkins/workspace/GNU-toolchain/arm-13/build-arm-none-eabi/host-tools --with-isl=/Volumes/data/jenkins/workspace/GNU-toolchain/arm-13/build-arm-none-eabi/host-tools --disable-shared --disable-nls --disable-threads --disable-tls --enable-checking=release --enable-languages=c,c++,fortran --with-newlib --with-gnu-as --with-headers=yes --with-gnu-ld --with-native-system-header-dir=/include --with-sysroot=/Volumes/data/jenkins/workspace/GNU-toolchain/arm-13/build-arm-none-eabi/install/arm-none-eabi --with-multilib-list=aprofile,rmprofile --with-pkgversion='Arm GNU Toolchain 13.2.rel1 (Build arm-13.7)' --with-bugurl=https://bugs.linaro.org/
+        Thread model: single
+        Supported LTO compression algorithms: zlib
+        gcc version 13.2.1 20231009 (Arm GNU Toolchain 13.2.rel1 (Build arm-13.7)) 
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_82ee7.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-mlibarch=armv4t' '-march=armv4t' '-dumpdir' 'CMakeFiles/cmTC_82ee7.dir/'
+         /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../libexec/gcc/arm-none-eabi/13.2.1/cc1plus -quiet -v -iprefix /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/ -isysroot /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../arm-none-eabi -D__USES_INITFINI__ /usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_82ee7.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mcpu=arm7tdmi -mfloat-abi=soft -marm -mlibarch=armv4t -march=armv4t -version -o /var/folders/04/zhfk9x6555zfv0zwsp8rwr280000gn/T//cc9xOJDT.s
+        GNU C++17 (Arm GNU Toolchain 13.2.rel1 (Build arm-13.7)) version 13.2.1 20231009 (arm-none-eabi)
+        	compiled by GNU C version Apple LLVM 13.0.0 (clang-1300.0.29.30), GMP version 6.2.1, MPFR version 3.1.6, MPC version 1.0.3, isl version isl-0.15-1-g835ea3a-GMP
+        
+        GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+        ignoring duplicate directory "/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/../../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/include/c++/13.2.1"
+        ignoring duplicate directory "/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/../../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/include/c++/13.2.1/arm-none-eabi"
+        ignoring duplicate directory "/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/../../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/include/c++/13.2.1/backward"
+        ignoring duplicate directory "/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/../../lib/gcc/arm-none-eabi/13.2.1/include"
+        ignoring nonexistent directory "/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../arm-none-eabi/usr/local/include"
+        ignoring duplicate directory "/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/../../lib/gcc/arm-none-eabi/13.2.1/include-fixed"
+        ignoring duplicate directory "/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/../../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/include"
+        ignoring duplicate directory "/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../arm-none-eabi/include"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/include/c++/13.2.1
+         /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/include/c++/13.2.1/arm-none-eabi
+         /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/include/c++/13.2.1/backward
+         /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/include
+         /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/include-fixed
+         /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/include
+        End of search list.
+        Compiler executable checksum: d47fcb070ee5b2b70fb4a82a239aa10f
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_82ee7.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-mlibarch=armv4t' '-march=armv4t' '-dumpdir' 'CMakeFiles/cmTC_82ee7.dir/'
+         /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/bin/as -v -march=armv4t -mfloat-abi=soft -meabi=5 -o CMakeFiles/cmTC_82ee7.dir/CMakeCXXCompilerABI.cpp.obj /var/folders/04/zhfk9x6555zfv0zwsp8rwr280000gn/T//cc9xOJDT.s
+        GNU assembler version 2.41.0 (arm-none-eabi) using BFD version (Arm GNU Toolchain 13.2.rel1 (Build arm-13.7)) 2.41.0.20231009
+        COMPILER_PATH=/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../libexec/gcc/arm-none-eabi/13.2.1/:/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../libexec/gcc/:/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/bin/
+        LIBRARY_PATH=/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/:/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/:/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/lib/:/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../arm-none-eabi/lib/
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_82ee7.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-mlibarch=armv4t' '-march=armv4t' '-dumpdir' 'CMakeFiles/cmTC_82ee7.dir/CMakeCXXCompilerABI.cpp.'
+        Linking CXX static library libcmTC_82ee7.a
+        /usr/local/Cellar/cmake/3.27.1/bin/cmake -P CMakeFiles/cmTC_82ee7.dir/cmake_clean_target.cmake
+        /usr/local/Cellar/cmake/3.27.1/bin/cmake -E cmake_link_script CMakeFiles/cmTC_82ee7.dir/link.txt --verbose=1
+        /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/arm-none-eabi-ar qc libcmTC_82ee7.a CMakeFiles/cmTC_82ee7.dir/CMakeCXXCompilerABI.cpp.obj
+        /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/arm-none-eabi-ranlib libcmTC_82ee7.a
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:127 (message)"
+      - "/usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:54 (project)"
+    message: |
+      Parsed CXX implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/include/c++/13.2.1]
+          add: [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/include/c++/13.2.1/arm-none-eabi]
+          add: [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/include/c++/13.2.1/backward]
+          add: [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/include]
+          add: [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/include-fixed]
+          add: [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/include]
+        end of search list found
+        collapse include dir [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/include/c++/13.2.1] ==> [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/arm-none-eabi/include/c++/13.2.1]
+        collapse include dir [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/include/c++/13.2.1/arm-none-eabi] ==> [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/arm-none-eabi/include/c++/13.2.1/arm-none-eabi]
+        collapse include dir [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/include/c++/13.2.1/backward] ==> [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/arm-none-eabi/include/c++/13.2.1/backward]
+        collapse include dir [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/include] ==> [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/lib/gcc/arm-none-eabi/13.2.1/include]
+        collapse include dir [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/include-fixed] ==> [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/lib/gcc/arm-none-eabi/13.2.1/include-fixed]
+        collapse include dir [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/include] ==> [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/arm-none-eabi/include]
+        implicit include dirs: [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/arm-none-eabi/include/c++/13.2.1;/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/arm-none-eabi/include/c++/13.2.1/arm-none-eabi;/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/arm-none-eabi/include/c++/13.2.1/backward;/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/lib/gcc/arm-none-eabi/13.2.1/include;/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/lib/gcc/arm-none-eabi/13.2.1/include-fixed;/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/arm-none-eabi/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:152 (message)"
+      - "/usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:54 (project)"
+    message: |
+      Parsed CXX implicit link information:
+        link line regex: [^( *|.*[/\\])(arm-none-eabi-ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        ignore line: [Change Dir: '/Users/sandro.bottoni/Projects/Experiment/inav/build/CMakeFiles/CMakeScratch/TryCompile-LoG63R']
+        ignore line: []
+        ignore line: [Run Build Command(s): /usr/local/Cellar/cmake/3.27.1/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_82ee7/fast]
+        ignore line: [/Applications/Xcode.app/Contents/Developer/usr/bin/make  -f CMakeFiles/cmTC_82ee7.dir/build.make CMakeFiles/cmTC_82ee7.dir/build]
+        ignore line: [Building CXX object CMakeFiles/cmTC_82ee7.dir/CMakeCXXCompilerABI.cpp.obj]
+        ignore line: [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/arm-none-eabi-g++   -v -o CMakeFiles/cmTC_82ee7.dir/CMakeCXXCompilerABI.cpp.obj -c /usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeCXXCompilerABI.cpp]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/arm-none-eabi-g++]
+        ignore line: [Target: arm-none-eabi]
+        ignore line: [Configured with: /Volumes/data/jenkins/workspace/GNU-toolchain/arm-13/src/gcc/configure --target=arm-none-eabi --prefix=/Volumes/data/jenkins/workspace/GNU-toolchain/arm-13/build-arm-none-eabi/install --with-gmp=/Volumes/data/jenkins/workspace/GNU-toolchain/arm-13/build-arm-none-eabi/host-tools --with-mpfr=/Volumes/data/jenkins/workspace/GNU-toolchain/arm-13/build-arm-none-eabi/host-tools --with-mpc=/Volumes/data/jenkins/workspace/GNU-toolchain/arm-13/build-arm-none-eabi/host-tools --with-isl=/Volumes/data/jenkins/workspace/GNU-toolchain/arm-13/build-arm-none-eabi/host-tools --disable-shared --disable-nls --disable-threads --disable-tls --enable-checking=release --enable-languages=c,c++,fortran --with-newlib --with-gnu-as --with-headers=yes --with-gnu-ld --with-native-system-header-dir=/include --with-sysroot=/Volumes/data/jenkins/workspace/GNU-toolchain/arm-13/build-arm-none-eabi/install/arm-none-eabi --with-multilib-list=aprofile,rmprofile --with-pkgversion='Arm GNU Toolchain 13.2.rel1 (Build arm-13.7)' --with-bugurl=https://bugs.linaro.org/]
+        ignore line: [Thread model: single]
+        ignore line: [Supported LTO compression algorithms: zlib]
+        ignore line: [gcc version 13.2.1 20231009 (Arm GNU Toolchain 13.2.rel1 (Build arm-13.7)) ]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_82ee7.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-mlibarch=armv4t' '-march=armv4t' '-dumpdir' 'CMakeFiles/cmTC_82ee7.dir/']
+        ignore line: [ /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../libexec/gcc/arm-none-eabi/13.2.1/cc1plus -quiet -v -iprefix /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/ -isysroot /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../arm-none-eabi -D__USES_INITFINI__ /usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_82ee7.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mcpu=arm7tdmi -mfloat-abi=soft -marm -mlibarch=armv4t -march=armv4t -version -o /var/folders/04/zhfk9x6555zfv0zwsp8rwr280000gn/T//cc9xOJDT.s]
+        ignore line: [GNU C++17 (Arm GNU Toolchain 13.2.rel1 (Build arm-13.7)) version 13.2.1 20231009 (arm-none-eabi)]
+        ignore line: [	compiled by GNU C version Apple LLVM 13.0.0 (clang-1300.0.29.30)  GMP version 6.2.1  MPFR version 3.1.6  MPC version 1.0.3  isl version isl-0.15-1-g835ea3a-GMP]
+        ignore line: []
+        ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+        ignore line: [ignoring duplicate directory "/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/../../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/include/c++/13.2.1"]
+        ignore line: [ignoring duplicate directory "/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/../../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/include/c++/13.2.1/arm-none-eabi"]
+        ignore line: [ignoring duplicate directory "/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/../../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/include/c++/13.2.1/backward"]
+        ignore line: [ignoring duplicate directory "/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/../../lib/gcc/arm-none-eabi/13.2.1/include"]
+        ignore line: [ignoring nonexistent directory "/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../arm-none-eabi/usr/local/include"]
+        ignore line: [ignoring duplicate directory "/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/../../lib/gcc/arm-none-eabi/13.2.1/include-fixed"]
+        ignore line: [ignoring duplicate directory "/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/../../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/include"]
+        ignore line: [ignoring duplicate directory "/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../arm-none-eabi/include"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/include/c++/13.2.1]
+        ignore line: [ /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/include/c++/13.2.1/arm-none-eabi]
+        ignore line: [ /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/include/c++/13.2.1/backward]
+        ignore line: [ /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/include]
+        ignore line: [ /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/include-fixed]
+        ignore line: [ /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/include]
+        ignore line: [End of search list.]
+        ignore line: [Compiler executable checksum: d47fcb070ee5b2b70fb4a82a239aa10f]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_82ee7.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-mlibarch=armv4t' '-march=armv4t' '-dumpdir' 'CMakeFiles/cmTC_82ee7.dir/']
+        ignore line: [ /Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/bin/as -v -march=armv4t -mfloat-abi=soft -meabi=5 -o CMakeFiles/cmTC_82ee7.dir/CMakeCXXCompilerABI.cpp.obj /var/folders/04/zhfk9x6555zfv0zwsp8rwr280000gn/T//cc9xOJDT.s]
+        ignore line: [GNU assembler version 2.41.0 (arm-none-eabi) using BFD version (Arm GNU Toolchain 13.2.rel1 (Build arm-13.7)) 2.41.0.20231009]
+        ignore line: [COMPILER_PATH=/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../libexec/gcc/arm-none-eabi/13.2.1/:/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../libexec/gcc/:/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/bin/]
+        ignore line: [LIBRARY_PATH=/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/:/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/:/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/lib/:/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/../arm-none-eabi/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_82ee7.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-mlibarch=armv4t' '-march=armv4t' '-dumpdir' 'CMakeFiles/cmTC_82ee7.dir/CMakeCXXCompilerABI.cpp.']
+        ignore line: [Linking CXX static library libcmTC_82ee7.a]
+        ignore line: [/usr/local/Cellar/cmake/3.27.1/bin/cmake -P CMakeFiles/cmTC_82ee7.dir/cmake_clean_target.cmake]
+        ignore line: [/usr/local/Cellar/cmake/3.27.1/bin/cmake -E cmake_link_script CMakeFiles/cmTC_82ee7.dir/link.txt --verbose=1]
+        ignore line: [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/arm-none-eabi-ar qc libcmTC_82ee7.a CMakeFiles/cmTC_82ee7.dir/CMakeCXXCompilerABI.cpp.obj]
+        ignore line: [/Users/sandro.bottoni/Projects/Experiment/inav/tools/arm-gnu-toolchain-13.2.rel1/bin/arm-none-eabi-ranlib libcmTC_82ee7.a]
+        ignore line: []
+        ignore line: []
+        implicit libs: []
+        implicit objs: []
+        implicit dirs: []
+        implicit fwks: []
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeDetermineCompilerId.cmake:1107 (message)"
+      - "/usr/local/Cellar/cmake/3.27.1/share/cmake/Modules/CMakeDetermineASMCompiler.cmake:127 (CMAKE_DETERMINE_COMPILER_ID_VENDOR)"
+      - "CMakeLists.txt:56 (enable_language)"
+    message: |
+      Checking whether the ASM compiler is GNU using "--version" matched "(GNU assembler)|(GCC)|(Free Software Foundation)":
+      arm-none-eabi-gcc (Arm GNU Toolchain 13.2.rel1 (Build arm-13.7)) 13.2.1 20231009
+      Copyright (C) 2023 Free Software Foundation, Inc.
+      This is free software; see the source for copying conditions.  There is NO
+      warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+      
+...

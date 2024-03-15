@@ -45,6 +45,7 @@
 
 #include "build/debug.h"
 
+
 typedef struct SD_Handle_s
 {
     uint32_t          CSD[4];           // SD card specific data table
@@ -147,47 +148,6 @@ void sdioPinConfigure(void)
 }
 
 #define IOCFG_SDMMC       IO_CONFIG(GPIO_MODE_AF_PP, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_NOPULL)
-
-void HAL_SD_MspInit(SD_HandleTypeDef* hsd)
-{
-    UNUSED(hsd);
-
-    if (!sdioHardware) {
-        return;
-    }
-
-    if (sdioHardware->instance == SDMMC1) {
-        __HAL_RCC_SDMMC1_CLK_DISABLE();
-        __HAL_RCC_SDMMC1_FORCE_RESET();
-        __HAL_RCC_SDMMC1_RELEASE_RESET();
-        __HAL_RCC_SDMMC1_CLK_ENABLE();
-    } else if (sdioHardware->instance == SDMMC2) {
-        __HAL_RCC_SDMMC2_CLK_DISABLE();
-        __HAL_RCC_SDMMC2_FORCE_RESET();
-        __HAL_RCC_SDMMC2_RELEASE_RESET();
-        __HAL_RCC_SDMMC2_CLK_ENABLE();
-    }
-
-    const IO_t clk = IOGetByTag(sdioPin[SDIO_PIN_CK].pin);
-    const IO_t cmd = IOGetByTag(sdioPin[SDIO_PIN_CMD].pin);
-    const IO_t d0 = IOGetByTag(sdioPin[SDIO_PIN_D0].pin);
-    const IO_t d1 = IOGetByTag(sdioPin[SDIO_PIN_D1].pin);
-    const IO_t d2 = IOGetByTag(sdioPin[SDIO_PIN_D2].pin);
-    const IO_t d3 = IOGetByTag(sdioPin[SDIO_PIN_D3].pin);
-
-    IOConfigGPIOAF(clk, IOCFG_SDMMC, sdioPin[SDIO_PIN_CK].af);
-    IOConfigGPIOAF(cmd, IOCFG_SDMMC, sdioPin[SDIO_PIN_CMD].af);
-    IOConfigGPIOAF(d0, IOCFG_SDMMC, sdioPin[SDIO_PIN_D0].af);
-
-#ifdef SDCARD_SDIO_4BIT
-    IOConfigGPIOAF(d1, IOCFG_SDMMC, sdioPin[SDIO_PIN_D1].af);
-    IOConfigGPIOAF(d2, IOCFG_SDMMC, sdioPin[SDIO_PIN_D2].af);
-    IOConfigGPIOAF(d3, IOCFG_SDMMC, sdioPin[SDIO_PIN_D3].af);
-#endif
-
-    HAL_NVIC_SetPriority(sdioHardware->irqn, 0, 0);
-    HAL_NVIC_EnableIRQ(sdioHardware->irqn);
-}
 
 void SDIO_GPIO_Init(void)
 {

@@ -32,6 +32,7 @@ typedef enum {
     PITOT_FAKE = 5,
     PITOT_MSP = 6,
     PITOT_DLVR = 7,
+    PITOT_DLHR30G = 8,
 } pitotSensor_e;
 
 #define PITOT_MAX  PITOT_FAKE
@@ -48,6 +49,7 @@ PG_DECLARE(pitotmeterConfig_t, pitotmeterConfig);
 typedef struct pito_s {
     pitotDev_t dev;
     float airSpeed;
+    float airSpeedAux;
 
     zeroCalibrationScalar_t zeroCalibration;
     pt1Filter_t lpfState;

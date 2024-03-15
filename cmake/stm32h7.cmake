@@ -1,3 +1,4 @@
+include(CMakePrintHelpers)
 include(cortex-m7)
 include(stm32h7-usb)
 
@@ -197,6 +198,28 @@ function(target_stm32h7xx)
     )
 endfunction()
 
+function(target_stm32h7ii)
+    target_stm32(
+        SOURCES ${STM32H7_HAL_SRC} ${STM32H7_SRC}
+        COMPILE_DEFINITIONS ${STM32H7_DEFINITIONS}
+        COMPILE_OPTIONS ${CORTEX_M7_COMMON_OPTIONS} ${CORTEX_M7_COMPILE_OPTIONS}
+        INCLUDE_DIRECTORIES ${STM32H7_INCLUDE_DIRS}
+        LINK_OPTIONS ${CORTEX_M7_COMMON_OPTIONS} ${CORTEX_M7_LINK_OPTIONS}
+
+        MSC_SOURCES ${STM32H7_USBMSC_SRC} ${STM32H7_MSC_SRC}
+        VCP_SOURCES ${STM32H7_USB_SRC} ${STM32H7_VCP_SRC}
+        VCP_INCLUDE_DIRECTORIES ${STM32H7_USB_INCLUDE_DIRS} ${STM32H7_VCP_DIR}
+
+        OPTIMIZATION -O2
+
+        OPENOCD_TARGET stm32h7x
+
+#        BOOTLOADER
+
+        ${ARGN}
+    )
+endfunction()
+
 macro(define_target_stm32h7 subfamily size)
     function(target_stm32h7${subfamily}x${size} name)
         set(func_ARGV ARGV)
@@ -218,6 +241,25 @@ macro(define_target_stm32h7 subfamily size)
             ${${func_ARGV}}
         )
     endfunction()
+
+    function(target_stm32h7${subfamily}ii name)
+        set(func_ARGV ARGV)
+        set(definitions
+            STM32H7
+            STM32H743iixt
+            STM32H7${subfamily}xx
+            MCU_FLASH_SIZE=2048
+        )
+        target_stm32h7xx(
+            NAME ${name}
+            STARTUP startup_stm32h7${subfamily}xx.s
+            COMPILE_DEFINITIONS ${definitions}
+            LINKER_SCRIPT stm32_flash_h7${subfamily}ii
+            ${${func_ARGV}}
+        )
+    endfunction()
 endmacro()
 
 define_target_stm32h7(43 i)
+define_target_stm32h7(43 ii)
+

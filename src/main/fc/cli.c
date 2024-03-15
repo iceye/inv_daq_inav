@@ -3521,7 +3521,7 @@ static void cliStatus(char *cmdline)
 
     cliPrintLinef("I2C Errors: %d, config size: %d, max available config: %d", i2cErrorCounter, getEEPROMConfigSize(), &__config_end - &__config_start);
 #endif
-#if defined(USE_ADC) && !defined(SITL_BUILD)
+#if definde USE_ADC && !defined USE_INNOVAVIONICS_ADC
     static char * adcFunctions[] = { "BATTERY", "RSSI", "CURRENT", "AIRSPEED" };
     cliPrintLine("ADC channel usage:");
     for (int i = 0; i < ADC_FUNCTION_COUNT; i++) {

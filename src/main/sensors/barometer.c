@@ -19,6 +19,10 @@
 #include <stdint.h>
 #include <math.h>
 
+#ifdef STM32IDE
+#include "target.h"
+#endif
+
 #include "platform.h"
 #include "build/debug.h"
 
@@ -36,6 +40,7 @@
 #include "drivers/barometer/barometer_bmp280.h"
 #include "drivers/barometer/barometer_bmp388.h"
 #include "drivers/barometer/barometer_lps25h.h"
+#include "drivers/barometer/barometer_lps33w.h"
 #include "drivers/barometer/barometer_fake.h"
 #include "drivers/barometer/barometer_ms56xx.h"
 #include "drivers/barometer/barometer_spl06.h"
@@ -49,6 +54,7 @@
 
 #include "sensors/barometer.h"
 #include "sensors/sensors.h"
+#include "innovavionics/inv_data.h"
 
 #ifdef USE_HARDWARE_REVISION_DETECTION
 #include "hardware_revision.h"
@@ -194,6 +200,18 @@ bool baroDetect(baroDev_t *dev, baroSensor_e baroHardwareToUse)
             break;
         }
         FALLTHROUGH;
+    case BARO_LPS33W:
+#if defined(USE_BARO_LPS33W)
+        if (lps33wDetect(dev)) {
+            baroHardware = BARO_LPS33W;
+            break;
+        }
+#endif
+        /* If we are asked for a specific sensor - break out, otherwise - fall through and continue */
+        if (baroHardwareToUse != BARO_AUTODETECT) {
+            break;
+        }
+        FALLTHROUGH;
 
     case BARO_MSP:
 #ifdef USE_BARO_MSP
@@ -288,10 +306,20 @@ uint32_t baroUpdate(void)
     }
 }
 
+
+/* Calculate barometric altitude from pressure and QNH, do not use temp/humidity compensation
+ * to calculate a value similar to an altimeter reading.
+ *  */
+static float pressureToAltitudeQNH(float pressure, uint32_t QNH ) {
+	return (1.0f - powf(pressure / ((float)QNH), 0.190295f)) * 4433000.0f;
+}
+
+
 static float pressureToAltitude(const float pressure)
 {
-    return (1.0f - powf(pressure / 101325.0f, 0.190295f)) * 4433000.0f;
+    return pressureToAltitudeQNH(pressure, 101325 );
 }
+
 
 float altitudeToPressure(const float altCm)
 {
@@ -325,8 +353,11 @@ int32_t baroCalculateAltitude(void)
     else {
         // calculates height from ground via baro readings
         baro.BaroAlt = pressureToAltitude(baro.baroPressure) - baroGroundAltitude;
+        //baro.BaroAltQnh = pressureToAltitudeQNH(baro.baroPressure, invDataGetUInt(INV_QNH));
    }
 
+    //invDataStoreValUInt(INV_ALTITUDE, baro.BaroAltQnh);
+    //invDataStoreValUInt(INV_STATIC_PRESSURE, baro.baroPressure);
     return baro.BaroAlt;
 }
 

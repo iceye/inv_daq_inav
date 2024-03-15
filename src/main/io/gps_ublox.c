@@ -22,6 +22,7 @@
 #include <string.h>
 #include <math.h>
 #include <stdarg.h>
+#include "stm32h7xx_hal.h"
 
 #include "platform.h"
 #include "build/build_config.h"
@@ -52,6 +53,8 @@
 
 #include "gps_ublox.h"
 #include "gps_ublox_utils.h"
+
+
 
 
 // SBAS_AUTO, SBAS_EGNOS, SBAS_WAAS, SBAS_MSAS, SBAS_GAGAN, SBAS_NONE
@@ -792,6 +795,9 @@ STATIC_PROTOTHREAD(gpsConfigure)
 {
     ptBegin(gpsConfigure);
 
+    //IOHi(GPS_RESET_PIN);
+
+
     // Reset timeout
     gpsSetProtocolTimeout(GPS_SHORT_TIMEOUT);
 
@@ -998,6 +1004,7 @@ STATIC_PROTOTHREAD(gpsProtocolReceiverThread)
 
 STATIC_PROTOTHREAD(gpsProtocolStateThread)
 {
+
     ptBegin(gpsProtocolStateThread);
 
     // Change baud rate
@@ -1063,7 +1070,6 @@ STATIC_PROTOTHREAD(gpsProtocolStateThread)
         // Configure GPS
         ptSpawn(gpsConfigure);
     }
-
     // GPS setup done, reset timeout
     gpsSetProtocolTimeout(gpsState.baseTimeoutMs);
 
@@ -1097,6 +1103,8 @@ void gpsRestartUBLOX(void)
     ptRestart(ptGetHandle(gpsProtocolReceiverThread));
     ptRestart(ptGetHandle(gpsProtocolStateThread));
 }
+
+
 
 void gpsHandleUBLOX(void)
 {

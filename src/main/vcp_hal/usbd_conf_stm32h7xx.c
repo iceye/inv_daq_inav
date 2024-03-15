@@ -1,3 +1,5 @@
+#ifndef STM32IDE
+
 /**
  * usbd_conf.c adopted from
  * STM32Cube_FW_H7_V1.3.0/Projects/STM32H743I_EVAL/Applications/USB_Device/CDC_Standalone
@@ -375,7 +377,7 @@ USBD_StatusTypeDef USBD_LL_Init(USBD_HandleTypeDef * pdev)
     hpcd.Instance = USB2_OTG_FS;
     hpcd.Init.dev_endpoints = 9;
     hpcd.Init.use_dedicated_ep1 = DISABLE;
-    hpcd.Init.ep0_mps = DEP0CTL_MPS_64;
+    hpcd.Init.ep0_mps = EP_MPS_64;
     hpcd.Init.low_power_enable = DISABLE;
     hpcd.Init.phy_itface = PCD_PHY_EMBEDDED;
     hpcd.Init.Sof_enable = DISABLE;
@@ -590,16 +592,17 @@ USBD_StatusTypeDef USBD_LL_SetUSBAddress(USBD_HandleTypeDef * pdev,
  * @param  size: Data size
  * @retval USBD Status
  */
+/*
 USBD_StatusTypeDef USBD_LL_Transmit(USBD_HandleTypeDef * pdev,
         uint8_t ep_addr,
         uint8_t * pbuf, uint16_t size)
 {
-    /* Get the packet total length */
+    / * Get the packet total length * /
     pdev->ep_in[ep_addr & 0x7F].total_length = size;
 
     HAL_PCD_EP_Transmit(pdev->pData, ep_addr, pbuf, size);
     return USBD_OK;
-}
+}*/
 
 /**
  * @brief  Prepares an endpoint for reception.
@@ -609,13 +612,14 @@ USBD_StatusTypeDef USBD_LL_Transmit(USBD_HandleTypeDef * pdev,
  * @param  size: Data size
  * @retval USBD Status
  */
+/*
 USBD_StatusTypeDef USBD_LL_PrepareReceive(USBD_HandleTypeDef * pdev,
         uint8_t ep_addr,
         uint8_t * pbuf, uint16_t size)
 {
     HAL_PCD_EP_Receive(pdev->pData, ep_addr, pbuf, size);
     return USBD_OK;
-}
+}*/
 
 /**
  * @brief  Returns the last transferred packet size.
@@ -639,3 +643,5 @@ void USBD_LL_Delay(uint32_t Delay)
 }
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
+#endif

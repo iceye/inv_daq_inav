@@ -16,7 +16,7 @@
  */
 
 #include <string.h>
-#include <dirent.h>
+//#include <dirent.h>
 #include "platform.h"
 #include "drivers/system.h"
 #include "config/config_streamer.h"

@@ -13,5 +13,12 @@
     "editor.insertSpaces": true,
     "editor.detectIndentation": false,
     "editor.expandTabs": true,
-    "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: Google, IndentWidth: 4,  BreakBeforeBraces: Mozilla }"
+    "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: Google, IndentWidth: 4,  BreakBeforeBraces: Mozilla }",
+    "cortex-debug.armToolchainPath": "${workspaceRoot}/tools/arm-gnu-toolchain-13.2.rel1/bin",
+    "openocd.host": "192.168.1.47",
+    "openocd.path": "/usr/local/bin/openocd",
+    "inav.debug.svdFile": "STM32H743.svd",
+    "inav.debug.target": "INNOVAVIONICSH743_3_1_1",
+    "inav.release.target": "INNOVAVIONICSH743_3_1_1",
+    "inav.debug.board": "h7fc.cfg"
 }

@@ -25,6 +25,8 @@
 #include "sensors/pitotmeter.h"
 #include "sensors/opflow.h"
 
+#include "innovavionics/inv_data.h"
+
 extern uint8_t requestedSensors[SENSOR_INDEX_COUNT];
 extern uint8_t detectedSensors[SENSOR_INDEX_COUNT];
 
@@ -233,31 +235,56 @@ bool isHardwareHealthy(void)
     const hardwareSensorStatus_e pitotStatus = getHwPitotmeterStatus();
     const hardwareSensorStatus_e gpsStatus = getHwGPSStatus();
     const hardwareSensorStatus_e opflowStatus = getHwOpticalFlowStatus();
-
+    bool result = true;
     // Sensor is considered failing if it's either unavailable (selected but not detected) or unhealthy (returning invalid readings)
-    if (gyroStatus == HW_SENSOR_UNAVAILABLE || gyroStatus == HW_SENSOR_UNHEALTHY)
-        return false;
-
-    if (accStatus == HW_SENSOR_UNAVAILABLE || accStatus == HW_SENSOR_UNHEALTHY)
-        return false;
-
-    if (baroStatus == HW_SENSOR_UNAVAILABLE || baroStatus == HW_SENSOR_UNHEALTHY)
-        return false;
-
-    if (magStatus == HW_SENSOR_UNAVAILABLE || magStatus == HW_SENSOR_UNHEALTHY)
-        return false;
-
-    if (rangefinderStatus == HW_SENSOR_UNAVAILABLE || rangefinderStatus == HW_SENSOR_UNHEALTHY)
-        return false;
-
-    if (pitotStatus == HW_SENSOR_UNAVAILABLE || pitotStatus == HW_SENSOR_UNHEALTHY)
-        return false;
-
-    if (gpsStatus == HW_SENSOR_UNAVAILABLE || gpsStatus == HW_SENSOR_UNHEALTHY)
-        return false;
-
-    if (opflowStatus == HW_SENSOR_UNAVAILABLE || opflowStatus == HW_SENSOR_UNHEALTHY)
-        return false;
+    if (gyroStatus == HW_SENSOR_UNAVAILABLE || gyroStatus == HW_SENSOR_UNHEALTHY){
+    	invSetGyroSensorError();
+    	result = false;
+    }
+    else{
+    	invSetGyroSensorHealty();
+    }
+    if (accStatus == HW_SENSOR_UNAVAILABLE || accStatus == HW_SENSOR_UNHEALTHY){
+    	invSetAccSensorError();
+    	result = false;
+    }
+    else{
+    	invSetAccSensorHealty();
+    }
+    if (baroStatus == HW_SENSOR_UNAVAILABLE || baroStatus == HW_SENSOR_UNHEALTHY){
+    	invSetBaroSensorError();
+    	result = false;
+    }
+    else{
+    	invSetBaroSensorHealty();
+    }
+    if (magStatus == HW_SENSOR_UNAVAILABLE || magStatus == HW_SENSOR_UNHEALTHY){
+    	invSetMagSensorError();
+    	result = false;
+    }
+    else{
+    	invSetMagSensorHealty();
+    }
+    if (rangefinderStatus == HW_SENSOR_UNAVAILABLE || rangefinderStatus == HW_SENSOR_UNHEALTHY){
+    	result = false;
+    }
+    if (pitotStatus == HW_SENSOR_UNAVAILABLE || pitotStatus == HW_SENSOR_UNHEALTHY){
+    	invSetPitotSensorError();
+    	result = false;
+    }
+    else{
+    	invSetPitotSensorHealty();
+    }
+    if (gpsStatus == HW_SENSOR_UNAVAILABLE || gpsStatus == HW_SENSOR_UNHEALTHY){
+    	invSetGpsSensorError();
+    	result = false;
+    }
+    else{
+    	invSetGpsSensorHealty();
+    }
+    if (opflowStatus == HW_SENSOR_UNAVAILABLE || opflowStatus == HW_SENSOR_UNHEALTHY){
+    	result = false;
+    }
 
     return true;
 }

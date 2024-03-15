@@ -20,6 +20,8 @@
  * Dominic Clifton - Serial port abstraction, Separation of common STM32 code for cleanflight, various cleanups.
  * Hamasaki/Timecop - Initial baseflight code
 */
+#include "stm32h7xx_hal.h"
+#include "stm32h7xx_hal_usart.h"
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -68,6 +70,41 @@ static void uartReconfigure(uartPort_t *uartPort)
     RCC_PeriphClkInit.Uart7ClockSelection = RCC_UART7CLKSOURCE_SYSCLK;
     RCC_PeriphClkInit.Uart8ClockSelection = RCC_UART8CLKSOURCE_SYSCLK;
     HAL_RCCEx_PeriphCLKConfig(&RCC_PeriphClkInit);*/
+
+	if(uartPort->Handle.Instance == UART5){
+		UART_HandleTypeDef *huart5 = &uartPort->Handle;
+		//huart5.Instance = uart5->Handle->Instance;
+		HAL_UART_DeInit(huart5);
+
+		huart5->Init.BaudRate = 38400;
+		huart5->Init.WordLength = UART_WORDLENGTH_8B;
+		huart5->Init.StopBits = UART_STOPBITS_1;
+		huart5->Init.Parity = UART_PARITY_NONE;
+		huart5->Init.Mode = UART_MODE_TX_RX;
+		huart5->Init.HwFlowCtl = UART_HWCONTROL_NONE;
+		huart5->Init.OverSampling = UART_OVERSAMPLING_16;
+		huart5->Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+		huart5->Init.ClockPrescaler = UART_PRESCALER_DIV1;
+		huart5->AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+		if (HAL_UART_Init(huart5) != HAL_OK)
+		{
+			Error_Handler();
+		}
+		if (HAL_UARTEx_SetTxFifoThreshold(huart5, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
+		{
+			Error_Handler();
+		}
+		if (HAL_UARTEx_SetRxFifoThreshold(huart5, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
+		{
+			Error_Handler();
+		}
+		if (HAL_UARTEx_EnableFifoMode(huart5) != HAL_OK)
+		{
+			Error_Handler();
+		}
+		return;
+	}
+
 
     HAL_UART_DeInit(&uartPort->Handle);
     uartPort->Handle.Init.BaudRate = uartPort->port.baudRate;

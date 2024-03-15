@@ -91,6 +91,9 @@
 
 #include "telemetry/telemetry.h"
 
+#include "innovavionics/inv_adc.h"
+
+
 #include "config/feature.h"
 
 void taskHandleSerial(timeUs_t currentTimeUs)
@@ -130,7 +133,7 @@ void taskUpdateBattery(timeUs_t currentTimeUs)
 #endif
     }
 
-#ifdef USE_ADC
+#if definde USE_ADC && !defined USE_INNOVAVIONICS_ADC
     if (feature(FEATURE_VBAT)) {
         batteryUpdate(BatMonitoringTimeSinceLastServiced);
     }
@@ -138,7 +141,7 @@ void taskUpdateBattery(timeUs_t currentTimeUs)
     if (feature(FEATURE_VBAT) && isAmperageConfigured()) {
         powerMeterUpdate(BatMonitoringTimeSinceLastServiced);
         sagCompensatedVBatUpdate(currentTimeUs, BatMonitoringTimeSinceLastServiced);
-#if defined(USE_POWER_LIMITS) && defined(USE_ADC)
+#if defined(USE_POWER_LIMITS) && (definde(USE_ADC) && !defined(USE_INNOVAVIONICS_ADC))
         powerLimiterUpdate(BatMonitoringTimeSinceLastServiced);
 #endif
     }
@@ -331,6 +334,14 @@ void taskUpdateAux(timeUs_t currentTimeUs)
 #endif
 }
 
+
+#if defined(USE_INNOVAVIONICS_ADC)
+void taskInvAdc(timeUs_t currentTimeUs)
+{
+	invAdcCheckNewData();
+}
+#endif
+
 void fcTasksInit(void)
 {
     schedulerInit();
@@ -417,6 +428,9 @@ void fcTasksInit(void)
 #endif
 #ifdef USE_IRLOCK
     setTaskEnabled(TASK_IRLOCK, irlockHasBeenDetected());
+#endif
+#ifdef USE_INNOVAVIONICS_ADC
+    setTaskEnabled(TASK_INV_ADC, invAdcStart());
 #endif
 #if defined(USE_SMARTPORT_MASTER)
     setTaskEnabled(TASK_SMARTPORT_MASTER, true);
@@ -672,4 +686,12 @@ cfTask_t cfTasks[TASK_COUNT] = {
         .desiredPeriod = TASK_PERIOD_HZ(TASK_AUX_RATE_HZ),          // 100Hz @10ms
         .staticPriority = TASK_PRIORITY_HIGH,
     },
+#ifdef USE_INNOVAVIONICS_ADC
+	[TASK_INV_ADC] = {
+		.taskName = "INV_ADC",
+		.taskFunc = taskInvAdc,
+		.desiredPeriod = TASK_PERIOD_HZ(TASK_INV_ADC_HZ),          // 10Hz @100ms
+		.staticPriority = TASK_PRIORITY_MEDIUM,
+	},
+#endif
 };

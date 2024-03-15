@@ -28,6 +28,8 @@
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __USB_PWR_H
 #define __USB_PWR_H
+#include "stm32h7xx_hal.h"
+
 
 /* Includes ------------------------------------------------------------------*/
 /* Exported types ------------------------------------------------------------*/

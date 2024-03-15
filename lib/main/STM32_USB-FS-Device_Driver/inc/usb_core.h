@@ -29,6 +29,8 @@
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __USB_CORE_H
 #define __USB_CORE_H
+#include <stdint.h>
+#include "stm32h7xx_hal.h"
 
 /* Includes ------------------------------------------------------------------*/
 /* Exported types ------------------------------------------------------------*/

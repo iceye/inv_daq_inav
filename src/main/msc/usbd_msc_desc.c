@@ -25,13 +25,18 @@
   ******************************************************************************
   */
 
+#ifndef STM32IDE
+
 /* Includes ------------------------------------------------------------------*/
+#include <usbd_conf.h>
+#include <usbd_desc.h>
+#include "stm32h7xx_hal.h"
+
 #include "usbd_core.h"
-#include "usbd_desc.h"
-#include "usbd_req.h"
-#include "usbd_conf.h"
+#include "usbd_ioreq.h"
 #include "usb_regs.h"
 #include "platform.h"
+#include "usbd_msc_desc.h"
 
 #define         DEVICE_ID1          (0x1FFFF7E8)
 #define         DEVICE_ID2          (0x1FFFF7EA)
@@ -54,7 +59,13 @@
 /**
   * @}
   */
-
+uint8_t *  USBD_MSC_DeviceDescriptor( uint8_t speed , uint16_t *length);
+uint8_t *  USBD_MSC_LangIDStrDescriptor( uint8_t speed , uint16_t *length);
+uint8_t *  USBD_MSC_ProductStrDescriptor( uint8_t speed , uint16_t *length);
+uint8_t *  USBD_MSC_ManufacturerStrDescriptor( uint8_t speed , uint16_t *length);
+uint8_t *  USBD_MSC_SerialStrDescriptor( uint8_t speed , uint16_t *length);
+uint8_t *  USBD_MSC_ConfigStrDescriptor( uint8_t speed , uint16_t *length);
+uint8_t *  USBD_MSC_InterfaceStrDescriptor( uint8_t speed , uint16_t *length);
 
 /** @defgroup USBD_DESC_Private_Defines
   * @{
@@ -105,10 +116,10 @@ USBD_DEVICE MSC_desc =
   #endif
 #endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
 /* USB Standard Device Descriptor */
-__ALIGN_BEGIN uint8_t USBD_DeviceDesc_MSC[USB_SIZ_DEVICE_DESC] __ALIGN_END =
+__ALIGN_BEGIN uint8_t USBD_DeviceDesc_MSC[USB_LEN_DEV_DESC] __ALIGN_END =
 {
   0x12,                       /*bLength */
-  USB_DEVICE_DESCRIPTOR_TYPE, /*bDescriptorType*/
+  USB_DESC_TYPE_DEVICE, /*bDescriptorType*/
   0x00,                       /*bcdUSB */
   0x02,
   0x00,                       /*bDeviceClass*/
@@ -124,7 +135,7 @@ __ALIGN_BEGIN uint8_t USBD_DeviceDesc_MSC[USB_SIZ_DEVICE_DESC] __ALIGN_END =
   USBD_IDX_MFC_STR,           /*Index of manufacturer  string*/
   USBD_IDX_PRODUCT_STR,       /*Index of product string*/
   USBD_IDX_SERIAL_STR,        /*Index of serial number string*/
-  USBD_CFG_MAX_NUM            /*bNumConfigurations*/
+  USBD_MAX_NUM_CONFIGURATION            /*bNumConfigurations*/
 } ; /* USB_DeviceDescriptor */
 
 #ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED
@@ -153,10 +164,10 @@ __ALIGN_BEGIN uint8_t USBD_DeviceQualifierDesc_MSC[USB_LEN_DEV_QUALIFIER_DESC] _
   #endif
 #endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
 /* USB Standard Device Descriptor */
-__ALIGN_BEGIN uint8_t USBD_LangIDDesc_MSC[USB_SIZ_STRING_LANGID] __ALIGN_END =
+__ALIGN_BEGIN uint8_t USBD_LangIDDesc_MSC[USB_LEN_LANGID_STR_DESC] __ALIGN_END =
 {
-  USB_SIZ_STRING_LANGID,
-  USB_DESC_TYPE_STRING,
+  USB_LEN_LANGID_STR_DESC,
+  USB_LEN_IF_DESC,
   LOBYTE(USBD_LANGID_STRING),
   HIBYTE(USBD_LANGID_STRING),
 };
@@ -172,7 +183,7 @@ uint8_t USBD_StringSerial_MSC[USB_SIZ_STRING_SERIAL] =
     #pragma data_alignment=4
   #endif
 #endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
-__ALIGN_BEGIN uint8_t USBD_StrDesc_MSC[USB_MAX_STR_DESC_SIZ] __ALIGN_END ;
+__ALIGN_BEGIN uint8_t USBD_StrDesc_MSC[USBD_MAX_STR_DESC_SIZ] __ALIGN_END ;
 
 /**
   * @}
@@ -379,5 +390,7 @@ static void IntToUnicode (uint32_t value , uint8_t *pbuf , uint8_t len)
 /**
   * @}
   */
+
+#endif  
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

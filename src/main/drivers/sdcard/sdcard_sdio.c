@@ -343,7 +343,7 @@ static bool sdcardSdio_poll(void)
                     }
                 break;
                 case SDCARD_RECEIVE_BLOCK_IN_PROGRESS:
-                    if (millis() <= sdcard.operationStartTime + SDCARD_TIMEOUT_READ_MSEC) {
+                    if (millis() > sdcard.operationStartTime + SDCARD_TIMEOUT_READ_MSEC) {
                         break; // Timeout not reached yet so keep waiting
                     }
                     // Timeout has expired, so fall through to convert to a fatal error

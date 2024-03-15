@@ -17,6 +17,9 @@
 
 /* Created by jflyper */
 
+#ifndef VTX_COMMON_H
+#define VTX_COMMON_H
+
 #include "common/time.h"
 
 #define VTX_SETTINGS_MIN_BAND       1
@@ -148,3 +151,6 @@ bool vtxCommonGetFrequency(const vtxDevice_t *vtxDevice, uint16_t *pFreq);
 bool vtxCommonGetDeviceCapability(vtxDevice_t *vtxDevice, vtxDeviceCapability_t *pDeviceCapability);
 bool vtxCommonGetPower(const vtxDevice_t *vtxDevice, uint8_t *pIndex, uint16_t *pPowerMw);
 bool vtxCommonGetOsdInfo(vtxDevice_t *vtxDevice, vtxDeviceOsdInfo_t * pOsdInfo);
+
+
+#endif

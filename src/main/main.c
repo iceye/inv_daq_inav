@@ -15,6 +15,10 @@
  * along with Cleanflight.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define TARGET_BOARD_IDENTIFIER
+
+#include "stm32h7xx_hal.h"
+
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -22,10 +26,13 @@
 #include "build/debug.h"
 #include "drivers/serial.h"
 #include "drivers/serial_softserial.h"
+#include <innovavionics/inv_data.h>
+#ifdef STM32IDE
+	#include "target.h"
+	#include "fc/settings.h"
+	#include "config.h"
 
-#include "fc/fc_init.h"
-
-#include "scheduler/scheduler.h"
+#endif
 
 #ifdef SOFTSERIAL_LOOPBACK
 serialPort_t *loopbackPort;
@@ -61,11 +68,24 @@ int main(int argc, char *argv[])
 int main(void)
 {
 #endif
+
+    #ifdef STM32IDE
+
+		targetConfiguration();
+
+	#endif
+	//DEFIO_IO(GPS_RESET_PIN);
     init();
     loopbackInit();
 
+
+
+
     while (true) {
+    	//HAL_GPIO_WritePin(GPIO_PIN_12, GPIOG, GPIO_PIN_SET);
         scheduler();
         processLoopback();
     }
 }
+
+

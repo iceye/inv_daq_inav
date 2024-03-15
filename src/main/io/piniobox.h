@@ -34,11 +34,17 @@
 #define BOX_PERMANENT_ID_NONE       255       // A permanent ID for no box mode
 
 
+#ifndef PINIO_COUNT
+#define PINIO_COUNT 0
+#endif
+
 typedef struct pinioBoxConfig_s {
     uint8_t permanentId[PINIO_COUNT];
 } pinioBoxConfig_t;
 
-PG_DECLARE(pinioBoxConfig_t, pinioBoxConfig);
+#ifdef USE_PINIO_BOX
+	PG_DECLARE(pinioBoxConfig_t, pinioBoxConfig);
+#endif
 
 void pinioBoxInit(void);
 void pinioBoxUpdate(void);

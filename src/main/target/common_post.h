@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include <stdint.h>
+
 // Config storage in memory-mapped flash
 extern uint8_t __config_start;
 extern uint8_t __config_end;

@@ -1,0 +1,18 @@
+{
+    "configurations": [
+        {
+            "showDevDebugOutput": true,
+            "cwd": "${workspaceRoot}",
+            "executable": "./debug/INNOVAVIONICSH743_3_1_1.elf",
+            "name": "Debug INAV INNOVAVIONICSH743_3_1_1.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "preLaunchTask": "Build STM",
+            "device": "stlink",
+            "configFiles": [
+                "board/stm32h7fc.cfg"
+            ]
+        }
+    ]
+}

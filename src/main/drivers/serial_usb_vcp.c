@@ -45,6 +45,7 @@ USBD_HandleTypeDef USBD_Device;
 
 #include "serial.h"
 #include "serial_usb_vcp.h"
+#include <usbd_desc.h>
 
 
 #define USB_TIMEOUT  50
@@ -206,7 +207,7 @@ void usbVcpInitHardware(void)
     IOInit(IOGetByTag(IO_TAG(PA11)), OWNER_USB, RESOURCE_INPUT, 0);
     IOInit(IOGetByTag(IO_TAG(PA12)), OWNER_USB, RESOURCE_OUTPUT, 0);
     /* Init Device Library */
-    USBD_Init(&USBD_Device, &VCP_Desc, 0);
+    USBD_Init(&USBD_Device, &FS_Desc, 0);
 
     /* Add Supported Class */
     USBD_RegisterClass(&USBD_Device, USBD_CDC_CLASS);

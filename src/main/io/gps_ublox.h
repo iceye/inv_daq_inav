@@ -22,6 +22,8 @@
 
 #include "common/time.h"
 
+#include "drivers/io.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -114,6 +116,8 @@ extern "C" {
 #define UBLOX_SBAS_PRN156               0x0000001000000000 //Enable search for SBAS PRN156
 #define UBLOX_SBAS_PRN157               0x0000002000000000 //Enable search for SBAS PRN157
 #define UBLOX_SBAS_PRN158               0x0000004000000000 //Enable search for SBAS PRN158
+
+
 
 // payload types
 typedef struct {
@@ -409,6 +413,7 @@ typedef enum {
 typedef enum {
     NAV_STATUS_FIX_VALID = 1
 } ubx_nav_status_bits_t;
+
 
 uint8_t gpsUbloxMaxGnss(void);
 timeMs_t gpsUbloxCapLastUpdate(void);

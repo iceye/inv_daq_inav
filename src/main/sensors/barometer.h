@@ -24,23 +24,26 @@
 typedef enum {
     BARO_NONE = 0,
     BARO_AUTODETECT = 1,
-    BARO_BMP085 = 2,
-    BARO_MS5611 = 3,
-    BARO_BMP280 = 4,
-    BARO_MS5607 = 5,
-    BARO_LPS25H = 6,
-    BARO_SPL06  = 7,
-    BARO_BMP388 = 8,
-    BARO_DPS310 = 9,
-    BARO_B2SMPB = 10,
-    BARO_MSP    = 11,
-    BARO_FAKE   = 12,
-    BARO_MAX    = BARO_FAKE
+    BARO_BMP085     = 2,
+    BARO_MS5611     = 3,
+    BARO_BMP280     = 4,
+    BARO_MS5607     = 5,
+    BARO_LPS25H     = 6,
+    BARO_SPL06      = 7,
+    BARO_BMP388     = 8,
+    BARO_DPS310     = 9,
+    BARO_B2SMPB     = 10,
+    BARO_LPS33W     = 11,
+    BARO_MSP        = 12,
+    BARO_FAKE       = 13,
+    BARO_MAX        = BARO_FAKE
 } baroSensor_e;
 
 typedef struct baro_s {
     baroDev_t dev;
     int32_t BaroAlt;
+    int32_t BaroAltQnh;
+    int32_t BaroQnh;
     int32_t baroTemperature;            // Use temperature for telemetry
     int32_t baroPressure;               // Use pressure for telemetry
 } baro_t;
