@@ -452,10 +452,14 @@ void gpsPreInit(void)
 
 void gpsInit(void)
 {
-	gpsReset = IOGetByTag(DEFIO_TAG__PG12);
+#ifdef GPS_RESET_PIN
+	gpsReset = IOGetByTag(GPS_RESET_PIN);
 	IOInit(gpsReset, OWNER_SYSTEM, RESOURCE_OUTPUT, RESOURCE_INDEX(20));
 	IOConfigGPIO(gpsReset, GPS_RESET_PIN_CFG);
-
+	delay(10);
+	IOHi(gpsReset);
+	delay(50);
+#endif
 
     gpsState.serialConfig = serialConfig();
     gpsState.gpsConfig = gpsConfig();
@@ -499,12 +503,10 @@ void gpsInit(void)
 
     // Start with the same baud for autodetection
     gpsState.autoBaudrateIndex = gpsState.baudrateIndex;
-
     // Open serial port
     portMode_t mode = gpsProviders[gpsState.gpsConfig->provider].portMode;
     gpsState.gpsPort = openSerialPort(gpsPortConfig->identifier, FUNCTION_GPS, NULL, NULL, baudRates[gpsToSerialBaudRate[gpsState.baudrateIndex]], mode, SERIAL_NOT_INVERTED);
 
-    IOHi(gpsReset);
     // Check if we have a serial port opened
     if (!gpsState.gpsPort) {
         featureClear(FEATURE_GPS);
@@ -527,6 +529,7 @@ uint16_t gpsConstrainHDOP(uint32_t hdop)
 bool gpsUpdate(void)
 {
     // Sanity check
+	IOHi(gpsReset);
     if (!feature(FEATURE_GPS)) {
         sensorsClear(SENSOR_GPS);
         DISABLE_STATE(GPS_FIX);
@@ -556,6 +559,19 @@ bool gpsUpdate(void)
         return res;
     }
 #endif
+
+
+    //gpsState.gpsPort->identifier
+/*    UART5_rxBuffer_count = 0;
+	if (__HAL_UART_GET_FLAG(&gpsState.gpsPort->, UART_FLAG_RXNE) == SET) {
+			while(__HAL_UART_GET_FLAG(&huart5, UART_FLAG_RXNE) == SET && UART5_rxBuffer_count<500){
+			  LED2_TOGGLE();
+			  HAL_UART_Receive(&huart5, (uint8_t *) &UART5_rxBuffer[UART5_rxBuffer_count++], 1, 100000);
+			}
+	}
+	UART5_rxBuffer[UART5_rxBuffer_count] = 0;
+	return UART5_rxBuffer_count;
+*/
 
     switch (gpsState.state) {
     default:

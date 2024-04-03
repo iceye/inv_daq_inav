@@ -147,6 +147,10 @@ typedef enum {
     DEVHW_SDCARD,       // Generic SD-Card
     DEVHW_IRLOCK,       // IR-Lock visual positioning hardware
     DEVHW_PCF8574,      // 8-bit I/O expander
+	DEVHW_MAX31855_1,	// Thermocouple K reader - Device 1
+	DEVHW_MAX31855_2,	// Thermocouple K reader - Device 2
+	DEVHW_MAX31855_3,	// Thermocouple K reader - Device 3
+	DEVHW_MAX31855_4	// Thermocouple K reader - Device 4
 } devHardwareType_e;
 
 typedef enum {

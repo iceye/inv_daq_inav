@@ -126,6 +126,9 @@ typedef enum {
 #ifdef USE_INNOVAVIONICS_ADC
 	TASK_INV_ADC,
 #endif
+#ifdef USE_EGT
+	TASK_EGT,
+#endif
     /* Count of real tasks */
     TASK_COUNT,
 

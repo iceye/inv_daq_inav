@@ -54,7 +54,7 @@
 #include "gps_ublox.h"
 #include "gps_ublox_utils.h"
 
-
+DMA_HandleTypeDef invUsart5dmaRx;
 
 
 // SBAS_AUTO, SBAS_EGNOS, SBAS_WAAS, SBAS_MSAS, SBAS_GAGAN, SBAS_NONE
@@ -63,6 +63,9 @@
 
 #define SBASMASK1_BASE 120
 #define SBASMASK1_BITS(prn) (1 << (prn-SBASMASK1_BASE))
+
+//static void INV_DMA_INIT();
+
 
 static const uint32_t ubloxScanMode1[] = {
     0x00000000, // AUTO
@@ -505,6 +508,10 @@ static void gpsDecodeProtocolVersion(const char *proto, size_t bufferLength)
 
 static uint32_t gpsDecodeHardwareVersion(const char * szBuf, unsigned nBufSize)
 {
+#ifdef USE_INNOVAVIONICS_ADC
+	return UBX_HW_VERSION_UBLOX9;
+#else
+
     // ublox_5   hwVersion 00040005
     if (strncmp(szBuf, "00040005", nBufSize) == 0) {
         return UBX_HW_VERSION_UBLOX5;
@@ -536,6 +543,7 @@ static uint32_t gpsDecodeHardwareVersion(const char * szBuf, unsigned nBufSize)
     }
 
     return UBX_HW_VERSION_UNKNOWN;
+#endif
 }
 
 static bool gpsParseFrameUBLOX(void)
@@ -697,6 +705,11 @@ static bool gpsParseFrameUBLOX(void)
     return false;
 }
 
+uint8_t _ck2_a, _ck2_b;
+uint8_t _ck2Buf[200] = {0};
+uint8_t  _ck2BufStart = 0;
+uint8_t  _ck2BufCounter = 0;
+
 static bool gpsNewFrameUBLOX(uint8_t data)
 {
     bool parsed = false;
@@ -707,32 +720,52 @@ static bool gpsNewFrameUBLOX(uint8_t data)
                 _skip_packet = false;
                 _step++;
             }
+            _ck2BufCounter = 0;
+            _ck2Buf[_ck2BufCounter++] = data;
             break;
         case 1: // Sync char 2 (0x62)
             if (PREAMBLE2 != data) {
                 _step = 0;
                 break;
             }
+            _ck2Buf[_ck2BufCounter++] = data;
             _step++;
             break;
         case 2: // Class
             _step++;
             _class = data;
+            _ck2_a = 0;
+            _ck2_b = 0;
+
+            _ck2Buf[_ck2BufCounter++] = data;
             _ck_b = _ck_a = data;   // reset the checksum accumulators
+            //_ck2_a = data;
+            //_ck2_b = data;
             break;
         case 3: // Id
             _step++;
+            _ck2Buf[_ck2BufCounter++] = data;
+            //_ck2_a+=data;
+            //_ck2_b+=_ck2_a;
             _ck_b += (_ck_a += data);       // checksum byte
             _msg_id = data;
             break;
         case 4: // Payload length (part 1)
             _step++;
+            _ck2BufStart = _ck2BufCounter;
+            _ck2Buf[_ck2BufCounter++] = data;
+            _ck2_a+=data;
+            _ck2_b+=_ck2_a;
             _ck_b += (_ck_a += data);       // checksum byte
             _payload_length = data; // payload length low byte
             break;
         case 5: // Payload length (part 2)
             _step++;
+            _ck2Buf[_ck2BufCounter++] = data;
+            _ck2_a+=data;
+            _ck2_b+=_ck2_a;
             _ck_b += (_ck_a += data);       // checksum byte
+
             _payload_length |= (uint16_t)(data << 8);
             if (_payload_length > MAX_UBLOX_PAYLOAD_SIZE ) {
                 // we can't receive the whole packet, just log the error and start searching for the next packet.
@@ -747,6 +780,9 @@ static bool gpsNewFrameUBLOX(uint8_t data)
             }
             break;
         case 6:
+        	_ck2Buf[_ck2BufCounter++] = data;
+        	_ck2_a+=data;
+        	_ck2_b+=_ck2_a;
             _ck_b += (_ck_a += data);       // checksum byte
             if (_payload_counter < MAX_UBLOX_PAYLOAD_SIZE) {
                 _buffer.bytes[_payload_counter] = data;
@@ -758,6 +794,7 @@ static bool gpsNewFrameUBLOX(uint8_t data)
             _payload_counter++;
             break;
         case 7:
+        	_ck2Buf[_ck2BufCounter++] = data;
             _step++;
             if (_ck_a != data) {
                 _skip_packet = true;          // bad checksum
@@ -766,6 +803,7 @@ static bool gpsNewFrameUBLOX(uint8_t data)
             }
             break;
         case 8:
+        	_ck2Buf[_ck2BufCounter++] = data;
             _step = 0;
 
             if (_ck_b != data) {
@@ -797,7 +835,7 @@ STATIC_PROTOTHREAD(gpsConfigure)
     ptBegin(gpsConfigure);
 
     //IOHi(GPS_RESET_PIN);
-
+    //INV_DMA_INIT();
 
     // Reset timeout
     gpsSetProtocolTimeout(GPS_SHORT_TIMEOUT);
@@ -852,7 +890,7 @@ STATIC_PROTOTHREAD(gpsConfigure)
         configureMSG(MSG_CLASS_UBX, MSG_POSLLH, 0);
         ptWait(_ack_state == UBX_ACK_GOT_ACK);
 
-        configureMSG(MSG_CLASS_UBX, MSG_STATUS, 0);
+        configureMSG(MSG_CLASS_UBX, MSG_STATUS, 1);
         ptWait(_ack_state == UBX_ACK_GOT_ACK);
 
         configureMSG(MSG_CLASS_UBX, MSG_VELNED, 0);
@@ -985,11 +1023,110 @@ STATIC_PROTOTHREAD(gpsConfigure)
     ptEnd(0);
 }
 
+
 static ptSemaphore_t semNewDataReady;
+static volatile DMA_RAM uint8_t ublxRxBuffer[50] = {0};
+static volatile uint8_t ublxRxReadBuffer[50] = {0};
+static volatile uint8_t ublxRxBufferIndex = 0;
+static volatile bool invUbloxReady = false;
+static bool initCalled = false;
+
+
+
+/*
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
+	if(huart->Instance == UART5)
+	{
+
+		__HAL_UART_SEND_REQ(huart, UART_RXDATA_FLUSH_REQUEST);
+		if(ublxRxBufferLength[ublxRxBufferIndex]>192){
+			ublxRxBufferLength[ublxRxBufferIndex] = 0;
+		}
+		HAL_UART_Receive(huart,(uint8_t*)&ublxRxBuffer[ublxRxBufferIndex][ublxRxBufferLength[ublxRxBufferIndex]], 8, 50000);
+		ublxRxBufferLength[ublxRxBufferIndex] += 8;
+
+	}
+}*/
+
+
+/*
+static volatile void *memcpy_v(volatile void *restrict dest, const volatile void *restrict src, size_t n) {
+    const volatile unsigned char *src_c = src;
+    volatile unsigned char *dest_c      = dest;
+
+    while (n > 0) {
+        n--;
+        dest_c[n] = src_c[n];
+    }
+    return  dest;
+}
+
+static void INV_DMA_INIT() {
+	//INIT DMA
+	initCalled = true;
+	HAL_NVIC_SetPriority(DMA1_Stream3_IRQn, 0, 0);
+	HAL_NVIC_EnableIRQ(DMA1_Stream3_IRQn);
+}
+
+
+void DMA1_Stream3_IRQHandler(void)
+{
+
+  HAL_DMA_IRQHandler(&invUsart5dmaRx);
+
+}
+*/
+
+
+/*void UART5_IRQHandler()
+{
+    HAL_UART_IRQHandler(gpsState.gpsPort->Handle); // <<< Set breakpoint here
+}*/
+
 
 STATIC_PROTOTHREAD(gpsProtocolReceiverThread)
 {
-    ptBegin(gpsProtocolReceiverThread);
+	ptBegin(gpsProtocolReceiverThread);
+	if(!initCalled){
+
+		initCalled = true;
+	}
+#ifdef PIPPO
+	    /*if(!initCalled){
+	    	INV_DMA_INIT();
+
+	    }
+	    else{
+			HAL_UART_Receive_DMA(&gpsState.gpsPort->Handle, ublxRxBuffer, 100);
+			if(invUbloxReady){
+				for (uint16_t i = 0; i < 200; i++) {
+					if (gpsNewFrameUBLOX(ublxRxBuffer[i])) {
+						gpsProcessNewDriverData();
+						ptSemaphoreSignal(semNewDataReady);
+					}
+				}
+				invUbloxReady = false;
+			}
+	    }*/
+		uint16_t bufferSize = 0;
+		if (__HAL_UART_GET_FLAG(gpsState.gpsPort->Handle, UART_FLAG_RXNE) == SET) {
+				while(__HAL_UART_GET_FLAG(gpsState.gpsPort->Handle, UART_FLAG_RXNE) == SET && bufferSize<50){
+				  //LED2_TOGGLE();
+					HAL_UART_Receive(gpsState.gpsPort->Handle, (uint8_t *) &ublxRxBuffer[bufferSize++], 1, 10);
+				}
+
+				for (uint16_t i = 0; i < bufferSize; i++) {
+					if (gpsNewFrameUBLOX(ublxRxBuffer[i])) {
+						gpsProcessNewDriverData();
+						ptSemaphoreSignal(semNewDataReady);
+					}
+				}
+		}
+
+
+#else
+
+
 
     while (1) {
         // Wait until there are bytes to consume
@@ -1005,6 +1142,7 @@ STATIC_PROTOTHREAD(gpsProtocolReceiverThread)
             }
         }
     }
+#endif
 
     ptEnd(0);
 }
@@ -1015,7 +1153,7 @@ STATIC_PROTOTHREAD(gpsProtocolStateThread)
     ptBegin(gpsProtocolStateThread);
 
     // Change baud rate
-    if (gpsState.gpsConfig->autoBaud != GPS_AUTOBAUD_OFF) {
+    if (gpsState.gpsConfig->autoBaud != GPS_AUTOBAUD_OFF && 0) {
         //  0. Wait for TX buffer to be empty
         ptWait(isSerialTransmitBufferEmpty(gpsState.gpsPort));
 
@@ -1123,6 +1261,11 @@ void gpsHandleUBLOX(void)
     if (ptIsStopped(ptGetHandle(gpsProtocolReceiverThread)) || ptIsStopped(ptGetHandle(gpsProtocolStateThread))) {
         gpsSetState(GPS_LOST_COMMUNICATION);
     }
+}
+
+void gpsHandleUBLOXDMA(void) {
+    // Run the protocol threads
+
 }
 
 #endif

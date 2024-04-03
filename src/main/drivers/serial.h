@@ -57,6 +57,7 @@ typedef enum portOptions_t {
 
 typedef void (*serialReceiveCallbackPtr)(uint16_t data, void *rxCallbackData);   // used by serial drivers to return frames to app
 
+
 typedef struct serialPort_s {
 
     const struct serialPortVTable *vTable;
@@ -78,6 +79,10 @@ typedef struct serialPort_s {
 
     serialReceiveCallbackPtr rxCallback;
     void *rxCallbackData;
+	#ifdef USE_HAL_DRIVER
+	   UART_HandleTypeDef *Handle;
+    #endif
+    USART_TypeDef *USARTx;
 } serialPort_t;
 
 struct serialPortVTable {

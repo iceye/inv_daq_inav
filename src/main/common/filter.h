@@ -16,6 +16,7 @@
  */
 
 #pragma once
+#include <stdint.h>
 
 typedef struct rateLimitFilter_s {
     float state;

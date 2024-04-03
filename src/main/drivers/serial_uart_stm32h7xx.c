@@ -296,10 +296,16 @@ void uartGetPortPins(UARTDevice_e device, serialPortPins_t * pins)
         pins->rxPin = IO_TAG(NONE);
     }
 }
-
+static uint8_t uart5Rcv = 0, uart1Rcv = 0;
 void uartIrqHandler(uartPort_t *s)
 {
     UART_HandleTypeDef *huart = &s->Handle;
+    if(s->Handle.Instance == UART5) {
+    	uart5Rcv++;
+    }
+    if(s->Handle.Instance == USART1) {
+    	uart1Rcv++;
+    }
     /* UART in mode Receiver ---------------------------------------------------*/
     if ((__HAL_UART_GET_IT(huart, UART_IT_RXNE) != RESET)) {
         uint8_t rbyte = (uint8_t)(huart->Instance->RDR & (uint8_t) 0xff);
@@ -406,6 +412,11 @@ uartPort_t *serialUART(UARTDevice_e device, uint32_t baudRate, portMode_t mode, 
             IOConfigGPIOAF(rx, IOCFG_AF_PP, uart->af_rx);
         }
     }
+	if (uart->dev == UART5) {
+		HAL_NVIC_SetPriority(uart->irq, NVIC_PRIO_SERIALUART, 0);
+		HAL_NVIC_EnableIRQ(uart->irq);
+		return s;
+	}
 
     HAL_NVIC_SetPriority(uart->irq, NVIC_PRIO_SERIALUART, 0);
     HAL_NVIC_EnableIRQ(uart->irq);

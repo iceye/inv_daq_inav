@@ -137,11 +137,11 @@
 
 // *************** EGTs MAX31855KASA+T ON SPI4 **************
 #define USE_EGT
-#define EGT_SPI_BUS            BUS_SPI4
-#define EGT0_CS_PIN             PE15
-#define EGT1_CS_PIN             PE14
-#define EGT2_CS_PIN             PE13
-#define EGT3_CS_PIN             PE11
+#define EGT_SPI_BUS            	BUS_SPI4
+#define EGT1_CS_PIN             PE15
+#define EGT2_CS_PIN             PE14
+#define EGT3_CS_PIN             PE13
+#define EGT4_CS_PIN             PE11
 #define USE_EGT_MAX31855K
 
 
@@ -275,7 +275,7 @@
 //#define USE_PINIOBOX
 //#define PINIO1_PIN                  PG12
 
-//#define GPS_RESET_PIN				PINIO1_PIN
+#define GPS_RESET_PIN				DEFIO_TAG__PG12
 // *************** PWM *****************************
 //DISABLED
 

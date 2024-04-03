@@ -28,11 +28,13 @@
 
 #include "io/osd.h"
 #include "io/osd/custom_elements.h"
+#include "osd_symbols.h"
 
 #include "drivers/osd_symbols.h"
 
 PG_REGISTER_ARRAY_WITH_RESET_FN(osdCustomElement_t, MAX_CUSTOM_ELEMENTS, osdCustomElements, PG_OSD_CUSTOM_ELEMENTS_CONFIG, 1);
 
+#if defined(USE_OSD)
 void pgResetFn_osdCustomElements(osdCustomElement_t *instance)
 {
     for (int i = 0; i < MAX_CUSTOM_ELEMENTS; i++) {
@@ -138,4 +140,17 @@ void customElementDrawElement(char *buff, uint8_t customElementIndex){
     }
     prevLength[customElementIndex] = buffSeek;
 }
+#else
+void pgResetFn_osdCustomElements(osdCustomElement_t *instance){
 
+}
+bool isCustomelementVisible(const osdCustomElement_t* customElement){
+	return false;
+}
+uint8_t customElementDrawPart(char *buff, uint8_t customElementIndex, uint8_t customElementItemIndex){
+	return 0;
+}
+void customElementDrawElement(char *buff, uint8_t customElementIndex){
+
+}
+#endif

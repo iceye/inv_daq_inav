@@ -7,7 +7,8 @@
 
 #ifndef SRC_INNOVAVIONICS_INV_PARAMS_H_
 #define SRC_INNOVAVIONICS_INV_PARAMS_H_
-
+#include "common/filter.h"
+#include "common/time.h"
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -41,7 +42,7 @@ typedef enum {
 	INV_GPS_LAT,
 	INV_GPS_LON,
 	INV_GPS_ALT,
-	INV_GPS_HEADING,
+	INV_GPS_COURSE,
 	INV_GPS_HDOP,
 	INV_GPS_VDOP,
 	INV_GPS_PDOP,
@@ -64,6 +65,7 @@ typedef enum {
 	INV_OILP,
 	INV_OILT,
 	INV_FUELP,
+	INV_FUELFLOW,
 	INV_EGT1,
 	INV_EGT2,
 	INV_EGT3,
@@ -72,8 +74,8 @@ typedef enum {
 	INV_RPM_PROP,
 	INV_RPM_ROTOR,
 	INV_AUXPUMP_ACTIVE,
-	INV_AUMPUMP_AMP,
-	INV_AUMPUMP_VOLTAGE,
+	INV_AUXPUMP_AMP,
+	INV_AUXPUMP_VOLTAGE,
 	INV_MAP,
 	INV_THROTTLE_POS,
 	INV_LAMBDA,
@@ -86,6 +88,7 @@ typedef enum {
 	INV_BKBATT_V,
 	INV_MAINAMP,
 	INV_GENAMP,
+	INV_GEN_ALARM,
 	INV_FLAP_POS,
 	INV_TRIM_PITCH_POS,
 	INV_TRIM_ROLL_POS,
@@ -113,6 +116,7 @@ typedef enum {
 	INV_VHF_ERROR,
 	INV_XPDR_STATUS,
 	INV_XPDR_SQUAK,
+	INV_XPDR_ALT_FL,
 	INV_XPDR_MODE,
 	INV_XPDR_IDENT,
 	INV_XPDR_ERROR,
@@ -149,7 +153,9 @@ typedef enum {
 	NO_FILTER,
 	ROUND,
 	MOVING_AVG,
-	FIR
+	LPF_PT1_SLOW,
+	LPF_PT1_FAST,
+	LPF_PT1_MID,
 } invElementFilter_t;
 
 typedef struct invElement_t invElement_t;
@@ -158,35 +164,27 @@ typedef bool (*invElementCalculator_t)(invElement_t *el, void* value);
 
 struct invElement_t{
 	invElementDataType_t dataType;
-	const char *label;
-
+	char label[16];
 	uint8_t _enabled : 1;
 	uint8_t _timeout : 1;
 	uint8_t _hasTimeout : 1;
 	uint8_t _readable : 1;
 	uint8_t _writable : 1;
 	uint8_t _intvalue : 1;
-	uint8_t _longvalue : 1;
 	uint8_t _bytevalue : 1;
-	uint8_t _floatvalue : 1;
 	uint8_t _boolvalue : 1;
-	uint8_t _stringvalue : 1;
 	uint8_t _unsigned : 1;
-	uint8_t _flags : 4;			// used to align to 16bit
+	uint8_t _flags : 7;			// used to align to 16bit or for future use
 
 
 	invElementFilter_t _filter;
 
 	invElementCalculator_t _calc;
-	uint64_t _valueL;
-	uint32_t _valueI;
+	int32_t _valueI;
+	uint32_t _valueUI;
 	uint8_t _valueBy;
-	float _valueF;
 	bool _valueB;
-	char *_valueS;
-
-	float *_history;
-
+	pt1Filter_t _pt1FilterState;
 };
 
 typedef struct invElement_t invElement_t;
@@ -205,15 +203,11 @@ bool _isInvElementWritable(invElement_t *el);
 
 bool _isInvElementInt(invElement_t *el);
 
-bool _isInvElementLong(invElement_t *el);
+bool _isInvElementUInt(invElement_t *el);
 
 bool _isInvElementByte(invElement_t *el);
 
-bool _isInvElementFloat(invElement_t *el);
-
 bool _isInvElementBool(invElement_t *el);
-
-bool _isInvElementString(invElement_t *el);
 
 bool _isInvElementUnsigned(invElement_t *el);
 

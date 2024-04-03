@@ -63,6 +63,8 @@
 #include "sensors/compass.h"
 #include "sensors/gyro.h"
 #include "sensors/sensors.h"
+#include "innovavionics/inv_params.h"
+#include "innovavionics/inv_data.h"
 
 
 /*
@@ -829,6 +831,11 @@ static void imuCalculateEstimatedAttitude(float dT)
                             magWeight);
     imuUpdateTailSitter();
     imuUpdateEulerAngles();
+
+    invDataStoreValInt(INV_ROLL, attitude.values.roll);
+	invDataStoreValInt(INV_PITCH, attitude.values.pitch);
+	invDataStoreValInt(INV_YAW, attitude.values.yaw);
+	invDataStoreValInt(INV_HEADING, courseOverGround);
 }
 
 void imuUpdateAccelerometer(void)

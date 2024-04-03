@@ -5,6 +5,8 @@
  *      Author: sandro.bottoni
  */
 
+//#define INNOVAVIONICS_ADC_DEBUG
+
 #include "inv_adc.h"
 
 #include "platform.h"
@@ -26,9 +28,11 @@
 #endif
 #ifdef USE_INNOVAVIONICS_ADC
 
-/*Private variables*/
 
+/*Private variables*/
+#ifdef INNOVAVIONICS_ADC_DEBUG
 #define INNOVAVIONICS_DEBUG_MODE 101
+#endif
 
 #define INV_ADC1_BUFFER_START 0
 #define INV_ADC2_BUFFER_START INV_ADC1_CHANNELS
@@ -52,7 +56,7 @@ invElementDataType_t invAdc1ValueMap[INV_ADC1_CHANNELS] = {
 		INV_OILP,
 		INV_DATA_NONE,
 		INV_DATA_NONE,
-		INV_AUMPUMP_VOLTAGE,
+		INV_AUXPUMP_VOLTAGE,
 		INV_DATA_NONE,
 		INV_OAT,
 		INV_OILT,
@@ -62,7 +66,7 @@ invElementDataType_t invAdc1ValueMap[INV_ADC1_CHANNELS] = {
 invElementDataType_t invAdc2ValueMap[INV_ADC2_CHANNELS] = {
 		INV_DATA_NONE,
 		INV_DATA_NONE,
-		INV_DATA_NONE,
+		INV_FUELP,
 		INV_DATA_NONE,
 		INV_DAQ_MCU_GND,
 		INV_GENAMP,
@@ -80,7 +84,7 @@ invElementDataType_t invAdc3ValueMap[INV_ADC3_CHANNELS] = {
 		INV_DAQ_VIN,
 		INV_DAQ_MCU_VAN,
 		INV_BATT_V,
-		INV_TRIM_POS,
+		INV_TRIM_PITCH_POS,
 		INV_FLAP_POS,
 		INV_DATA_NONE, //internal vbatt
 		INV_DAQ_MCU_TEMP,
@@ -169,10 +173,12 @@ bool invAdcStart(){
 		invDeAdcInit();
 		return false;
 	}
-	debugMode = INNOVAVIONICS_DEBUG_MODE;
-	TIME_SECTION_BEGIN(1);
-	TIME_SECTION_BEGIN(2);
-	TIME_SECTION_BEGIN(3);
+	#ifdef INNOVAVIONICS_ADC_DEBUG
+		debugMode = INNOVAVIONICS_DEBUG_MODE;
+		TIME_SECTION_BEGIN(1);
+		TIME_SECTION_BEGIN(2);
+		TIME_SECTION_BEGIN(3);
+	#endif
 	return true;
 }
 
@@ -232,9 +238,6 @@ static void invCleanCache(uint32_t* buffer, uint8_t size){
 }
 
 
-
-
-
 void invAdcCheckNewData(){
 	if (invAdc1Error) {
 		invAdc1Error = true;
@@ -259,9 +262,9 @@ void invAdcCheckNewData(){
 	}
 
 	if (invAdc1ValuesReady) {
-		for (uint8_t i; i < INV_ADC1_CHANNELS; i++) {
+		for (uint8_t i=0; i < INV_ADC1_CHANNELS; i++) {
 			if (invAdc1ValueMap[i] != INV_DATA_NONE) {
-				invDataStoreValUInt(invAdc1ValueMap[i], invAdcValues[INV_ADC1_BUFFER_START + i]);
+				invDataStoreValByConf(invAdc1ValueMap[i], invAdcValues[INV_ADC1_BUFFER_START + i]);
 			}
 		}
 		invAdc1ValuesReady = false;
@@ -269,25 +272,31 @@ void invAdcCheckNewData(){
 		invAdc1Error = false;
 		invAdc1LastSeen = millis();
 		invCleanCache((uint32_t*)invAdc1ValuesDMA, INV_ADC1_CHANNELS);
-		TIME_SECTION_BEGIN(1);
+		#ifdef INNOVAVIONICS_ADC_DEBUG
+			TIME_SECTION_BEGIN(1);
+		#endif
 		HAL_ADC_Start_DMA(&invHadc1, (uint32_t*)invAdc1ValuesDMA, INV_ADC1_CHANNELS);
 	}
 	else{
 		invAdc1Timeout = (millis() - invAdc1LastSeen) > 1000;
 	}
 	if (invAdc2ValuesReady) {
-		for (uint8_t i; i < INV_ADC2_CHANNELS; i++) {
+		for (uint8_t i=0; i < INV_ADC2_CHANNELS; i++) {
 			if (invAdc2ValueMap[i] != INV_DATA_NONE) {
-				invDataStoreValUInt(invAdc2ValueMap[i],invAdcValues[INV_ADC2_BUFFER_START + i]);
+				invDataStoreValByConf(invAdc2ValueMap[i],invAdcValues[INV_ADC2_BUFFER_START + i]);
 			}
 		}
-		DEBUG_SET(INNOVAVIONICS_DEBUG_MODE, 7, invAdcValues[INV_ADC2_BUFFER_START + 4]); // GND
+		#ifdef INNOVAVIONICS_ADC_DEBUG
+			DEBUG_SET(INNOVAVIONICS_DEBUG_MODE, 7, invAdcValues[INV_ADC2_BUFFER_START + 4]); // GND
+		#endif
 		invAdc2ValuesReady = false;
 		invAdc2Timeout = false;
 		invAdc2Error = false;
 		invAdc2LastSeen = millis();
 		invCleanCache((uint32_t*) invAdc2ValuesDMA, INV_ADC2_CHANNELS);
-		TIME_SECTION_BEGIN(2);
+		#ifdef INNOVAVIONICS_ADC_DEBUG
+			TIME_SECTION_BEGIN(2);
+		#endif
 		HAL_ADC_Start_DMA(&invHadc2, (uint32_t*) invAdc2ValuesDMA,
 				INV_ADC2_CHANNELS);
 	}
@@ -295,16 +304,17 @@ void invAdcCheckNewData(){
 		invAdc2Timeout = (millis() - invAdc2LastSeen) > 1000;
 	}
 	if (invAdc3ValuesReady) {
-		for (uint8_t i; i < INV_ADC3_CHANNELS; i++) {
+		for (uint8_t i=0; i < INV_ADC3_CHANNELS; i++) {
 			if (invAdc3ValueMap[i] != INV_DATA_NONE) {
-				invDataStoreValUInt(invAdc3ValueMap[i],invAdcValues[INV_ADC3_BUFFER_START + i]);
+				invDataStoreValByConf(invAdc3ValueMap[i],invAdcValues[INV_ADC3_BUFFER_START + i]);
 			}
 		}
-		DEBUG_SET(INNOVAVIONICS_DEBUG_MODE, 0, invAdcValues[INV_ADC3_BUFFER_START + 5]); //VIN
-		DEBUG_SET(INNOVAVIONICS_DEBUG_MODE, 6, 65535-invAdcValues[INV_ADC3_BUFFER_START + 6]); //VAN
-		DEBUG_SET(INNOVAVIONICS_DEBUG_MODE, 4, invAdcValues[INV_ADC3_BUFFER_START + 11]); //TEMP
-		DEBUG_SET(INNOVAVIONICS_DEBUG_MODE, 5, invAdcValues[INV_ADC3_BUFFER_START + 12]); //VREF
-
+		#ifdef INNOVAVIONICS_ADC_DEBUG
+			DEBUG_SET(INNOVAVIONICS_DEBUG_MODE, 0, invAdcValues[INV_ADC3_BUFFER_START + 5]); //VIN
+			DEBUG_SET(INNOVAVIONICS_DEBUG_MODE, 6, 65535-invAdcValues[INV_ADC3_BUFFER_START + 6]); //VAN
+			DEBUG_SET(INNOVAVIONICS_DEBUG_MODE, 4, invAdcValues[INV_ADC3_BUFFER_START + 11]); //TEMP
+			DEBUG_SET(INNOVAVIONICS_DEBUG_MODE, 5, invAdcValues[INV_ADC3_BUFFER_START + 12]); //VREF
+		#endif
 
 
 		invAdc3ValuesReady = false;
@@ -312,7 +322,10 @@ void invAdcCheckNewData(){
 		invAdc3Error = false;
 		invAdc3LastSeen = millis();
 		invCleanCache((uint32_t*) invAdc3ValuesDMA, INV_ADC3_CHANNELS);
-		TIME_SECTION_BEGIN(3);
+		#ifdef INNOVAVIONICS_ADC_DEBUG
+			TIME_SECTION_BEGIN(3);
+		#endif
+
 		HAL_ADC_Start_DMA(&invHadc3, (uint32_t*) invAdc3ValuesDMA,
 		INV_ADC3_CHANNELS);
 	}
@@ -420,8 +433,8 @@ static void INV_ADC1_Init(void)
   invHadc1.Init.Overrun = ADC_OVR_DATA_OVERWRITTEN;
   invHadc1.Init.LeftBitShift = ADC_LEFTBITSHIFT_NONE;
   invHadc1.Init.OversamplingMode = ENABLE;
-  invHadc1.Init.Oversampling.Ratio = 16;
-  invHadc1.Init.Oversampling.RightBitShift = ADC_RIGHTBITSHIFT_4;
+  invHadc1.Init.Oversampling.Ratio = 32;
+  invHadc1.Init.Oversampling.RightBitShift = ADC_RIGHTBITSHIFT_5;
   invHadc1.Init.Oversampling.TriggeredMode = ADC_TRIGGEREDMODE_SINGLE_TRIGGER;
   invHadc1.Init.Oversampling.OversamplingStopReset = ADC_REGOVERSAMPLING_CONTINUED_MODE;
   if (HAL_ADC_Init(&invHadc1) != HAL_OK)
@@ -565,8 +578,8 @@ static void INV_ADC2_Init(void)
   invHadc2.Init.Overrun = ADC_OVR_DATA_OVERWRITTEN;
   invHadc2.Init.LeftBitShift = ADC_LEFTBITSHIFT_NONE;
   invHadc2.Init.OversamplingMode = ENABLE;
-  invHadc2.Init.Oversampling.Ratio = 16;
-  invHadc2.Init.Oversampling.RightBitShift = ADC_RIGHTBITSHIFT_4;
+  invHadc2.Init.Oversampling.Ratio = 32;
+  invHadc2.Init.Oversampling.RightBitShift = ADC_RIGHTBITSHIFT_5;
   invHadc2.Init.Oversampling.TriggeredMode = ADC_TRIGGEREDMODE_SINGLE_TRIGGER;
   invHadc2.Init.Oversampling.OversamplingStopReset = ADC_REGOVERSAMPLING_CONTINUED_MODE;
   if (HAL_ADC_Init(&invHadc2) != HAL_OK)
@@ -711,8 +724,8 @@ static void INV_ADC3_Init(void)
   invHadc3.Init.Overrun = ADC_OVR_DATA_OVERWRITTEN;
   invHadc3.Init.LeftBitShift = ADC_LEFTBITSHIFT_NONE;
   invHadc3.Init.OversamplingMode = ENABLE;
-  invHadc3.Init.Oversampling.Ratio = 16;
-  invHadc3.Init.Oversampling.RightBitShift = ADC_RIGHTBITSHIFT_4;
+  invHadc3.Init.Oversampling.Ratio = 32;
+  invHadc3.Init.Oversampling.RightBitShift = ADC_RIGHTBITSHIFT_5;
   invHadc3.Init.Oversampling.TriggeredMode = ADC_TRIGGEREDMODE_SINGLE_TRIGGER;
   invHadc3.Init.Oversampling.OversamplingStopReset = ADC_REGOVERSAMPLING_CONTINUED_MODE;
   if (HAL_ADC_Init(&invHadc3) != HAL_OK)
@@ -891,19 +904,25 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 		memcpy_v(&invAdcValues[INV_ADC1_BUFFER_START],invAdc1ValuesDMA,INV_ADC1_CHANNELS*sizeof(uint32_t));
 		invAdc1ValuesReady = true;
 		invAdc1Error = false;
-		TIME_SECTION_END(1);
+		#ifdef INNOVAVIONICS_ADC_DEBUG
+			TIME_SECTION_END(1);
+		#endif
 	}
 	if(hadc == &invHadc2){
 		memcpy_v(&invAdcValues[INV_ADC2_BUFFER_START],invAdc2ValuesDMA,INV_ADC2_CHANNELS*sizeof(uint32_t));
 		invAdc2ValuesReady = true;
 		invAdc2Error = false;
-		TIME_SECTION_END(2);
+		#ifdef INNOVAVIONICS_ADC_DEBUG
+			TIME_SECTION_END(2);
+		#endif
 	}
 	if(hadc == &invHadc3){
 		memcpy_v(&invAdcValues[INV_ADC3_BUFFER_START],invAdc3ValuesDMA,INV_ADC3_CHANNELS*sizeof(uint32_t));
 		invAdc3ValuesReady = true;
 		invAdc3Error = false;
-		TIME_SECTION_END(3);
+		#ifdef INNOVAVIONICS_ADC_DEBUG
+			TIME_SECTION_END(3);
+		#endif
 	}
 
 }

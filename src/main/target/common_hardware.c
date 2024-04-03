@@ -410,6 +410,13 @@
     BUSDEV_REGISTER_SPI(busdev_sdcard_spi,  DEVHW_SDCARD,       SDCARD_SPI_BUS,     SDCARD_CS_PIN,      NONE,           DEVFLAGS_SPI_MODE_0,  0);
 #endif
 
+#if defined(EGT_SPI_BUS)
+	BUSDEV_REGISTER_SPI(busdev_egt1,      DEVHW_MAX31855_1,       EGT_SPI_BUS,     EGT1_CS_PIN,      NONE,  DEVFLAGS_NONE,  0);
+	BUSDEV_REGISTER_SPI(busdev_egt2,      DEVHW_MAX31855_2,       EGT_SPI_BUS,     EGT2_CS_PIN,      NONE,  DEVFLAGS_NONE,  0);
+	BUSDEV_REGISTER_SPI(busdev_egt3,      DEVHW_MAX31855_3,       EGT_SPI_BUS,     EGT3_CS_PIN,      NONE,  DEVFLAGS_NONE,  0);
+	BUSDEV_REGISTER_SPI(busdev_egt4,      DEVHW_MAX31855_4,       EGT_SPI_BUS,     EGT4_CS_PIN,      NONE,  DEVFLAGS_NONE,  0);
+#endif
+
 /*
 // FIXME(digitalentity): This is unnecessary at the moment as SDIO is not part of BusDevice infrastructure
 #if defined(USE_SDCARD) && defined(USE_SDCARD_SDIO)

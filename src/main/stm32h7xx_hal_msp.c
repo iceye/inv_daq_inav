@@ -1533,11 +1533,30 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     PB6     ------> UART5_TX
     */
     GPIO_InitStruct.Pin = GPIO_PIN_5|GPIO_PIN_6;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    GPIO_InitStruct.Alternate = GPIO_AF14_UART5;
-    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+	GPIO_InitStruct.Pull = GPIO_PULLUP;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+	GPIO_InitStruct.Alternate = GPIO_AF14_UART5;
+	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+	HAL_I2CEx_EnableFastModePlus(SYSCFG_PMCR_I2C_PB6_FMP);
+
+	/*invUsart5dmaRx.Instance = DMA1_Stream3;
+	invUsart5dmaRx.Init.Request = DMA_REQUEST_UART5_RX;
+	invUsart5dmaRx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+    invUsart5dmaRx.Init.PeriphInc = DMA_PINC_DISABLE;
+    invUsart5dmaRx.Init.MemInc = DMA_MINC_ENABLE;
+    invUsart5dmaRx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+    invUsart5dmaRx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+    invUsart5dmaRx.Init.Mode = DMA_NORMAL;
+    invUsart5dmaRx.Init.Priority = DMA_PRIORITY_LOW;
+    invUsart5dmaRx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+    if (HAL_DMA_Init(&invUsart5dmaRx) != HAL_OK)
+    {
+      Error_Handler();
+    }
+
+    __HAL_LINKDMA(huart,hdmarx,invUsart5dmaRx);*/
 
   /* USER CODE BEGIN UART5_MspInit 1 */
 

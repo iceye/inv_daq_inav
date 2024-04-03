@@ -353,11 +353,12 @@ int32_t baroCalculateAltitude(void)
     else {
         // calculates height from ground via baro readings
         baro.BaroAlt = pressureToAltitude(baro.baroPressure) - baroGroundAltitude;
-        //baro.BaroAltQnh = pressureToAltitudeQNH(baro.baroPressure, invDataGetUInt(INV_QNH));
+        baro.BaroAltQnh = pressureToAltitudeQNH(baro.baroPressure, invDataGetUInt(INV_QNH));
    }
-
-    //invDataStoreValUInt(INV_ALTITUDE, baro.BaroAltQnh);
-    //invDataStoreValUInt(INV_STATIC_PRESSURE, baro.baroPressure);
+    invDataStoreValUInt(INV_QNH, 101325);
+    invDataStoreValUInt(INV_ALTITUDE, baro.BaroAltQnh);
+    invDataStoreValUInt(INV_DENSITYALT, baro.BaroAltQnh);
+    invDataStoreValUInt(INV_STATIC_PRESSURE, baro.baroPressure);
     return baro.BaroAlt;
 }
 

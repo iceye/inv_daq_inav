@@ -92,6 +92,9 @@
 #include "telemetry/telemetry.h"
 
 #include "innovavionics/inv_adc.h"
+#include "innovavionics/inv_data_calculators.h"
+#include "drivers/egt/max31855.h"
+
 
 
 #include "config/feature.h"
@@ -342,6 +345,12 @@ void taskInvAdc(timeUs_t currentTimeUs)
 }
 #endif
 
+#ifdef USE_EGT
+void taskUpdateEgt(timeUs_t currentTimeUs) {
+	readEgts();
+}
+#endif
+
 void fcTasksInit(void)
 {
     schedulerInit();
@@ -430,8 +439,14 @@ void fcTasksInit(void)
     setTaskEnabled(TASK_IRLOCK, irlockHasBeenDetected());
 #endif
 #ifdef USE_INNOVAVIONICS_ADC
+    initInvDataCalculators();
     setTaskEnabled(TASK_INV_ADC, invAdcStart());
 #endif
+#ifdef USE_EGT
+	initEgts();
+	setTaskEnabled(TASK_EGT, true);
+#endif
+
 #if defined(USE_SMARTPORT_MASTER)
     setTaskEnabled(TASK_SMARTPORT_MASTER, true);
 #endif
@@ -507,7 +522,7 @@ cfTask_t cfTasks[TASK_COUNT] = {
     [TASK_GPS] = {
         .taskName = "GPS",
         .taskFunc = taskProcessGPS,
-        .desiredPeriod = TASK_PERIOD_HZ(50),      // GPS usually don't go raster than 10Hz
+        .desiredPeriod = TASK_PERIOD_HZ(100),      // GPS usually don't go raster than 10Hz
         .staticPriority = TASK_PRIORITY_MEDIUM,
     },
 #endif
@@ -693,5 +708,12 @@ cfTask_t cfTasks[TASK_COUNT] = {
 		.desiredPeriod = TASK_PERIOD_HZ(TASK_INV_ADC_HZ),          // 10Hz @100ms
 		.staticPriority = TASK_PRIORITY_MEDIUM,
 	},
+#endif
+#ifdef USE_EGT
+	[TASK_EGT] = {
+		.taskName = "EGT", .taskFunc = taskUpdateEgt,
+		.desiredPeriod = TASK_PERIOD_HZ(TASK_EGT_HZ), 		// 2Hz @500ms
+		.staticPriority = TASK_PRIORITY_LOW,
+    },
 #endif
 };

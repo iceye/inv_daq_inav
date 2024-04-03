@@ -28,24 +28,16 @@ bool _isInvElementInt(invElement_t *el){
 	return el->_intvalue == 1;
 }
 
-bool _isInvElementLong(invElement_t *el){
-	return el->_longvalue == 1;
+bool _isInvElementUInt(invElement_t *el){
+	return el->_intvalue == 1 && el->_unsigned == 1;
 }
 
 bool _isInvElementByte(invElement_t *el){
 	return el->_bytevalue == 1;
 }
 
-bool _isInvElementFloat(invElement_t *el){
-	return el->_floatvalue == 1;
-}
-
 bool _isInvElementBool(invElement_t *el){
 	return el->_boolvalue == 1;
-}
-
-bool _isInvElementString(invElement_t *el){
-	return el->_stringvalue == 1;
 }
 
 bool _isInvElementUnsigned(invElement_t *el) {

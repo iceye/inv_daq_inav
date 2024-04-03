@@ -30,10 +30,10 @@ extern volatile invElement_t _invData [];
 
 
 #define invData(_data) (_invData[_data])
-#define invDataStoreValString(_data, _val)  (*_invData[_data]._calc)(&_invData[_data], _val))
+
+void invDataStoreValByConf(invElementDataType_t _data, void* _val) ;
+
 #define invDataStoreValBool(_data, _val)  {bool __invValTmp = (bool)_val; (*_invData[_data]._calc)(&_invData[_data], &(__invValTmp));}
-#define invDataStoreValULong(_data, _val)  {uint64_t __invValTmp = (uint64_t)_val; (*_invData[_data]._calc)(&_invData[_data], &(__invValTmp));}
-#define invDataStoreValLong(_data, _val)  {int64_t __invValTmp = (int64_t)_val; (*_invData[_data]._calc)(&_invData[_data], &(__invValTmp));}
 #define invDataStoreValUInt(_data, _val)  {uint32_t __invValTmp = (uint32_t)_val; (*_invData[_data]._calc)(&_invData[_data], &(__invValTmp));}
 #define invDataStoreValInt(_data, _val)  {int32_t __invValTmp = (int32_t)_val; (*_invData[_data]._calc)(&_invData[_data], &(__invValTmp));}
 #define invDataStoreValByte(_data, _val) {uint8_t __invValTmp = (uint8_t)_val; (*_invData[_data]._calc)(&_invData[_data], &(__invValTmp));}
@@ -49,19 +49,17 @@ extern volatile invElement_t _invData [];
 #define invDataIsBool(_data) _isInvElementBool(&(_invData[_data]))
 #define invDataIsString(_data) _isInvElementString(&(_invData[_data]))
 #define invDataHasFilter(_data) (_invData[_data])._filter != NO_FILTER
+#define invDataHasLpfSlow(_data) (_invData[_data])._filter == LPF_PT1_SLOW
+#define invDataHasLpfMid(_data) (_invData[_data])._filter == LPF_PT1_MID
+#define invDataHasLpfFast(_data) (_invData[_data])._filter == LPF_PT1_FAST
 #define invDataIsUnsigned(_data) _isInvElementUnsigned(&(_invData[_data]))
 #define invDataLabel(_data) (_invData[_data]).label
 
 
 #define invDataGetInt(_data) ((_invData[_data])._valueI)
-#define invDataGetLong(_data) ((_invData[_data])._valueL)
-
-#define invDataGetUInt(_data) ((uint32_t)(_invData[_data])._valueI)
-#define invDataGetULong(_data) ((uint64_t)(_invData[_data])._valueL)
+#define invDataGetUInt(_data) ((_invData[_data])._valueUI)
 #define invDataGetByte(_data) ((_invData[_data])._valueBy)
-#define invDataGetFloat(_data) ((_invData[_data])._valueF)
 #define invDataGetBool(_data) ((_invData[_data])._valueB)
-#define invDataGetString(_data) ((_invData[_data])._valueS)
 
 
 #define invGetDaqStatus() (_invData[INV_DAQ_STATUS]._valueBy)

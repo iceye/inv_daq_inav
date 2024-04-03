@@ -71,7 +71,7 @@ static void uartReconfigure(uartPort_t *uartPort)
     RCC_PeriphClkInit.Uart8ClockSelection = RCC_UART8CLKSOURCE_SYSCLK;
     HAL_RCCEx_PeriphCLKConfig(&RCC_PeriphClkInit);*/
 
-	if(uartPort->Handle.Instance == UART5){
+	/*if(uartPort->Handle.Instance == UART5){
 		UART_HandleTypeDef *huart5 = &uartPort->Handle;
 		//huart5.Instance = uart5->Handle->Instance;
 		HAL_UART_DeInit(huart5);
@@ -103,7 +103,7 @@ static void uartReconfigure(uartPort_t *uartPort)
 			Error_Handler();
 		}
 		return;
-	}
+	}*/
 
 
     HAL_UART_DeInit(&uartPort->Handle);
@@ -113,7 +113,21 @@ static void uartReconfigure(uartPort_t *uartPort)
     uartPort->Handle.Init.Parity = (uartPort->port.options & SERIAL_PARITY_EVEN) ? USART_PARITY_EVEN : USART_PARITY_NONE;
     uartPort->Handle.Init.HwFlowCtl = UART_HWCONTROL_NONE;
     uartPort->Handle.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+   // uartPort->Handle.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+    //uartPort->Handle.Init.OverSampling = UART_OVERSAMPLING_8;
+
+
+    uartPort->Handle.Init.OverSampling = UART_OVERSAMPLING_16;
+    uartPort->Handle.Init.ClockPrescaler = UART_PRESCALER_DIV1;
+
     uartPort->Handle.Init.Mode = 0;
+    /*if (uartPort->Handle.Instance == UART5) {
+    	uartPort->Handle.FifoMode = UART_FIFOMODE_ENABLE;
+    	//uartPort->Handle.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_RXOVERRUNDISABLE_INIT;
+    	//uartPort->Handle.AdvancedInit.OverrunDisable = UART_ADVFEATURE_OVERRUN_DISABLE;
+
+    }*/
+
 
     if (uartPort->port.mode & MODE_RX)
         uartPort->Handle.Init.Mode |= UART_MODE_RX;
@@ -148,6 +162,51 @@ static void uartReconfigure(uartPort_t *uartPort)
         /* Enable the UART Transmit Data Register Empty Interrupt */
         SET_BIT(uartPort->USARTx->CR1, USART_CR1_TXEIE);
     }
+
+
+    if (uartPort->Handle.Instance == UART4) {
+		HAL_NVIC_EnableIRQ(UART4_IRQn);
+	}
+	else
+    if (uartPort->Handle.Instance == UART5) {
+    	HAL_NVIC_EnableIRQ(UART5_IRQn);
+    }
+    else
+	if (uartPort->Handle.Instance == UART7) {
+		HAL_NVIC_EnableIRQ(UART7_IRQn);
+	}
+	else
+	if (uartPort->Handle.Instance == UART8) {
+		HAL_NVIC_EnableIRQ(UART8_IRQn);
+	}
+	else
+	if (uartPort->Handle.Instance == USART2) {
+		HAL_NVIC_EnableIRQ(USART2_IRQn);
+	}
+	else
+	if (uartPort->Handle.Instance == USART3) {
+		HAL_NVIC_EnableIRQ(USART3_IRQn);
+	}
+    else
+    if (uartPort->Handle.Instance == USART6) {
+		HAL_NVIC_EnableIRQ(USART6_IRQn);
+	}
+
+    /*if (uartPort->Handle.Instance == UART5) {
+    	 if (HAL_UARTEx_SetTxFifoThreshold(&uartPort->Handle, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
+    	  {
+    	    Error_Handler();
+    	  }
+    	  if (HAL_UARTEx_SetRxFifoThreshold(&uartPort->Handle, UART_RXFIFO_THRESHOLD_1_2) != HAL_OK)
+    	  {
+    	    Error_Handler();
+    	  }
+    	  if (HAL_UARTEx_EnableFifoMode(&uartPort->Handle) != HAL_OK)
+    	  {
+    	    Error_Handler();
+    	  }
+	}*/
+
     return;
 }
 
@@ -203,9 +262,15 @@ serialPort_t *uartOpen(USART_TypeDef *USARTx, serialReceiveCallbackPtr callback,
     s->port.baudRate = baudRate;
     s->port.options = options;
 
+    s->port.USARTx = s->USARTx;
+	#ifdef USE_HAL_DRIVER
+    	s->port.Handle = &s->Handle;
+   	#endif
+
     uartReconfigure(s);
 
-    return (serialPort_t *)s;
+    //return (serialPort_t *)s;
+    return &s->port;
 }
 
 void uartSetBaudRate(serialPort_t *instance, uint32_t baudRate)

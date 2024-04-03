@@ -22,6 +22,10 @@
 #include <string.h>
 #include <math.h>
 
+#ifdef STM32IDE
+	#include "target.h"
+#endif
+
 #include "common/log.h" //for MSP_SIMULATOR
 #include "platform.h"
 
@@ -131,6 +135,11 @@
 
 #ifdef USE_HARDWARE_REVISION_DETECTION
 #include "hardware_revision.h"
+#endif
+
+#ifdef USE_INNOVAVIONICS_ADC
+	#include "innovavionics/inv_params.h"
+	#include "innovavionics/inv_data.h"
 #endif
 
 #include "version.h"
@@ -629,6 +638,7 @@ static bool mspFcProcessOutCommand(uint16_t cmdMSP, sbuf_t *dst, mspPostProcessF
         sbufWriteU32(dst, 0);
 #endif
         break;
+
 
     case MSP_SONAR_ALTITUDE:
 #ifdef USE_RANGEFINDER
@@ -1696,6 +1706,154 @@ static bool mspFcProcessOutCommand(uint16_t cmdMSP, sbuf_t *dst, mspPostProcessF
             }
         }
         break;
+
+#ifdef USE_INNOVAVIONICS_ADC
+    case MSP2_INAV_INV_ALTITUDE:
+		sbufWriteU32(dst, 	invDataGetInt(INV_ALTITUDE));
+		sbufWriteU32(dst,	invDataGetInt(INV_DENSITYALT));
+		sbufWriteU32(dst,	invDataGetInt(INV_STATIC_PRESSURE));
+		sbufWriteU32(dst,	invDataGetUInt(INV_QNH));
+		break;
+    case MSP2_INAV_INV_ATTITUDE: //  ROLL, PITCH, YAW, HEADING
+		sbufWriteU16(dst, 	invDataGetInt(INV_ROLL));
+		sbufWriteU16(dst,	invDataGetInt(INV_PITCH));
+		sbufWriteU16(dst,	invDataGetInt(INV_YAW));
+		sbufWriteU16(dst,	invDataGetInt(INV_HEADING));
+		break;
+    case MSP2_INAV_INV_ACC:  //  ACCEL_X, ACCEL_Y, ACCEL_Z
+		for (int i = 0; i < 3; i++) {
+			sbufWriteU16(dst, (int16_t)lrintf(acc.accADCf[i] * 1024));
+		}
+        break;
+
+    case MSP2_INAV_INV_IAS: //  IAS, IAS_AUX, TAS
+    	sbufWriteU32(dst, 	invDataGetInt(INV_IAS));
+		sbufWriteU32(dst,	invDataGetInt(INV_IAS_AUX));
+		sbufWriteU32(dst,	invDataGetInt(INV_TAS));
+		break;
+    case MSP2_INAV_INV_AIRTEMP: //  IAT, OAT
+    	sbufWriteU32(dst, 	invDataGetInt(INV_IAT));
+		sbufWriteU32(dst,	invDataGetInt(INV_OAT));
+		break;
+    case MSP2_INAV_INV_IAS_EXTRA: //  IAS_PRESSURE, IAS_AUX_PRESSURE, IAS_TEMPERATURE
+		sbufWriteU32(dst, 	invDataGetInt(INV_IAS_PRESSURE));
+		sbufWriteU32(dst,	invDataGetInt(INV_IAS_AUX_PRESSURE));
+		sbufWriteU32(dst,	invDataGetInt(INV_IAS_TEMPERATURE));
+		break;
+    case MSP2_INAV_INV_GPS_POS: //  TIMESTAMP, LATITUDE, LONGITUDE, ALTITUDE, COURSE
+    	sbufWriteU32(dst, 	invDataGetUInt(INV_GPS_TIME));
+		sbufWriteU32(dst,	invDataGetInt(INV_GPS_LAT));
+		sbufWriteU32(dst,	invDataGetInt(INV_GPS_LON));
+		sbufWriteU32(dst,	invDataGetInt(INV_GPS_ALT));
+		sbufWriteU32(dst,	invDataGetUInt(INV_GPS_COURSE));
+		break;
+    case MSP2_INAV_INV_GPS_SPEED: //  3D_SPEED, GROUND_SPEED
+		sbufWriteU32(dst, 	invDataGetUInt(INV_GPS_3DSPEED));
+		sbufWriteU32(dst,	invDataGetUInt(INV_GPS_GS));
+		break;
+    case MSP2_INAV_INV_GPS_FIX: //  FIX_TYPE, NUM_SATS
+		sbufWriteU8(dst, 	invDataGetByte(INV_GPS_FIX_STATUS));
+		sbufWriteU8(dst,	invDataGetByte(INV_GPS_SAT));
+		break;
+    case MSP2_INAV_INV_GPS_NED: //  NORTH, EAST, DOWN SPEED
+		sbufWriteU32(dst, 	invDataGetInt(INV_GPS_NSPEED));
+		sbufWriteU32(dst,	invDataGetInt(INV_GPS_ESPEED));
+		sbufWriteU32(dst,	invDataGetInt(INV_GPS_DSPEED));
+		break;
+    case MSP2_INAV_INV_WIND: //  WIND_SPEED, WIND_DIRECTION, WIND STATUS
+		sbufWriteU32(dst, 	invDataGetUInt(INV_WIND_SPEED));
+		sbufWriteU32(dst,	invDataGetUInt(INV_WIND_DIR));
+		sbufWriteU8(dst,	invDataGetBool(INV_WIND_SPEED_STATUS));
+		break;
+    case MSP2_INAV_INV_CHT: //  CHT1, CHT2, CHT3, CHT4
+		sbufWriteU32(dst, 	invDataGetInt(INV_CHT1));
+		sbufWriteU32(dst,	invDataGetInt(INV_CHT2));
+		sbufWriteU32(dst,	invDataGetInt(INV_CHT3));
+		sbufWriteU32(dst,	invDataGetInt(INV_CHT4));
+		break;
+    case MSP2_INAV_INV_EGT: //  EGT1, EGT2, EGT3, EGT4
+		sbufWriteU32(dst, 	invDataGetInt(INV_EGT1));
+		sbufWriteU32(dst,	invDataGetInt(INV_EGT2));
+		sbufWriteU32(dst,	invDataGetInt(INV_EGT3));
+		sbufWriteU32(dst,	invDataGetInt(INV_EGT4));
+		break;
+    case MSP2_INAV_INV_LAMBDA: // LAMBDA1
+		sbufWriteU32(dst, 	invDataGetInt(INV_LAMBDA));
+		break;
+    case MSP2_INAV_INV_OIL: //  OIL_TEMP, OIL_PRESSURE
+		sbufWriteU32(dst, 	invDataGetInt(INV_OILT));
+		sbufWriteU32(dst,	invDataGetInt(INV_OILP));
+		break;
+    case MSP2_INAV_INV_FUEL: //  FUEL_PRESSURE, FUEL_FLOW
+		sbufWriteU32(dst, 	invDataGetInt(INV_FUELP));
+		sbufWriteU32(dst,	invDataGetUInt(INV_FUELFLOW));
+		break;
+    case MSP2_INAV_INV_FUELP_STATUS: //  FUEL PUMP STATUS, FUEL PUMP VOLTAGE, FUEL PUMP CURRENT
+		sbufWriteU8(dst, 	invDataGetBool(INV_AUXPUMP_ACTIVE));
+		sbufWriteU32(dst,	invDataGetUInt(INV_AUXPUMP_VOLTAGE));
+		sbufWriteU32(dst,	invDataGetInt(INV_AUXPUMP_AMP));
+		break;
+    case MSP2_INAV_INV_TANK: //  TANK1, TANK2, TANK_AUX
+		sbufWriteU32(dst, 	invDataGetUInt(INV_TANK_1));
+		sbufWriteU32(dst,	invDataGetUInt(INV_TANK_2));
+		sbufWriteU32(dst,	invDataGetUInt(INV_TANK_AUX));
+		break;
+    case MSP2_INAV_INV_RPM_MAP: //  RPM ENGINE, PROP RPM/ROTOTR RPM, MAP
+		sbufWriteU32(dst, 	invDataGetUInt(INV_RPM_ENGINE));
+		sbufWriteU32(dst,	invDataGetUInt(INV_RPM_ROTOR));
+		sbufWriteU32(dst,	invDataGetInt(INV_MAP));
+		break;
+    case MSP2_INAV_INV_COM_POSITIONS: //  THROTTLE, RUDDER, AILERON, ELEVATOR
+		sbufWriteU32(dst, 	invDataGetInt(INV_THROTTLE_POS));
+		sbufWriteU32(dst,	invDataGetInt(INV_YAW_POS));
+		sbufWriteU32(dst,	invDataGetInt(INV_ROLL_POS));
+		sbufWriteU32(dst,	invDataGetInt(INV_PITCH_POS));
+		break;
+    case MSP2_INAV_INV_FLAP_TRIM: //  FLAPS, TRIM_PITCH, TRIM_ROLL, TRIM_YAW
+		sbufWriteU32(dst, 	invDataGetInt(INV_FLAP_POS));
+		sbufWriteU32(dst,	invDataGetInt(INV_TRIM_PITCH_POS));
+		sbufWriteU32(dst,	invDataGetInt(INV_TRIM_ROLL_POS));
+		sbufWriteU32(dst,	invDataGetInt(INV_TRIM_YAW_POS));
+		break;
+    case MSP2_INAV_INV_VOLTAGE: //  MAIN_VOLTAGE (BATT), MAIN_CURRENT, GEN_CURRENT, GENERATOR ALARM FLAG
+		sbufWriteU32(dst, 	invDataGetUInt(INV_BATT_V));
+		sbufWriteU32(dst,	invDataGetInt(INV_MAINAMP));
+		sbufWriteU32(dst,	invDataGetInt(INV_GENAMP));
+		sbufWriteU8(dst,	invDataGetBool(INV_GEN_ALARM));
+		break;
+    case MSP2_INAV_INV_DAQ_STATUS: //  VIN, VREF, VDDAN, GND, TEMP, MCU_TEMP, DAQ_STATUS
+		sbufWriteU32(dst, 	invDataGetUInt(INV_DAQ_VIN));
+		sbufWriteU32(dst,	invDataGetUInt(INV_DAQ_MCU_VVREF));
+		sbufWriteU32(dst,	invDataGetUInt(INV_DAQ_MCU_VAN));
+		sbufWriteU32(dst,	invDataGetUInt(INV_DAQ_MCU_GND));
+		sbufWriteU32(dst,	invDataGetInt(INV_DAQ_TEMP));
+		sbufWriteU32(dst,	invDataGetInt(INV_DAQ_MCU_TEMP));
+		sbufWriteU32(dst,	invDataGetInt(INV_DAQ_STATUS));
+		break;
+
+    case MSP2_INAV_INV_VHF_STATUS: //  VHF_CONNECTION_STATUS, MAIN_FREQ, STBY_FREQ, DUAL_ACTIVE
+		sbufWriteU8(dst, 	invDataGetBool(INV_VHF_STATUS));
+		sbufWriteU32(dst, 	invDataGetUInt(INV_VHF_MAIN_FREQ));
+		sbufWriteU32(dst,	invDataGetUInt(INV_VHF_STBY_FREQ));
+		sbufWriteU8(dst,	invDataGetBool(INV_VHF_DUAL));
+		break;
+    case MSP2_INAV_INV_VHF_SETTINGS: //  VOL, SQ, VOX
+		sbufWriteU8(dst, 	invDataGetByte(INV_VHF_VOL));
+		sbufWriteU8(dst,	invDataGetByte(INV_VHF_SQ));
+		sbufWriteU8(dst,	invDataGetByte(INV_VHF_VOX));
+		break;
+	//TODO: Other VHF configuration here...
+
+    case MSP2_INAV_INV_XPDR_STATUS: //  XPDR_CONNECTION_STATUS, XPDR_SQUAK_CODE, XPDR ALTITUDE IN FLIGHT LEVEL, XPDR_MODE (FLAG)
+		sbufWriteU8(dst, 	invDataGetBool(INV_XPDR_STATUS));
+		sbufWriteU32(dst, 	invDataGetUInt(INV_XPDR_SQUAK));
+		sbufWriteU32(dst,	invDataGetInt(INV_XPDR_ALT_FL));
+		sbufWriteU8(dst,	invDataGetByte(INV_XPDR_MODE));
+		break;
+
+
+#endif
+
     default:
         return false;
     }
@@ -3058,7 +3216,7 @@ static mspResult_e mspFcProcessInCommand(uint16_t cmdMSP, sbuf_t *src)
 
 #if defined(USE_OSD)
     case MSP2_INAV_OSD_SET_LAYOUT_ITEM:
-        {
+        {x
             uint8_t layout;
             if (!sbufReadU8Safe(&layout, src)) {
                 return MSP_RESULT_ERROR;
