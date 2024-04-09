@@ -51,9 +51,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 
-#include <usbd_desc.h>
 #include "usbd_cdc.h"
 #include "usbd_core.h"
+#include "usbd_desc.h"
 
 /* Definition for TIMx clock resources */
 #define TIMusb                             TIM7

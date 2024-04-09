@@ -45,8 +45,6 @@
   ******************************************************************************
   */
 
-#ifndef STM32IDE
-
 /* Includes ------------------------------------------------------------------*/
 #include <stdbool.h>
 #include "usbd_core.h"
@@ -55,6 +53,10 @@
 #include "platform.h"
 #include "build/version.h"
 #include "drivers/usb_msc.h"
+
+#define U_ID_0 (*(uint32_t*)UID_BASE)
+#define U_ID_1 (*(uint32_t*)(UID_BASE + 4))
+#define U_ID_2 (*(uint32_t*)(UID_BASE + 8))
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -167,6 +169,7 @@ uint8_t USBD_StringSerial[USB_SIZ_STRING_SERIAL] =
   #pragma data_alignment=4
 #endif
 __ALIGN_BEGIN uint8_t USBD_StrDesc[USBD_MAX_STR_DESC_SIZ] __ALIGN_END;
+//extern uint8_t USBD_StrDesc[];
 
 /* Private functions ---------------------------------------------------------*/
 static void IntToUnicode (uint32_t value , uint8_t *pbuf , uint8_t len);
@@ -340,6 +343,4 @@ static void IntToUnicode (uint32_t value , uint8_t *pbuf , uint8_t len)
     pbuf[ 2* idx + 1] = 0;
   }
 }
-
-#endif
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

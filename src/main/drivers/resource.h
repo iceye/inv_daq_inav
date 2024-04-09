@@ -55,6 +55,7 @@ typedef enum {
     OWNER_PINIO,
     OWNER_IRLOCK,
 	OWNER_EGT,
+	OWNER_CAN,
     OWNER_TOTAL_COUNT
 } resourceOwner_e;
 

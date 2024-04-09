@@ -24,7 +24,7 @@
 #include "drivers/bus.h"
 #include "drivers/time.h"
 
-#define TASK_EGT_HZ 5
+#define TASK_EGT_HZ 2
 
 #ifdef __cplusplus
 extern "C" {

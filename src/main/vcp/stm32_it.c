@@ -163,5 +163,8 @@ void USB_FS_WKUP_IRQHandler(void)
 void USBWakeUp_IRQHandler(void)
 #endif
 {
-   // EXTI_ClearITPendingBit(EXTI_Line18);
+	EXTI_HandleTypeDef line18;
+	line18.Line = EXTI_LINE_18;
+	line18.PendingCallback = NULL;
+	HAL_EXTI_ClearPending(&line18, EXTI_TRIGGER_RISING_FALLING);
 }

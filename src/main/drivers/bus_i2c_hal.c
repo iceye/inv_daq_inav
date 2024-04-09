@@ -375,6 +375,11 @@ void i2cInit(I2CDevice device)
     #error Unknown MCU type
 #endif
 
+    //INNOVAVIONICS - I2C2 is used for Pitot sensor, max speed is 400KHz!
+    if(hardware->dev == I2C2){
+    	hardware->speed = I2C_SPEED_400KHZ;
+    }
+
     switch (hardware->speed) {
         case I2C_SPEED_400KHZ:
         default:

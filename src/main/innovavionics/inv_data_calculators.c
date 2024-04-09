@@ -5,7 +5,7 @@
  *      Author: sandro.bottoni
  */
 
-#include <innovavionics/inv_data_calculators.h>
+#include "inv_data_calculators.h"
 #include "stm32h7xx_hal.h"
 #include "inv_data.h"
 
@@ -13,8 +13,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define _OFFSET_TEMP_MILLIDEG_CHT 0
-#define _OFFSET_TEMP_MILLIDEG_OIL 0
+#define _OFFSET_TEMP_MILLIDEG_CHT 0.0f
+#define _OFFSET_TEMP_MILLIDEG_OIL 0.0f
 
 
 float invVref_mV = 3300.0f;
@@ -32,15 +32,15 @@ void initInvDataCalculators() {
 	for (int i = 0; i < INV_DATA_COUNT; i++) {
 
 		if (invDataHasLpfMid(i)) {
-			pt1FilterInit(&invData(i)._pt1FilterState,1, MS2S(100));
+			pt1FilterInit((pt1Filter_t *)&invData(i)._pt1FilterState,2, MS2S(100));
 		}
 		else
 		if (invDataHasLpfFast(i)) {
-			pt1FilterInit(&invData(i)._pt1FilterState,5, MS2S(100));
+			pt1FilterInit((pt1Filter_t *)&invData(i)._pt1FilterState,10, MS2S(100));
 		}
 		else
 		if (invDataHasLpfSlow(i)) {
-			pt1FilterInit(&invData(i)._pt1FilterState,0.2, MS2S(100));
+			pt1FilterInit((pt1Filter_t *)&invData(i)._pt1FilterState,2, MS2S(100));
 		}
 
 	}
@@ -89,54 +89,65 @@ uint32_t toRHighMilliohm(uint32_t analog_uV) {
 /*ROTAX CHT SENSOR*/
 /**
  * @brief  Convert resistance to temperature for Rotax 912 CHT sensor
- * @param  r: resistance in Ohms
+ * @param  r: resistance in milliOhms
  * @retval temperature in milliCelcius
  */
 float r2tempRotaxCht(float r) { // culculate temperature from thermistor resistance using Steinhart-Hart equation
-  if (r == 0) return 1000.0f;
-  return 1000.0f * (1 / (1.588479837f + 2.677440431f * log(r) + -2.062028844 * pow(log(r), 3)) - 273.15 + _OFFSET_TEMP_MILLIDEG_CHT); // return temperature in milliCelcius
+  if (r == 0) return 180000.0f;
+  //Over 100k it's disconnected
+  if(r>100000000) return -100000.0f;
+
+  float logR = log(r/1000.0f);
+  float logR3 = logR*logR*logR;
+
+  return 1000.0f * ((1.0f /(0.0018032097440841197f + 0.00017511726125370215f * logR + 0.0000021767578413371076f * logR3) ) - 273.15f + _OFFSET_TEMP_MILLIDEG_CHT); // return temperature in milliCelcius
 }
 
 
 /*ROTAX OIL-T SENSOR*/
 /**
  * @brief  Convert resistance to temperature for Rotax 912 Oil-T sensor
- * @param  r: resistance in Ohms
+ * @param  r: resistance in milliOhms
  * @retval temperature in milliCelcius
  */
 float r2tempRotaxOilt(float r) { // culculate temperature from thermistor resistance using Steinhart-Hart equation
-	if (r == 0) return 1000.0f;
-	  return 1000.0f *(1 / (1.588479837f + 2.677440431f * log(r) + -2.062028844 * pow(log(r), 3)) - 273.15 + _OFFSET_TEMP_MILLIDEG_OIL); // return temperature in milliCelcius
+	if (r == 0) return 180000.0f;
+	//Over 100k it's disconnected
+	if(r>100000000) return -100000.0f;
+
+	float logR = log(r/1000.0f);
+	float logR3 = logR*logR*logR;
+	return 1000.0f * ((1.0f /(0.0018032097440841197f + 0.00017511726125370215f * logR + 0.0000021767578413371076f * logR3) ) - 273.15f +_OFFSET_TEMP_MILLIDEG_CHT); // return temperature in milliCelcius
 }
 
 
 /*ROTAX OIL-P SENSOR*/
 /**
  * @brief  Convert resistance to pressure for Rotax 912 Oil-P sensor pre 2008
- * @param  r: resistance in Ohms
+ * @param  r: resistance in milliOhms
  * @retval pressure in milliBAR
  */
 float r2pressRotaxPressure(float r) { // culculate temperature from thermistor resistance using Steinhart-Hart equation
-	if (r == 0)
-		return -1.0f;
+	if (r == 0) return -1.0f;
+	if(r>100000000) return -1.0f;
+
+	r /=1000.0f;
 	return (0.034471f * r * r) + (46.443574f * r) - 491.302965; // return pressure in milliBAR
 }
 
 /*AFTERMARKET OIL-P5V LINEAR SENSOR*/
 /**
- * @brief  Convert voltage to pressure for Aftermarket Rotax 912 Oil-P sensor 0-5V (0.5v-4.5v) 0-10bar
- * @param  r: resistance in Ohms
+ * @brief  Convert voltage to pressure for Aftermarket Rotax 912 Oil-P sensor 0-5V (0.5v-4.5v) 0-10bar, the ADC will detect 300mV to 2700V
+ * @param  microVolts: microVolts
  * @retval pressure in milliBAR
  */
-float mV2press5VPressure(float r) {
-	if (r == 0)
-		return -1.0f;
-	return 2500 * r - 1250; // return pressure in milliBAR
+float mV2press5VPressure(float microVolts) {
+	if (microVolts < 450000 || microVolts > 4550000) return -1000.0f;
+	if (microVolts <= 500000) return 0.0f;
+	if (microVolts >= 4500000) return 10000.0f;
+
+	return 2.500f *  ((microVolts/1000.0f) - 500.0f); // return pressure in milliBAR
 }
-
-
-
-
 
 /* END OF SENSOR CONVERSIONS*/
 
@@ -248,59 +259,64 @@ bool generalRHighSensorCalculator(invElement_t *el, void *val) {
 
 
 bool rotaxChtRSensorCalculator(invElement_t *el, void *val) {
+	float milliCelsius = r2tempRotaxCht(toRLowMilliohm(adc_uV(*((uint32_t*) val))));
 	if (el->_filter != NO_FILTER)
-		el->_valueI = pt1FilterApply(&el->_pt1FilterState,(float)toRLowMilliohm(adc_uV(*((uint32_t*) val))));
+		el->_valueI = pt1FilterApply(&el->_pt1FilterState,milliCelsius);
 	else
-		el->_valueI = toRLowMilliohm(adc_uV(*((uint32_t*) val)));
+		el->_valueI = milliCelsius;
 	return true;
 }
 
 
 
 bool rotaxOiltRSensorCalculator(invElement_t *el, void *val) {
+	float milliCelsius = r2tempRotaxOilt(toRLowMilliohm(adc_uV(*((uint32_t*) val))));
 	if (el->_filter != NO_FILTER)
-		el->_valueI = pt1FilterApply(&el->_pt1FilterState,(float)toRLowMilliohm(adc_uV(*((uint32_t*) val))));
+		el->_valueI = pt1FilterApply(&el->_pt1FilterState,milliCelsius);
 	else
-		el->_valueI = toRLowMilliohm(adc_uV(*((uint32_t*) val)));
-
+		el->_valueI = milliCelsius;
 	return true;
 }
 
 
 
 bool rotaxOilpRSensorCalculator(invElement_t *el, void *val) {
+	float milliBar = r2pressRotaxPressure(toRLowMilliohm(adc_uV(*((uint32_t*) val))));
 	if (el->_filter != NO_FILTER)
-		el->_valueI = pt1FilterApply(&el->_pt1FilterState,(float)toRLowMilliohm(adc_uV(*((uint32_t*) val))));
+		el->_valueI = pt1FilterApply(&el->_pt1FilterState,milliBar);
 	else
-		el->_valueI = toRLowMilliohm(adc_uV(*((uint32_t*) val)));
+		el->_valueI = milliBar;
 	return true;
 }
 
 
 
 bool rotaxOilp5VSensorCalculator(invElement_t *el, void *val) {
+	float milliBar = mV2press5VPressure(to5VInMicroVolt(adc_uV(*((uint32_t*) val))));
 	if (el->_filter != NO_FILTER)
-		el->_valueI = pt1FilterApply(&el->_pt1FilterState,(float)to5VInMicroVolt(adc_uV(*((uint32_t*) val))));
+		el->_valueI = pt1FilterApply(&el->_pt1FilterState,milliBar);
 	else
-		el->_valueI = to5VInMicroVolt(adc_uV(*((uint32_t*) val)));
+		el->_valueI = milliBar;
 	return true;
 }
 
 
 bool rotaxFuelp5VSensorCalculator(invElement_t *el, void *val) {
+	float milliBar = mV2press5VPressure(to5VInMicroVolt(adc_uV(*((uint32_t*) val))));
 	if (el->_filter != NO_FILTER)
-		el->_valueI = pt1FilterApply(&el->_pt1FilterState,(float)to5VInMicroVolt(adc_uV(*((uint32_t*) val))));
+		el->_valueI = pt1FilterApply(&el->_pt1FilterState,milliBar);
 	else
-		el->_valueI = to5VInMicroVolt(adc_uV(*((uint32_t*) val)));
+		el->_valueI = milliBar;
 	return true;
 }
 
 
 bool rotaxVin12VSensorCalculator(invElement_t *el, void *val) {
+	float milliVolt = to12VInMicroVolt(adc_uV(*((uint32_t*) val)));
 	if (el->_filter != NO_FILTER)
-		el->_valueI = pt1FilterApply(&el->_pt1FilterState,(float)to12VInMicroVolt(adc_uV(*((uint32_t*) val))));
+		el->_valueI = pt1FilterApply(&el->_pt1FilterState,milliVolt);
 	else
-		el->_valueI = to5VInMicroVolt(adc_uV(*((uint32_t*) val)));
+		el->_valueI = milliVolt;
 	return true;
 }
 

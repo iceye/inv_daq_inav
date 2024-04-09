@@ -33,6 +33,7 @@ typedef enum {
     PITOT_MSP = 6,
     PITOT_DLVR = 7,
     PITOT_DLHR30G = 8,
+	PITOT_ND005 = 9,
 } pitotSensor_e;
 
 #define PITOT_MAX  PITOT_FAKE
@@ -50,14 +51,17 @@ typedef struct pito_s {
     pitotDev_t dev;
     float airSpeed;
     float airSpeedAux;
+    float airSpeedTurbolence;
 
     zeroCalibrationScalar_t zeroCalibration;
     pt1Filter_t lpfState;
+    pt1Filter_t lpfStateTurbolence;
     timeUs_t lastMeasurementUs;
     timeMs_t lastSeenHealthyMs;
 
     float pressureZero;
     float pressure;
+    float pressureSpeedTurbolence;
     float temperature;
 } pitot_t;
 
@@ -70,6 +74,7 @@ bool pitotIsCalibrationComplete(void);
 void pitotStartCalibration(void);
 void pitotUpdate(void);
 float getAirspeedEstimate(void);
+float getAirspeedTurbolenceEstimate(void);
 bool pitotIsHealthy(void);
 
 #endif

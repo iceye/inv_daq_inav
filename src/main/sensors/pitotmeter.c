@@ -33,6 +33,7 @@
 #include "drivers/pitotmeter/pitotmeter_ms4525.h"
 #include "drivers/pitotmeter/pitotmeter_dlvr_l10d.h"
 #include "drivers/pitotmeter/pitotmeter_dlhr_l30g.h"
+#include "drivers/pitotmeter/pitotmeter_nd005.h"
 #include "drivers/pitotmeter/pitotmeter_adc.h"
 #include "drivers/pitotmeter/pitotmeter_msp.h"
 #include "drivers/pitotmeter/pitotmeter_virtual.h"
@@ -112,7 +113,15 @@ bool pitotDetect(pitotDev_t *dev, uint8_t pitotHardwareToUse)
                 pitotHardware = PITOT_DLHR30G;
                 break;
             }
-#endif            
+#endif
+        case PITOT_ND005:
+#ifdef USE_PITOT_ND005
+			// Skip autodetection for DLHR (it is indistinguishable from others) and allow only manual config
+            if (pitotHardwareToUse != PITOT_AUTODETECT && nd005Detect(dev)) {
+                pitotHardware = PITOT_ND005;
+                break;
+            }
+#endif
             FALLTHROUGH;
         case PITOT_ADC:
 #if defined(USE_ADC) && defined(USE_PITOT_ADC)
@@ -221,7 +230,8 @@ STATIC_PROTOTHREAD(pitotThread)
     // Init filter
     pitot.lastMeasurementUs = micros();
 
-    pt1FilterInit(&pitot.lpfState, pitotmeterConfig()->pitot_lpf_milli_hz / 1000.0f, 0.0f);
+    pt1FilterInit(&pitot.lpfState, 1.0f, 0.0f );//pitotmeterConfig()->pitot_lpf_milli_hz / 1000.0f, 0.0f);
+    pt1FilterInit(&pitot.lpfStateTurbolence, 0.2f, 0.0f );
 
     while(1) {
 #ifdef USE_SIMULATOR
@@ -241,8 +251,8 @@ STATIC_PROTOTHREAD(pitotThread)
             if (pitot.dev.get(&pitot.dev))          // read current data
                 pitot.lastSeenHealthyMs = millis();
 
-            if (pitot.dev.start(&pitot.dev))        // init for next read
-                pitot.lastSeenHealthyMs = millis();        
+            /*if (pitot.dev.start(&pitot.dev))        // init for next read
+                pitot.lastSeenHealthyMs = millis();        */
         }
 
 
@@ -273,14 +283,26 @@ STATIC_PROTOTHREAD(pitotThread)
             // It also allows us to use pitot_scale to calibrate the dynamic pressure sensor scale
 
             // NOTE ::filter pressure - apply filter when NOT calibrating for zero !!!
+
             currentTimeUs = micros();
             pitot.pressure = pt1FilterApply3(&pitot.lpfState, pitotPressureTmp, US2S(currentTimeUs - pitot.lastMeasurementUs));
+            pitot.pressureSpeedTurbolence = pt1FilterApply3(&pitot.lpfStateTurbolence, fabsf(pitotPressureTmp - pitot.pressure), US2S(currentTimeUs - pitot.lastMeasurementUs));
             pitot.lastMeasurementUs = currentTimeUs;
             //invDataStoreValUInt(INV_IAS_PRESSURE, pitot.pressure);
 
             pitot.airSpeed = pitotmeterConfig()->pitot_scale * fast_fsqrtf(2.0f * fabsf(pitot.pressure - pitot.pressureZero) / SSL_AIR_DENSITY) * 100;  // cm/s
+            pitot.airSpeedTurbolence = (pitotmeterConfig()->pitot_scale * fast_fsqrtf(2.0f * (pitot.pressure+pitot.pressureSpeedTurbolence) / SSL_AIR_DENSITY) * 100) - pitotmeterConfig()->pitot_scale * fast_fsqrtf(2.0f * (pitot.pressure-pitot.pressureSpeedTurbolence) / SSL_AIR_DENSITY) * 100;  // cm/s;  // cm/s
+             // mm/s
            // invDataStoreValUInt(INV_IAS, pitot.airSpeed*10);
             pitot.temperature = pitotTemperatureTmp;   // Kelvin
+
+
+            invDataStoreValUInt(INV_IAS_TEMPERATURE, (uint32_t) pitot.temperature*1000); //mdegC
+            invDataStoreValUInt(INV_IAS_PRESSURE, (uint32_t) pitot.pressure*1000); //mPa
+            invDataStoreValUInt(INV_IAS, (uint32_t) pitot.airSpeed); // mm/s
+            invDataStoreValUInt(INV_IAS_TURBOLENCE, (uint32_t) pitot.airSpeedTurbolence); // mm/s
+
+
 
            // invDataStoreValInt(INV_IAS_TEMPERATURE, (pitot.temperature*100));
 
@@ -289,8 +311,9 @@ STATIC_PROTOTHREAD(pitotThread)
             pitot.pressure = pitotPressureTmp;
             performPitotCalibrationCycle();
             pitot.airSpeed = 0.0f;
-           // invDataStoreValUInt(INV_IAS_PRESSURE, 0);
-           // invDataStoreValUInt(INV_IAS, 0);
+            invDataStoreValUInt(INV_IAS_PRESSURE, 0);
+            invDataStoreValUInt(INV_IAS, 0);
+            invDataStoreValUInt(INV_IAS_TEMPERATURE, 0); //mdegC
         }
 
 #if defined(USE_PITOT_FAKE)
@@ -316,6 +339,11 @@ void pitotUpdate(void)
 float getAirspeedEstimate(void)
 {
     return pitot.airSpeed;
+}
+
+float getAirspeedTurbolenceEstimate(void)
+{
+    return pitot.airSpeedTurbolence;
 }
 
 float getAirspeedEstimateAux(void)

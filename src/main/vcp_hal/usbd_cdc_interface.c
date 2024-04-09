@@ -46,19 +46,20 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include <usbd_desc.h>
-#include "../platform.h"
+#include "platform.h"
 
 #include "usbd_core.h"
+#include "usbd_desc.h"
 #include "usbd_cdc.h"
 #include "usbd_cdc_interface.h"
 #include "stdbool.h"
 #include "drivers/time.h"
+#include "drivers/nvic.h"
+#include "build/atomic.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-#define APP_RX_DATA_SIZE  4096
-#define APP_TX_DATA_SIZE  4096
+
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -98,17 +99,7 @@ static int8_t CDC_Itf_Control(uint8_t cmd, uint8_t* pbuf, uint16_t length);
 static int8_t CDC_Itf_Receive(uint8_t* pbuf, uint32_t *Len);
 
 static void TIM_Config(void);
-
-/**
-  * @brief  This function is executed in case of error occurrence.
-  * @param  None
-  * @retval None
-  */
-void Error_Handler(void)
-{
-  /* Add your own code here */
-}
-
+static void Error_Handler(void);
 
 USBD_CDC_ItfTypeDef USBD_CDC_fops =
 {
@@ -142,7 +133,7 @@ static int8_t CDC_Itf_Init(void)
   if (HAL_TIM_Base_Start_IT(&TimHandle) != HAL_OK)
   {
     /* Starting Error */
-    Error_Handler();
+	  HardFault_Handler();
   }
 
   /*##-5- Set Application Buffers ############################################*/
@@ -327,7 +318,7 @@ static void TIM_Config(void)
   if (HAL_TIM_Base_Init(&TimHandle) != HAL_OK)
   {
     /* Initialization Error */
-    Error_Handler();
+	  HardFault_Handler();
   }
 
   /*##-6- Enable TIM peripherals Clock #######################################*/
@@ -340,7 +331,6 @@ static void TIM_Config(void)
   /* Enable the TIMx global Interrupt */
   HAL_NVIC_EnableIRQ(TIMx_IRQn);
 }
-
 
 
 uint32_t CDC_Receive_DATA(uint8_t* recvBuf, uint32_t len)
@@ -368,14 +358,13 @@ uint32_t CDC_Receive_BytesAvailable(void)
 
 uint32_t CDC_Send_FreeBytes(void)
 {
-    /*
-        return the bytes free in the circular buffer
+    uint32_t freeBytes;
 
-        functionally equivalent to:
-        (APP_Rx_ptr_out > APP_Rx_ptr_in ? APP_Rx_ptr_out - APP_Rx_ptr_in : APP_RX_DATA_SIZE - APP_Rx_ptr_in + APP_Rx_ptr_in)
-        but without the impact of the condition check.
-    */
-    return ((UserTxBufPtrOut - UserTxBufPtrIn) + (-((int)(UserTxBufPtrOut <= UserTxBufPtrIn)) & APP_TX_DATA_SIZE)) - 1;
+    ATOMIC_BLOCK(NVIC_PRIO_VCP) {
+        freeBytes = ((UserTxBufPtrOut - UserTxBufPtrIn) + (-((int)(UserTxBufPtrOut <= UserTxBufPtrIn)) & APP_TX_DATA_SIZE)) - 1;
+    }
+
+    return freeBytes;
 }
 
 /**
@@ -388,7 +377,7 @@ uint32_t CDC_Send_FreeBytes(void)
  */
 uint32_t CDC_Send_DATA(const uint8_t *ptrBuffer, uint32_t sendLength)
 {
-    USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef*)USBD_Device.pClassData;
+    USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef*)USBD_Device.pCDC_ClassData;
     while (hcdc->TxState != 0);
 
     for (uint32_t i = 0; i < sendLength; i++)

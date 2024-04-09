@@ -46,8 +46,8 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __USBD_DESC_FC_H
-#define __USBD_DESC_FC_H
+#ifndef __USBD_DESC_H
+#define __USBD_DESC_H
 
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_def.h"
@@ -56,10 +56,11 @@
 /* Exported constants --------------------------------------------------------*/
 
 #define  USB_SIZ_STRING_SERIAL       0x1A
+#define  USB_SIZ_DEVICE_DESC		18
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 extern USBD_DescriptorsTypeDef VCP_Desc;
 
-#endif /* __USBD_DESC_FC_H */
+#endif /* __USBD_DESC_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -75,6 +75,7 @@ static const motorProtocolProperties_t motorProtocolProperties[] = {
     [PWM_TYPE_DSHOT150]     = { .usesHwTimer = true,    .isDSHOT = true },
     [PWM_TYPE_DSHOT300]     = { .usesHwTimer = true,    .isDSHOT = true },
     [PWM_TYPE_DSHOT600]     = { .usesHwTimer = true,    .isDSHOT = true },
+	[PWM_TYPE_MSP]     		= { .usesHwTimer = false,   .isDSHOT = false },
 };
 
 pwmInitError_e getPwmInitError(void)

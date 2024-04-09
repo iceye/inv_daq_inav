@@ -1527,6 +1527,7 @@ static bool mspFcProcessOutCommand(uint16_t cmdMSP, sbuf_t *dst, mspPostProcessF
     case MSP2_INAV_AIR_SPEED:
 #ifdef USE_PITOT
         sbufWriteU32(dst, getAirspeedEstimate());
+        sbufWriteU32(dst, getAirspeedTurbolenceEstimate());
 #else
         sbufWriteU32(dst, 0);
 #endif

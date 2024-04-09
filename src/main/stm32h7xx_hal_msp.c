@@ -23,6 +23,7 @@
 
 /* USER CODE BEGIN Includes */
 #include "target.h"
+#include "stm32h7xx_hal.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -151,7 +152,9 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
         invHdmaAdc1.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
         if (HAL_DMA_Init(&invHdmaAdc1) != HAL_OK)
         {
-          Error_Handler();
+          while(1){
+        	  HAL_Delay(1000);
+          }
         }
 
         __HAL_LINKDMA(hadc,DMA_Handle,invHdmaAdc1);
@@ -225,7 +228,7 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
         invHdmaAdc2.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
         if (HAL_DMA_Init(&invHdmaAdc2) != HAL_OK)
         {
-          Error_Handler();
+        	HardFault_Handler();
         }
 
         __HAL_LINKDMA(hadc,DMA_Handle,invHdmaAdc2);
@@ -291,7 +294,7 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
         invHdmaAdc3.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
         if (HAL_DMA_Init(&invHdmaAdc3) != HAL_OK)
         {
-          Error_Handler();
+          HardFault_Handler();
         }
 
         __HAL_LINKDMA(hadc,DMA_Handle,invHdmaAdc3);
@@ -450,7 +453,7 @@ void HAL_FDCAN_MspInit(FDCAN_HandleTypeDef* hfdcan)
     PeriphClkInitStruct.FdcanClockSelection = RCC_FDCANCLKSOURCE_PLL;
     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
     {
-      Error_Handler();
+      HardFault_Handler();
     }
 
     /* Peripheral clock enable */
@@ -487,7 +490,7 @@ void HAL_FDCAN_MspInit(FDCAN_HandleTypeDef* hfdcan)
     PeriphClkInitStruct.FdcanClockSelection = RCC_FDCANCLKSOURCE_PLL;
     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
     {
-      Error_Handler();
+    	HardFault_Handler();
     }
 
     /* Peripheral clock enable */
@@ -596,7 +599,7 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef* hi2c)
     PeriphClkInitStruct.I2c123ClockSelection = RCC_I2C123CLKSOURCE_D2PCLK1;
     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
     {
-      Error_Handler();
+    	HardFault_Handler();
     }
 
     __HAL_RCC_GPIOB_CLK_ENABLE();
@@ -629,7 +632,7 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef* hi2c)
     PeriphClkInitStruct.I2c123ClockSelection = RCC_I2C123CLKSOURCE_D2PCLK1;
     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
     {
-      Error_Handler();
+      HardFault_Handler();
     }
 
     __HAL_RCC_GPIOF_CLK_ENABLE();
@@ -662,7 +665,7 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef* hi2c)
     PeriphClkInitStruct.I2c123ClockSelection = RCC_I2C123CLKSOURCE_D2PCLK1;
     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
     {
-      Error_Handler();
+      HardFault_Handler();
     }
 
     __HAL_RCC_GPIOH_CLK_ENABLE();
@@ -695,7 +698,7 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef* hi2c)
     PeriphClkInitStruct.I2c4ClockSelection = RCC_I2C4CLKSOURCE_D3PCLK1;
     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
     {
-      Error_Handler();
+      HardFault_Handler();
     }
 
     __HAL_RCC_GPIOF_CLK_ENABLE();
@@ -839,7 +842,7 @@ void HAL_RNG_MspInit(RNG_HandleTypeDef* hrng)
     PeriphClkInitStruct.RngClockSelection = RCC_RNGCLKSOURCE_PLL;
     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
     {
-      Error_Handler();
+      HardFault_Handler();
     }
 
     /* Peripheral clock enable */
@@ -894,7 +897,7 @@ void HAL_RTC_MspInit(RTC_HandleTypeDef* hrtc)
     PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
     {
-      Error_Handler();
+      HardFault_Handler();
     }
 
     /* Peripheral clock enable */
@@ -1553,7 +1556,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     invUsart5dmaRx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
     if (HAL_DMA_Init(&invUsart5dmaRx) != HAL_OK)
     {
-      Error_Handler();
+      HardFault_Handler();
     }
 
     __HAL_LINKDMA(huart,hdmarx,invUsart5dmaRx);*/

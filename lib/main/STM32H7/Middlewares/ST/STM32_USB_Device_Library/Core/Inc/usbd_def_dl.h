@@ -18,8 +18,8 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __USBD_DEF_H
-#define __USBD_DEF_H
+#ifndef __USBD_DEF_DL_H
+#define __USBD_DEF_DL_H
 
 #ifdef __cplusplus
 extern "C" {

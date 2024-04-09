@@ -28,7 +28,7 @@
 #include "drivers/io.h"
 
 #if defined(STM32F4)
-#include "usb_core.h"
+#include "usb_core_dl.h"
 #include "usbd_cdc_vcp.h"
 #include "usb_io.h"
 #elif defined(STM32F7) || defined(STM32H7)
@@ -36,7 +36,7 @@
 #include "usb_io.h"
 USBD_HandleTypeDef USBD_Device;
 #else
-#include "usb_core.h"
+#include "usb_core_dl.h"
 #include "usb_init.h"
 #include "hw_config.h"
 #endif
@@ -45,7 +45,6 @@ USBD_HandleTypeDef USBD_Device;
 
 #include "serial.h"
 #include "serial_usb_vcp.h"
-#include <usbd_desc.h>
 
 
 #define USB_TIMEOUT  50
@@ -207,7 +206,7 @@ void usbVcpInitHardware(void)
     IOInit(IOGetByTag(IO_TAG(PA11)), OWNER_USB, RESOURCE_INPUT, 0);
     IOInit(IOGetByTag(IO_TAG(PA12)), OWNER_USB, RESOURCE_OUTPUT, 0);
     /* Init Device Library */
-    USBD_Init(&USBD_Device, &FS_Desc, 0);
+    USBD_Init(&USBD_Device, &VCP_Desc, 0);
 
     /* Add Supported Class */
     USBD_RegisterClass(&USBD_Device, USBD_CDC_CLASS);
@@ -217,7 +216,7 @@ void usbVcpInitHardware(void)
 
     /* Start Device Process */
     USBD_Start(&USBD_Device);
-    
+
 #ifdef STM32H7
     HAL_PWREx_EnableUSBVoltageDetector();
     delay(100); // Cold boot failures observed without this, even when USB cable is not connected

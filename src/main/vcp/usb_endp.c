@@ -26,7 +26,6 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32h7xx_hal.h"
 #include "usb_lib.h"
 #include "usb_desc.h"
 #include "usb_mem.h"

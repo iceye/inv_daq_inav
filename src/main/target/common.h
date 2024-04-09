@@ -96,9 +96,9 @@
 // Allow default airspeed sensors
 #define USE_PITOT
 //#define USE_PITOT_MS4525
-#define USE_PITOT_MSP
+//#define USE_PITOT_MSP
 //#define USE_PITOT_DLVR
-#define USE_PITOT_DLHRL30G // This is a differential pressure sensor with superior performance, 16, 17, 18bit resolution for 0-7465,2Pa (0 to ~397km/h) range
+//#define USE_PITOT_DLHRL30G // This is a differential pressure sensor with superior performance, 16, 17, 18bit resolution for 0-7465,2Pa (0 to ~397km/h) range
 //#define USE_1WIRE
 //#define USE_1WIRE_DS2482
 

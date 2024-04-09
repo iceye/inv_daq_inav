@@ -120,8 +120,10 @@
 
 // *************** PITOT0 DLHR_L30G_E1BD_C/I_NAV8 ON I2C2 **************
 #define PITOT_I2C_BUS            BUS_I2C2
-#define USE_PITOT_DLHRL30G
+//#define USE_PITOT_DLHRL30G
 #define PITOT_EOC_PIN            PG3
+#define USE_PITOT_ND005
+#define ND005_I2C_BUS            BUS_I2C2
 
 // *************** BARO0 LPS33WTR ON I2C1 **************
 #define USE_BARO

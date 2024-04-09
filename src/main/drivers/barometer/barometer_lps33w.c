@@ -2653,7 +2653,7 @@ bool lps33wDetect(baroDev_t *baro)
     baro->get_ut = lps33w_get_ut;
     baro->start_ut = lps33w_start_ut;
 
-    baro->up_delay = 1000;
+    baro->up_delay = 0;
     baro->start_up = lps33w_start_up;
     baro->get_up = lps33w_get_up;
 

@@ -29,10 +29,30 @@
 #ifndef __HW_CONFIG_H
 #define __HW_CONFIG_H
 
-#ifndef STM32F7
-#ifndef STM32H7
+/* Includes ------------------------------------------------------------------*/
+//#include "platform_config.h"
+#include "usb_type.h"
+#include "stm32h7xx.h"
 
-#endif
-#endif
+/* Exported types ------------------------------------------------------------*/
+/* Exported constants --------------------------------------------------------*/
+/* Exported macro ------------------------------------------------------------*/
+/* Exported define -----------------------------------------------------------*/
+#define MASS_MEMORY_START     0x04002000
+#define BULK_MAX_PACKET_SIZE  0x00000040
+
+/* Exported functions ------------------------------------------------------- */
+void Set_System(void);
+void Set_USBClock(void);
+void Enter_LowPowerMode(void);
+void Leave_LowPowerMode(void);
+void USB_Interrupts_Config(void);
+void USB_Cable_Config(FunctionalState NewState);
+void Get_SerialNum(void);
+
+
+/* External variables --------------------------------------------------------*/
+extern __IO uint32_t packetSent;     // HJI
+
 #endif  /*__HW_CONFIG_H*/
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

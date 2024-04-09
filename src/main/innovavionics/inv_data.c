@@ -49,7 +49,15 @@ volatile invElement_t _invData [INV_DATA_COUNT] = {
 	{
 		.dataType = INV_IAS,				._enabled = 1, ._timeout = 0, ._hasTimeout = 0, ._readable = 1, ._writable = 0,
 		._intvalue = 1, ._bytevalue = 0, ._boolvalue = 0,
-		._unsigned = 0, ._flags = 0, ._filter = LPF_PT1_MID,
+		._unsigned = 0, ._flags = 0, ._filter = NO_FILTER, //Filtered by the fc task
+		._calc = invCalculatorIntPlain,
+		._valueI = 0,
+
+	},
+	{
+		.dataType = INV_IAS_TURBOLENCE,				._enabled = 1, ._timeout = 0, ._hasTimeout = 0, ._readable = 1, ._writable = 0,
+		._intvalue = 1, ._bytevalue = 0, ._boolvalue = 0,
+		._unsigned = 0, ._flags = 0, ._filter = NO_FILTER, //Filtered by the fc task
 		._calc = invCalculatorIntPlain,
 		._valueI = 0,
 
@@ -65,7 +73,7 @@ volatile invElement_t _invData [INV_DATA_COUNT] = {
 	{
 		.dataType = INV_IAS_PRESSURE,		._enabled = 1, ._timeout = 0, ._hasTimeout = 0, ._readable = 1, ._writable = 0,
 		._intvalue = 1, ._bytevalue = 0, ._boolvalue = 0,
-		._unsigned = 0, ._flags = 0, ._filter = NO_FILTER,
+		._unsigned = 0, ._flags = 0, ._filter = NO_FILTER, //Filtered by the fc task
 		._calc = invCalculatorIntPlain,
 		._valueI = 0,
 
@@ -74,6 +82,14 @@ volatile invElement_t _invData [INV_DATA_COUNT] = {
 		.dataType = INV_IAS_AUX,			._enabled = 0, ._timeout = 0, ._hasTimeout = 0, ._readable = 1, ._writable = 0,
 		._intvalue = 1, ._bytevalue = 0, ._boolvalue = 0,
 		._unsigned = 0, ._flags = 0, ._filter = LPF_PT1_MID,
+		._calc = invCalculatorIntPlain,
+		._valueI = 0,
+
+	},
+	{
+		.dataType = INV_IAS_AUX_TURBOLENCE,				._enabled = 1, ._timeout = 0, ._hasTimeout = 0, ._readable = 1, ._writable = 0,
+		._intvalue = 1, ._bytevalue = 0, ._boolvalue = 0,
+		._unsigned = 0, ._flags = 0, ._filter = NO_FILTER, //Filtered by the fc task
 		._calc = invCalculatorIntPlain,
 		._valueI = 0,
 
@@ -393,7 +409,7 @@ volatile invElement_t _invData [INV_DATA_COUNT] = {
 	{
 		.dataType = INV_CHT1,				._enabled = 1, ._timeout = 0, ._hasTimeout = 0, ._readable = 1, ._writable = 0,
 		._intvalue = 1, ._bytevalue = 0, ._boolvalue = 0,
-		._unsigned = 0, ._flags = 0, ._filter = LPF_PT1_SLOW,
+		._unsigned = 0, ._flags = 0, ._filter = LPF_PT1_MID,
 		._calc = rotaxChtRSensorCalculator,
 		._valueI = 0,
 
@@ -401,7 +417,7 @@ volatile invElement_t _invData [INV_DATA_COUNT] = {
 	{
 		.dataType = INV_CHT2,				._enabled = 1, ._timeout = 0, ._hasTimeout = 0, ._readable = 1, ._writable = 0,
 		._intvalue = 1, ._bytevalue = 0, ._boolvalue = 0,
-		._unsigned = 0, ._flags = 0, ._filter = LPF_PT1_SLOW,
+		._unsigned = 0, ._flags = 0, ._filter = LPF_PT1_MID,
 		._calc = rotaxChtRSensorCalculator,
 		._valueI = 0,
 
@@ -409,7 +425,7 @@ volatile invElement_t _invData [INV_DATA_COUNT] = {
 	{
 		.dataType = INV_CHT3,				._enabled = 1, ._timeout = 0, ._hasTimeout = 0, ._readable = 1, ._writable = 0,
 		._intvalue = 1, ._bytevalue = 0, ._boolvalue = 0,
-		._unsigned = 0, ._flags = 0, ._filter = LPF_PT1_SLOW,
+		._unsigned = 0, ._flags = 0, ._filter = LPF_PT1_MID,
 		._calc = rotaxChtRSensorCalculator,
 		._valueI = 0,
 
@@ -417,7 +433,7 @@ volatile invElement_t _invData [INV_DATA_COUNT] = {
 	{
 		.dataType = INV_CHT4,				._enabled = 1, ._timeout = 0, ._hasTimeout = 0, ._readable = 1, ._writable = 0,
 		._intvalue = 1, ._bytevalue = 0, ._boolvalue = 0,
-		._unsigned = 0, ._flags = 0, ._filter = LPF_PT1_SLOW,
+		._unsigned = 0, ._flags = 0, ._filter = LPF_PT1_MID,
 		._calc = rotaxChtRSensorCalculator,
 		._valueI = 0,
 

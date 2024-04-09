@@ -238,8 +238,8 @@ pllConfig_t pll1ConfigRevV = {
     .q = 16,
     .r = 8,
     .vos = PWR_REGULATOR_VOLTAGE_SCALE0
-};
-*/
+};*/
+
 
 #ifndef USE_INAV_CLOCKS
 // HSE clock configuration, originally taken from
@@ -264,12 +264,14 @@ static void SystemClockHSE_Config(void)
     }
 #endif
 
+    /*
 #ifdef USE_H7_LEGACY_CPU_REVISION_SPEED
     pllConfig_t *pll1Config = &pll1ConfigRevY;
 #else
     pllConfig_t *pll1Config = (HAL_GetREVID() == REV_ID_V) ? &pll1ConfigRevV : &pll1ConfigRevY;
 #endif
-
+*/
+    pllConfig_t *pll1Config = &pll1ConfigRevV;
 
     pll1Config->m = HSE_VALUE / 1000000 / 2;  // correction for different HSE_VALUE
 

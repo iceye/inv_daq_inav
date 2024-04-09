@@ -474,7 +474,7 @@ cfTask_t cfTasks[TASK_COUNT] = {
     [TASK_SERIAL] = {
         .taskName = "SERIAL",
         .taskFunc = taskHandleSerial,
-        .desiredPeriod = TASK_PERIOD_HZ(100),     // 100 Hz should be enough to flush up to 115 bytes @ 115200 baud
+        .desiredPeriod = TASK_PERIOD_HZ(200),     // 100 Hz should be enough to flush up to 115 bytes @ 115200 baud
         .staticPriority = TASK_PRIORITY_LOW,
     },
 
@@ -499,14 +499,14 @@ cfTask_t cfTasks[TASK_COUNT] = {
     [TASK_BATTERY] = {
         .taskName = "BATTERY",
         .taskFunc = taskUpdateBattery,
-        .desiredPeriod = TASK_PERIOD_HZ(50),      // 50 Hz
+        .desiredPeriod = TASK_PERIOD_HZ(10),      // 50 Hz
         .staticPriority = TASK_PRIORITY_MEDIUM,
     },
 
     [TASK_TEMPERATURE] = {
         .taskName = "TEMPERATURE",
         .taskFunc = taskUpdateTemperature,
-        .desiredPeriod = TASK_PERIOD_HZ(100),     // 100 Hz
+        .desiredPeriod = TASK_PERIOD_HZ(10),     // 100 Hz
         .staticPriority = TASK_PRIORITY_LOW,
     },
 
@@ -522,7 +522,7 @@ cfTask_t cfTasks[TASK_COUNT] = {
     [TASK_GPS] = {
         .taskName = "GPS",
         .taskFunc = taskProcessGPS,
-        .desiredPeriod = TASK_PERIOD_HZ(100),      // GPS usually don't go raster than 10Hz
+        .desiredPeriod = TASK_PERIOD_HZ(50),      // GPS usually don't go raster than 10Hz
         .staticPriority = TASK_PRIORITY_MEDIUM,
     },
 #endif
@@ -558,7 +558,7 @@ cfTask_t cfTasks[TASK_COUNT] = {
     [TASK_PITOT] = {
         .taskName = "PITOT",
         .taskFunc = taskUpdatePitot,
-        .desiredPeriod = TASK_PERIOD_MS(20),
+        .desiredPeriod = TASK_PERIOD_HZ(50),
         .staticPriority = TASK_PRIORITY_MEDIUM,
     },
 #endif
@@ -712,7 +712,7 @@ cfTask_t cfTasks[TASK_COUNT] = {
 #ifdef USE_EGT
 	[TASK_EGT] = {
 		.taskName = "EGT", .taskFunc = taskUpdateEgt,
-		.desiredPeriod = TASK_PERIOD_HZ(TASK_EGT_HZ), 		// 2Hz @500ms
+		.desiredPeriod = TASK_PERIOD_HZ(TASK_EGT_HZ), 		// 5Hz @200ms
 		.staticPriority = TASK_PRIORITY_LOW,
     },
 #endif
