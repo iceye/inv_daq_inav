@@ -40,6 +40,7 @@ void handleInflightCalibrationStickPosition(void);
 void disarm(disarmReason_t disarmReason);
 timeUs_t getLastDisarmTimeUs(void);
 void tryArm(void);
+void tryArmBypassable(bool force);
 disarmReason_t getDisarmReason(void);
 
 bool emergencyArmingUpdate(bool armingSwitchIsOn, bool forceArm);

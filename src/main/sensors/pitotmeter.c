@@ -66,7 +66,13 @@ PG_REGISTER_WITH_RESET_TEMPLATE(pitotmeterConfig_t, pitotmeterConfig, PG_PITOTME
 #define PITOT_HARDWARE_TIMEOUT_MS   500     // Accept 500ms of non-responsive sensor, report HW failure otherwise
 
 #ifdef USE_PITOT
-#define PITOT_HARDWARE_DEFAULT    PITOT_AUTODETECT
+	#if defined(USE_PITOT_ND005)
+		#define PITOT_HARDWARE_DEFAULT    PITOT_ND005
+	#elif defined(USE_PITOT_DLHRL30G)
+		#define PITOT_HARDWARE_DEFAULT    USE_PITOT_DLHRL30G
+	#else
+	#define PITOT_HARDWARE_DEFAULT    PITOT_AUTODETECT
+#endif
 #else
 #define PITOT_HARDWARE_DEFAULT    PITOT_NONE
 #endif
@@ -230,8 +236,11 @@ STATIC_PROTOTHREAD(pitotThread)
     // Init filter
     pitot.lastMeasurementUs = micros();
 
-    pt1FilterInit(&pitot.lpfState, 1.0f, 0.0f );//pitotmeterConfig()->pitot_lpf_milli_hz / 1000.0f, 0.0f);
+    pt1FilterInit(&pitot.lpfState, pitotmeterConfig()->pitot_lpf_milli_hz / 1000.0f, 0.0f);
     pt1FilterInit(&pitot.lpfStateTurbolence, 0.2f, 0.0f );
+
+    pt1FilterInit(&pitot.lpfStateAux, pitotmeterConfig()->pitot_lpf_milli_hz / 1000.0f, 0.0f);
+    pt1FilterInit(&pitot.lpfStateAuxTurbolence, 0.2f, 0.0f );
 
     while(1) {
 #ifdef USE_SIMULATOR
@@ -271,7 +280,7 @@ STATIC_PROTOTHREAD(pitotThread)
         ptYield();
 
         // Calculate IAS
-        if (pitotIsCalibrationComplete()) {
+        if (true || pitotIsCalibrationComplete()) {
             // NOTE ::
             // https://en.wikipedia.org/wiki/Indicated_airspeed
             // Indicated airspeed (IAS) is the airspeed read directly from the airspeed indicator on an aircraft, driven by the pitot-static system.
@@ -291,16 +300,17 @@ STATIC_PROTOTHREAD(pitotThread)
             //invDataStoreValUInt(INV_IAS_PRESSURE, pitot.pressure);
 
             pitot.airSpeed = pitotmeterConfig()->pitot_scale * fast_fsqrtf(2.0f * fabsf(pitot.pressure - pitot.pressureZero) / SSL_AIR_DENSITY) * 100;  // cm/s
-            pitot.airSpeedTurbolence = (pitotmeterConfig()->pitot_scale * fast_fsqrtf(2.0f * (pitot.pressure+pitot.pressureSpeedTurbolence) / SSL_AIR_DENSITY) * 100) - pitotmeterConfig()->pitot_scale * fast_fsqrtf(2.0f * (pitot.pressure-pitot.pressureSpeedTurbolence) / SSL_AIR_DENSITY) * 100;  // cm/s;  // cm/s
-             // mm/s
+            pitot.airSpeedTurbolence = ((pitotmeterConfig()->pitot_scale * fast_fsqrtf(2.0f * (pitot.pressure+pitot.pressureSpeedTurbolence) / SSL_AIR_DENSITY)) - (pitotmeterConfig()->pitot_scale * fast_fsqrtf(2.0f * (pitot.pressure-pitot.pressureSpeedTurbolence) / SSL_AIR_DENSITY))) * 100;  // cm/s;  // cm/s
+
+
            // invDataStoreValUInt(INV_IAS, pitot.airSpeed*10);
             pitot.temperature = pitotTemperatureTmp;   // Kelvin
 
 
-            invDataStoreValUInt(INV_IAS_TEMPERATURE, (uint32_t) pitot.temperature*1000); //mdegC
-            invDataStoreValUInt(INV_IAS_PRESSURE, (uint32_t) pitot.pressure*1000); //mPa
-            invDataStoreValUInt(INV_IAS, (uint32_t) pitot.airSpeed); // mm/s
-            invDataStoreValUInt(INV_IAS_TURBOLENCE, (uint32_t) pitot.airSpeedTurbolence); // mm/s
+            invDataStoreValInt(INV_IAS_TEMPERATURE, (uint32_t) pitot.temperature*1000); //mdegC
+            invDataStoreValInt(INV_IAS_PRESSURE, (int32_t) pitot.pressure*1000); //mPa
+            invDataStoreValUInt(INV_IAS, (uint32_t) pitot.airSpeed*10); // mm/s
+            invDataStoreValUInt(INV_IAS_TURBOLENCE, (uint32_t) pitot.airSpeedTurbolence*10); // mm/s
 
 
 
@@ -311,7 +321,7 @@ STATIC_PROTOTHREAD(pitotThread)
             pitot.pressure = pitotPressureTmp;
             performPitotCalibrationCycle();
             pitot.airSpeed = 0.0f;
-            invDataStoreValUInt(INV_IAS_PRESSURE, 0);
+            invDataStoreValInt(INV_IAS_PRESSURE, 0);
             invDataStoreValUInt(INV_IAS, 0);
             invDataStoreValUInt(INV_IAS_TEMPERATURE, 0); //mdegC
         }
@@ -346,10 +356,16 @@ float getAirspeedTurbolenceEstimate(void)
     return pitot.airSpeedTurbolence;
 }
 
-float getAirspeedEstimateAux(void)
+float getAirspeedAuxEstimate(void)
 {
     return pitot.airSpeedAux;
 }
+
+float getAirspeedAuxTurbolenceEstimate(void)
+{
+    return pitot.airSpeedAuxTurbolence;
+}
+
 
 bool pitotIsHealthy(void)
 {

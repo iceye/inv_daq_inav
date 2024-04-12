@@ -14,9 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Cleanflight.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include "pitotmeter_dlhr_l30g.h"
 
-#include <stdbool.h>
-#include <stdint.h>
 
 #include <platform.h>
 #include <build/debug.h>
@@ -27,6 +26,14 @@
 #include "drivers/bus_i2c.h"
 #include "drivers/time.h"
 #include "drivers/pitotmeter/pitotmeter.h"
+
+#ifndef DLHRL30G_RESOLUTION
+#define DLHRL30G_RESOLUTION DLHRL30G_RESOLUTION_18_BITS
+#endif
+
+#ifndef DLHRL30G_MEASURAMENT_TYPE
+#define DLHRL30G_MEASURAMENT_TYPE DLHRL30G_AVERAGE8
+#endif
 
 //ONLY SPI BUS IS SUPPORTED
 
@@ -46,11 +53,56 @@
 
 #define INCH_H2O_TO_PASCAL(press) (INCH_OF_H2O_TO_PASCAL * (press))
 
-#define RANGE_INCH_H2O      30
-#define DLHR30G_OFFSET         0.0f
-#define DLHR30G_SCALE          262144.0f
-// NOTE :: DLHR30G_OFFSET_CORR can be used for offset correction. Now firmware relies on zero calibration
-#define DLHR30G_OFFSET_CORR    0.0f   //MUST BE TESTED IN LAB
+#define DLHR30G_OFFSET_CORR    0x19EA40   //MUST BE TESTED IN LAB
+
+uint8_t dlhrl30g_status;
+bool dlhrl30g_init = false;
+uint32_t dlhrl30g_pressure_resolution_mask = 0;
+uint32_t dlhrl30g_temperature_resolution_mask = 0;
+float dlhrl30g_pressure_zero_ref = 0.0f;
+
+
+
+static float dlhrl30g_transferPressure(uint32_t raw_value) {
+	// Based on the following formula in the datasheet:
+	//     Pressure(inH2O) = 1.25 x ((P_out_dig - OS_dig) / 2^24) x FSS(inH2O)
+	if(raw_value<DLHR30G_OFFSET_CORR){
+		return 0.0f;
+	}
+	return 1.25f * (( (float) raw_value - DLHR30G_OFFSET_CORR) / DLHRL30G_FULL_SCALE_REF) * DLHRL30G_PRESSURE_RANGE;
+}
+
+// Convert a raw digital temperature read from the sensor to a floating point value in Celcius.
+float dlhrl30g_transferTemperature(uint32_t raw_value) {
+	// Based on the following formula in the datasheet:
+	//     Temperature(degC) = ((T_out_dig * 125) / 2^24) - 40
+	return (((float) raw_value * 125.0f) / DLHRL30G_FULL_SCALE_REF) - 40.0f;
+}
+
+// Convert the input in inH2O to the configured pressure output unit.
+static  float dlhrl30g_convertPressure(float in_h2o, dlhrl30g_PressureUnit_t pressure_unit) {
+	switch(pressure_unit) {
+	  case  DLHRL30G_PASCAL:
+		return 249.08 * (in_h2o);
+	  case  DLHRL30G_IN_H2O:
+	  default:
+		return in_h2o;
+	}
+}
+
+// Convert the input in Celcius to the configured temperature output unit.
+static float dlhrl30g_convertTemperature(float degree_c, dlhrl30g_TemperatureUnit_t temperature_unit) {
+	switch(temperature_unit) {
+	  case  DLHRL30G_FAHRENHEIT:
+		return degree_c * 1.8 + 32.0;
+	  case  DLHRL30G_KELVIN:
+		return degree_c + 273.15;
+	  case  DLHRL30G_CELCIUS:
+	  default:
+		return degree_c;
+	}
+}
+
 
 typedef struct __attribute__ ((__packed__)) dlhrl30gCtx_s {
     bool     dataValid;
@@ -60,44 +112,68 @@ typedef struct __attribute__ ((__packed__)) dlhrl30gCtx_s {
 
 STATIC_ASSERT(sizeof(dlhrl30gCtx_t) < BUS_SCRATCHPAD_MEMORY_SIZE, busDevice_scratchpad_memory_too_small);
 
+
+static bool dlhr30g_startNewMeasurament(pitotDev_t * pitot){
+
+	uint8_t i2cMeasurementType = DLHRL30G_MEASURAMENT_TYPE;
+	if (!busWriteBuf(pitot->busDev, 0xFF, (uint8_t*)&i2cMeasurementType, 1)) {
+		return false;
+	}
+	return true;
+}
+
+
 static bool dlhrl30g_start(pitotDev_t * pitot)
 {
     UNUSED(pitot);
+    if(!dlhrl30g_init){
+    	dlhrl30g_init = true;
+		// Produce bitmasks to mask out undefined bits of both sensors. The pressure sensor's resolution
+		  // depends on the purchased option (-6, -7, -8 for 16-, 17-, and 18-bit resolution respectively),
+		  // and the temperature sensor is always 16-bit resolution. Note that the *lower* bits are the unused
+		  // bits, so that it is the *UPPER* bits that should be kept and the lower ones discarded.
+		dlhrl30g_pressure_resolution_mask    = ~(((uint32_t) 1 << (DLHRL30G_FULL_SCALE_RESOLUTION - DLHRL30G_RESOLUTION)) - 1);
+		dlhrl30g_temperature_resolution_mask = ~(((uint32_t) 1 << (DLHRL30G_FULL_SCALE_RESOLUTION - DLHRL30G_TEMPERATURE_RESOLUTION)) - 1);
+		dlhrl30g_pressure_zero_ref = 0.1f * DLHRL30G_FULL_SCALE_REF;
+
+    }
+
+    dlhr30g_startNewMeasurament(pitot);
+
     return true;
 }
 
 static bool dlhrl30g_read(pitotDev_t * pitot)
 {
-    uint8_t rxbuf1[4];
 
-    dlhrl30gCtx_t * ctx = busDeviceGetScratchpadMemory(pitot->busDev);
-    ctx->dataValid = false;
+	dlhrl30gCtx_t * ctx = busDeviceGetScratchpadMemory(pitot->busDev);
+	ctx->dataValid = false;
 
-    if (!busReadBuf(pitot->busDev, 0xFF, rxbuf1, 4)) {
-        return false;
-    }
+	uint8_t rxbuf1[7];
+	// Read the 8-bit status data.
+	if (!busReadBuf(pitot->busDev, 0xFF, (uint8_t*)&rxbuf1, 7)) {
+		return false;
+	}
+	dlhrl30g_status = rxbuf1[0];
 
-    // status = 00 -> ok, new data
-	// status = 01 -> reserved
-    // status = 10 -> ok, data stale
-    // status = 11 -> error
-    const uint8_t status = ((rxbuf1[0] & 0xC0) >> 6);
+	if ((dlhrl30g_status & (DLHRL30G_ERROR_MEMORY | DLHRL30G_ERROR_ALU | DLHRL30G_RESERVED_7)) != 0) {
+	  // An ALU or memory error occurred.
+	  return false;
+	}
 
-    if (status) {
-        // anything other then 00 in the status bits is an error
-        LOG_DEBUG( PITOT, "DLHR30G: Bad status read. status = %u", (unsigned int)(status) );
-        return false;
-    }
+	if ((dlhrl30g_status & DLHRL30G_BUSY) != 0) {
+	  // The sensor is still busy; retry on next loop.
+	  return false;
+	}
 
-    int16_t dP_raw1, dT_raw1;
 
-    dP_raw1 = 0x3FFF & ((rxbuf1[0] << 8) + rxbuf1[1]);
-    dT_raw1 = (0xFFE0 & ((rxbuf1[2] << 8) + rxbuf1[3])) >> 5;
+	ctx->dataValid = true;
+	ctx->dlhrl30g_up = (rxbuf1[1]<<16 | rxbuf1[2]<<8 | rxbuf1[3]);
+	ctx->dlhrl30g_ut = (rxbuf1[4]<<16 | rxbuf1[5]<<8 | rxbuf1[6]);
 
-    // Data valid, update ut/up values
-    ctx->dataValid = true;
-    ctx->dlhrl30g_up = dP_raw1;
-    ctx->dlhrl30g_ut = dT_raw1;
+
+	//Asking for a new measurement
+	dlhr30g_startNewMeasurament(pitot);
 
     return true;
 }
@@ -105,27 +181,11 @@ static bool dlhrl30g_read(pitotDev_t * pitot)
 static void dlhrl30g_calculate(pitotDev_t * pitot, float *pressure, float *temperature)
 {
     dlhrl30gCtx_t * ctx = busDeviceGetScratchpadMemory(pitot->busDev);
+    float pInch = dlhrl30g_transferPressure(ctx->dlhrl30g_up & dlhrl30g_pressure_resolution_mask);
+    *pressure = dlhrl30g_convertPressure(pInch, DLHRL30G_PASCAL);
+   	*temperature = dlhrl30g_convertTemperature(dlhrl30g_transferTemperature(ctx->dlhrl30g_ut & dlhrl30g_temperature_resolution_mask), DLHRL30G_CELCIUS);
 
-  
-    // pressure in inchH2O
-    float dP_inchH2O = 1.25f *  2.0f * RANGE_INCH_H2O  * (((float)ctx->dlhrl30g_up - (DLHR30G_OFFSET + DLHR30G_OFFSET_CORR) ) / DLHR30G_SCALE); 
 
-    // temperature in deg C
-    float T_C = (float)ctx->dlhrl30g_ut * (200.0f / 2047.0f) - 50.0f;     
-
-    // result must fit inside the max pressure range
-    if ((dP_inchH2O > RANGE_INCH_H2O) || (dP_inchH2O < 0)) {
-        LOG_DEBUG( PITOT,"DLHR30G: Out of range. pressure = %f", (double)(dP_inchH2O) );
-        return;
-    }
-
-    if (pressure) {
-        *pressure = INCH_H2O_TO_PASCAL( dP_inchH2O);   // Pa
-    }
-
-    if (temperature) {
-        *temperature = C_TO_KELVIN( T_C); // K
-    }
 }
 
 bool dlhrl30gDetect(pitotDev_t * pitot)

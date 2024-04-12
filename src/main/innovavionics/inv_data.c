@@ -49,17 +49,17 @@ volatile invElement_t _invData [INV_DATA_COUNT] = {
 	{
 		.dataType = INV_IAS,				._enabled = 1, ._timeout = 0, ._hasTimeout = 0, ._readable = 1, ._writable = 0,
 		._intvalue = 1, ._bytevalue = 0, ._boolvalue = 0,
-		._unsigned = 0, ._flags = 0, ._filter = NO_FILTER, //Filtered by the fc task
+		._unsigned = 1, ._flags = 0, ._filter = NO_FILTER, //Filtered by the fc task
 		._calc = invCalculatorIntPlain,
-		._valueI = 0,
+		._valueUI = 0,
 
 	},
 	{
 		.dataType = INV_IAS_TURBOLENCE,				._enabled = 1, ._timeout = 0, ._hasTimeout = 0, ._readable = 1, ._writable = 0,
 		._intvalue = 1, ._bytevalue = 0, ._boolvalue = 0,
-		._unsigned = 0, ._flags = 0, ._filter = NO_FILTER, //Filtered by the fc task
+		._unsigned = 1, ._flags = 0, ._filter = NO_FILTER, //Filtered by the fc task
 		._calc = invCalculatorIntPlain,
-		._valueI = 0,
+		._valueUI = 0,
 
 	},
 	{
@@ -81,24 +81,24 @@ volatile invElement_t _invData [INV_DATA_COUNT] = {
 	{
 		.dataType = INV_IAS_AUX,			._enabled = 0, ._timeout = 0, ._hasTimeout = 0, ._readable = 1, ._writable = 0,
 		._intvalue = 1, ._bytevalue = 0, ._boolvalue = 0,
-		._unsigned = 0, ._flags = 0, ._filter = LPF_PT1_MID,
+		._unsigned = 1, ._flags = 0, ._filter = LPF_PT1_MID,
 		._calc = invCalculatorIntPlain,
-		._valueI = 0,
+		._valueUI = 0,
 
 	},
 	{
 		.dataType = INV_IAS_AUX_TURBOLENCE,				._enabled = 1, ._timeout = 0, ._hasTimeout = 0, ._readable = 1, ._writable = 0,
 		._intvalue = 1, ._bytevalue = 0, ._boolvalue = 0,
-		._unsigned = 0, ._flags = 0, ._filter = NO_FILTER, //Filtered by the fc task
+		._unsigned = 1, ._flags = 0, ._filter = NO_FILTER, //Filtered by the fc task
 		._calc = invCalculatorIntPlain,
-		._valueI = 0,
+		._valueUI = 0,
 
 	},
 	{
 		.dataType = INV_IAS_AUX_PRESSURE,	._enabled = 1, ._timeout = 0, ._hasTimeout = 0, ._readable = 1, ._writable = 0,
 		._intvalue = 1, ._bytevalue = 0, ._boolvalue = 0,
 		._unsigned = 0, ._flags = 0, ._filter = NO_FILTER,
-		._calc = invCalculatorIntPlain,
+		._calc = invCalculatorIasAdcPressure,
 		._valueI = 0,
 
 	},

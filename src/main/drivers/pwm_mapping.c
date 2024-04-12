@@ -357,6 +357,7 @@ void pwmBuildTimerOutputList(timMotorServoHardware_t * timOutputs, bool isMixerU
 
 static bool motorsUseHardwareTimers(void)
 {
+
     return getMotorProtocolProperties(motorConfig()->motorPwmProtocol)->usesHwTimer;
 }
 

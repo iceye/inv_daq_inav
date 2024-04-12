@@ -1671,7 +1671,7 @@ static void loadMainState(timeUs_t currentTimeUs)
 
 #ifdef USE_PITOT
     blackboxCurrent->airSpeed = getAirspeedEstimate();
-    blackboxCurrent->airSpeedAux = getAirspeedEstimateAux();
+    blackboxCurrent->airSpeedAux = getAirspeedAuxEstimate();
 #endif
 
 #ifdef USE_RANGEFINDER

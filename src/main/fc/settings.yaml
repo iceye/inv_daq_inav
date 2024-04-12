@@ -19,7 +19,7 @@ tables:
     values: ["NONE", "AUTO", "BMP085", "MS5611", "BMP280", "MS5607", "LPS25H", "LPS33W", "SPL06", "BMP388", "DPS310", "B2SMPB", "MSP", "FAKE"]
     enum: baroSensor_e
   - name: pitot_hardware
-    values: ["NONE", "AUTO", "MS4525", "ADC", "VIRTUAL", "FAKE", "MSP", "DLVR-L10D"]
+    values: ["NONE", "AUTO", "MS4525", "ADC", "VIRTUAL", "FAKE", "MSP", "DLVR-L10D","DLHR-G30D", "ND005"]
     enum: pitotSensor_e
   - name: receiver_type
     values: ["NONE", "SERIAL", "MSP", "SIM (SITL)"]
@@ -29,9 +29,9 @@ tables:
   - name: blackbox_device
     values: ["SERIAL", "SPIFLASH", "SDCARD"]
   - name: motor_pwm_protocol
-    values: ["STANDARD", "ONESHOT125", "MULTISHOT", "BRUSHED", "DSHOT150", "DSHOT300", "DSHOT600"]
+    values: ["STANDARD", "ONESHOT125", "MULTISHOT", "BRUSHED", "DSHOT150", "DSHOT300", "DSHOT600",  "MSP"]
   - name: servo_protocol
-    values: ["PWM", "SBUS", "SBUS_PWM"]
+    values: ["PWM", "SBUS", "SBUS_PWM", "MSP"]
   - name: failsafe_procedure
     values: ["LAND", "DROP", "RTH", "NONE"]
   - name: current_sensor
@@ -291,7 +291,7 @@ groups:
         max: 250
       - name: dynamic_gyro_notch_mode
         description: "Gyro dynamic notch type"
-        default_value: "2D"
+        default_value: "3D"
         table: dynamic_gyro_notch_mode
         field: dynamicGyroNotchMode
         condition: USE_DYNAMIC_FILTERS
@@ -394,7 +394,7 @@ groups:
         default_value: 1
       - name: acc_hardware
         description: "Selection of acc hardware. See Wiki Sensor auto detect and hardware failure detection for more info"
-        default_value: "AUTO"
+        default_value: "LSM6DXX"
         table: acc_hardware
       - name: acc_lpf_hz
         description: "Software-based filter to remove mechanical vibrations from the accelerometer measurements. Value is cutoff frequency (Hz). For larger frames with bigger props set to lower value."
@@ -491,7 +491,7 @@ groups:
         table: alignment
       - name: mag_hardware
         description: "Selection of mag hardware. See Wiki Sensor auto detect and hardware failure detection for more info"
-        default_value: "AUTO"
+        default_value: "LIS3MDL"
         table: mag_hardware
       - name: mag_declination
         description: "Current location magnetic declination in format. For example, -6deg 37min = -637 for Japan. Leading zero in ddd not required. Get your local magnetic declination here: http://magnetic-declination.com/ . Not in use if inav_auto_mag_decl is turned on and you acquire valid GPS fix."
@@ -572,7 +572,7 @@ groups:
     members:
       - name: baro_hardware
         description: "Selection of baro hardware. See Wiki Sensor auto detect and hardware failure detection for more info"
-        default_value: "AUTO"
+        default_value: "LPS33W"
         table: baro_hardware
       - name: baro_cal_tolerance
         description: "Baro calibration tolerance in cm. The default should allow the noisiest baro to complete calibration [cm]."
@@ -588,7 +588,7 @@ groups:
     members:
       - name: pitot_hardware
         description: "Selection of pitot hardware."
-        default_value: "NONE"
+        default_value: "ND005"
         table: pitot_hardware
       - name: pitot_lpf_milli_hz
         min: 0
@@ -761,11 +761,11 @@ groups:
         description: "Output frequency (in Hz) for motor pins.  Applies only to brushed motors. "
         default_value: 16000
         field: motorPwmRate
-        min: 50
+        min: 10
         max: 32000
       - name: motor_pwm_protocol
-        description: "Protocol that is used to send motor updates to ESCs. Possible values - STANDARD, ONESHOT125, ONESHOT42, MULTISHOT, DSHOT150, DSHOT300, DSHOT600, DSHOT1200, BRUSHED"
-        default_value: "ONESHOT125"
+        description: "Protocol that is used to send motor updates to ESCs. Possible values - STANDARD, ONESHOT125, ONESHOT42, MULTISHOT, DSHOT150, DSHOT300, DSHOT600, DSHOT1200, BRUSHED, MSP"
+        default_value: "MSP"
         field: motorPwmProtocol
         table: motor_pwm_protocol
       - name: motor_poles

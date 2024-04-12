@@ -120,10 +120,12 @@
 
 // *************** PITOT0 DLHR_L30G_E1BD_C/I_NAV8 ON I2C2 **************
 #define PITOT_I2C_BUS            BUS_I2C2
-//#define USE_PITOT_DLHRL30G
+#define USE_PITOT_DLHRL30G
+#define DLHRL30G_I2C_BUS         BUS_I2C2
 #define PITOT_EOC_PIN            PG3
 #define USE_PITOT_ND005
 #define ND005_I2C_BUS            BUS_I2C2
+//#define USE_PITOT_AUX
 
 // *************** BARO0 LPS33WTR ON I2C1 **************
 #define USE_BARO
@@ -212,7 +214,7 @@
 #define RPMA_TIM_IN_FILTER          0     //4bits 0-15
 
 
-#define FUELFLOWA_PIN               PF7
+#define FUELFLOWA_PIN               PB9
 #define FUELFLOWA_TIM               TIM17    //TIM1, TIM2, TIM3, TIM4, TIM5, TIM8, TIM12, TIM13, TIM14, ...
 #define FUELFLOWA_TIM_CH            1       //1,2,3,4   
 #define FUELFLOWA_TIM_PRSC          65535   //16bit
@@ -223,17 +225,6 @@
 #define FUELFLOWA_TIM_PRSC_IN_DIV   1      //1,2,4,8
 #define FUELFLOWA_TIM_IN_FILTER     0     //4bits 0-15
 
-
-#define AUXCOUNTER1_PIN             PE9
-#define AUXCOUNTER1_TIM             TIM1    //TIM1, TIM2, TIM3, TIM4, TIM5, TIM8, TIM12, TIM13, TIM14, ...
-#define AUXCOUNTER1_TIM_CH          1       //1,2,3,4
-#define AUXCOUNTER1_TIM_PRSC        65535   //16bit
-#define AUXCOUNTER1_TIM_COUNT       65535   //16bit
-#define AUXCOUNTER1_TIM_CLK_DIV     1       //1,2,4
-#define AUXCOUNTER1_TIM_MODE        DOWN    //UP, DOWN, CENTER
-#define AUXCOUNTER1_TIM_POL         RISING  //RISING, FALLING, BOTH
-#define AUXCOUNTER1_TIM_PRSC_IN_DIV 1      //1,2,4,8
-#define AUXCOUNTER1_TIM_IN_FILTER   0     //4bits 0-15
 
 #define AUXCOUNTER3_PIN             PI7
 #define AUXCOUNTER3_TIM             TIM8    //TIM1, TIM2, TIM3, TIM4, TIM5, TIM8, TIM12, TIM13, TIM14, ...
@@ -246,7 +237,7 @@
 #define AUXCOUNTER3_TIM_PRSC_IN_DIV 1      //1,2,4,8
 #define AUXCOUNTER3_TIM_IN_FILTER   0     //4bits 0-15
 
-#define AUXCOUNTER4_PIN             PE9
+#define AUXCOUNTER4_PIN             PH10
 #define AUXCOUNTER4_TIM             TIM5    //TIM1, TIM2, TIM3, TIM4, TIM5, TIM8, TIM12, TIM13, TIM14, ...
 #define AUXCOUNTER4_TIM_CH          1       //1,2,3,4
 #define AUXCOUNTER4_TIM_PRSC        65535   //16bit
@@ -296,6 +287,14 @@
 #define TARGET_IO_PORTH 0xffff
 #define TARGET_IO_PORTI 0xffff
 
-#define MAX_PWM_OUTPUT_PORTS        4
+#define MAX_PWM_OUTPUT_PORTS        5
+
+
+
+
+#define ARMING_DISABLE_CALIBRATION_ERROR
+#define ARMING_DISABLE_RXLINK_ERROR
+#define ARMING_DISABLE_LEVELED_ERROR
+#define ARMING_DISABLE_LOWTHROTTLE_CHECK
 
 #endif

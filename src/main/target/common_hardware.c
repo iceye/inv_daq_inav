@@ -385,18 +385,18 @@
     #define DLHR_I2C_BUS PITOT_I2C_BUS
 #endif
 
-#if defined(USE_PITOT_DLHRL30G) && defined(DLHR_I2C_BUS)
-    #ifndef DLHR_I2C_BUS_ADDR
-        #define DLHR_I2C_BUS PITOT_I2C_BUS
+#if defined(USE_PITOT_DLHRL30G)  && (defined(DLHRL30G_I2C_BUS) || defined(PITOT_I2C_BUS))
+    #ifndef DLHRL30G_I2C_BUS
+        #define DLHRL30G_I2C_BUS PITOT_I2C_BUS
     #endif
-    BUSDEV_REGISTER_I2C(busdev_dlhr,        DEVHW_DLHR30G,         DLHR_I2C_BUS,        0x28,              NONE,           DEVFLAGS_USE_RAW_REGISTERS,  0);    // Requires 0xFF to passthrough
+    BUSDEV_REGISTER_I2C(busdev_dlhr,        DEVHW_DLHR30G,         DLHRL30G_I2C_BUS,        0x29,              NONE,           DEVFLAGS_USE_RAW_REGISTERS,  0);    // Requires 0xFF to passthrough
 #endif
 
 #if defined(USE_PITOT_ND005) && (defined(ND005_I2C_BUS) || defined(PITOT_I2C_BUS))
-    #ifndef ND005_I2C_BUS_ADDR
+    #ifndef ND005_I2C_BUS
         #define ND005_I2C_BUS PITOT_I2C_BUS
     #endif
-    BUSDEV_REGISTER_I2C(busdev_dlhr,        DEVHW_ND005,         ND005_I2C_BUS,        0x28,              NONE,           DEVFLAGS_USE_RAW_REGISTERS,  0);    // Requires 0xFF to passthrough
+    BUSDEV_REGISTER_I2C(busdev_nd005,        DEVHW_ND005,         ND005_I2C_BUS,        0x28,              NONE,           DEVFLAGS_USE_RAW_REGISTERS,  0);    // Requires 0xFF to passthrough
 #endif
 
 /** OTHER HARDWARE **/

@@ -1528,6 +1528,8 @@ static bool mspFcProcessOutCommand(uint16_t cmdMSP, sbuf_t *dst, mspPostProcessF
 #ifdef USE_PITOT
         sbufWriteU32(dst, getAirspeedEstimate());
         sbufWriteU32(dst, getAirspeedTurbolenceEstimate());
+        sbufWriteU32(dst, getAirspeedAuxEstimate());
+        sbufWriteU32(dst, getAirspeedAuxTurbolenceEstimate());
 #else
         sbufWriteU32(dst, 0);
 #endif

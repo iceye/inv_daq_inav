@@ -12,6 +12,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include "pitotmeter.h"
+#include "time.h"
 
 #define _OFFSET_TEMP_MILLIDEG_CHT 0.0f
 #define _OFFSET_TEMP_MILLIDEG_OIL 0.0f
@@ -321,3 +323,39 @@ bool rotaxVin12VSensorCalculator(invElement_t *el, void *val) {
 }
 
 
+uint32_t invCalculatorIasAdcPressureCurrentTimeUs = 0;
+uint32_t invCalculatorIasAdcPressureCurrentTimeUsLastMeasurementUs = 0;
+#define ADC_IAS_AUX_MICROV_ZERO 735400
+#define ADC_IAS_AUX_MICROV_PA 662.0f
+
+bool invCalculatorIasAdcPressure(invElement_t *el, void *val){
+
+#ifdef USE_PITOT_AUX
+
+	uint32_t adcuV = (float)adc_uV(*((uint32_t*) val));
+	float pitotPressureTmp = 0;
+	if(adcuV > ADC_IAS_AUX_MICROV_ZERO){
+		pitotPressureTmp = (float)(adcuV-ADC_IAS_AUX_MICROV_ZERO)/ADC_IAS_AUX_MICROV_PA;
+	}
+	invCalculatorIasAdcPressureCurrentTimeUs = micros();
+	pitot.pressureAux = pt1FilterApply3(&pitot.lpfStateAux, pitotPressureTmp, US2S(invCalculatorIasAdcPressureCurrentTimeUs - invCalculatorIasAdcPressureCurrentTimeUsLastMeasurementUs));
+	pitot.pressureSpeedAuxTurbolence = pt1FilterApply3(&pitot.lpfStateAuxTurbolence, fabsf(pitotPressureTmp - pitot.pressureAux), US2S(invCalculatorIasAdcPressureCurrentTimeUs - invCalculatorIasAdcPressureCurrentTimeUsLastMeasurementUs));
+	invCalculatorIasAdcPressureCurrentTimeUsLastMeasurementUs = invCalculatorIasAdcPressureCurrentTimeUs;
+	el->_valueI = pitot.pressureAux*1000;
+
+    pitot.airSpeedAux = pitotmeterConfig()->pitot_scale * fast_fsqrtf(2.0f * fabsf(pitot.pressureAux - pitot.pressureZero) / SSL_AIR_DENSITY) * 100;  // cm/s
+    pitot.airSpeedAuxTurbolence = (pitotmeterConfig()->pitot_scale * fast_fsqrtf(2.0f * (pitot.pressureAux+pitot.pressureSpeedAuxTurbolence) / SSL_AIR_DENSITY) * 100) - pitotmeterConfig()->pitot_scale * fast_fsqrtf(2.0f * (pitot.pressureAux-pitot.pressureSpeedAuxTurbolence) / SSL_AIR_DENSITY) * 100;  // cm/s;
+
+	invDataStoreValUInt(INV_IAS_AUX, (int32_t) pitot.airSpeedAux); // mm/s
+	invDataStoreValUInt(INV_IAS_AUX_TURBOLENCE, (int32_t) pitot.airSpeedTurbolence); // mm/s
+#else
+	pitot.pressureAux = 0;
+	pitot.pressureSpeedAuxTurbolence = 0;
+	pitot.airSpeedAux = 0;
+	pitot.airSpeedAuxTurbolence = 0;
+
+	invDataStoreValUInt(INV_IAS_AUX, (int32_t) pitot.airSpeedAux); // mm/s
+	invDataStoreValUInt(INV_IAS_AUX_TURBOLENCE, (int32_t) pitot.airSpeedTurbolence); // mm/s
+#endif
+    return true;
+}

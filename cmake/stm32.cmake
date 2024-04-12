@@ -50,19 +50,19 @@ main_sources(STM32_ASYNCFATFS_SRC
     io/asyncfatfs/fat_standard.c
 )
 
-main_sources(STM32_MSC_SRC
-    msc/usbd_storage.c
-)
+#main_sources(STM32_MSC_SRC
+#    msc/usbd_storage.c
+#)
 
-main_sources(STM32_MSC_FLASH_SRC
-    msc/usbd_storage_emfat.c
-    msc/emfat.c
-    msc/emfat_file.c
-)
+#main_sources(STM32_MSC_FLASH_SRC
+#    msc/usbd_storage_emfat.c
+#    msc/emfat.c
+#    msc/emfat_file.c
+#)
 
-main_sources(STM32_MSC_SDCARD_SRC
-    msc/usbd_storage_sd_spi.c
-)
+#main_sources(STM32_MSC_SDCARD_SRC
+#    msc/usbd_storage_sd_spi.c
+#)
 
 set(STM32_INCLUDE_DIRS
     "${CMSIS_INCLUDE_DIR}"

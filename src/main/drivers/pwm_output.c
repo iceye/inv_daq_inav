@@ -540,7 +540,9 @@ void pwmMotorPreconfigure(void)
         default:
             motorWritePtr = pwmWriteNull;
             break;
-
+        case PWM_TYPE_MSP:
+        	motorWritePtr = pwmWriteNull;
+        	break;
         case PWM_TYPE_STANDARD:
         case PWM_TYPE_BRUSHED:
         case PWM_TYPE_ONESHOT125:

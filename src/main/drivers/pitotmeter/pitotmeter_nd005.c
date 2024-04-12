@@ -21,9 +21,9 @@
 #include "innovavionics/inv_data.h"
 
 
-#define ND005_OFFSET_CORR  15    //MUST BE TESTED IN LAB
-#define ND005_SWITCHUP_VALUE 22200 //~75% of the range
-#define ND005_SWITCHDOWN_VALUE 8800 //~30% of the range
+#define ND005_OFFSET_CORR  28    //MUST BE TESTED IN LAB
+#define ND005_SWITCHUP_VALUE 23600 //~80% of the range
+#define ND005_SWITCHDOWN_VALUE 5900 //~20% of the range
 #define ND005_MINSWITCH_MS 2000 //~30% of the range
 #define ND005_ADJ_TIMESET_MS 200 //~30% of the range
 
@@ -122,7 +122,7 @@ static bool nd005_start(pitotDev_t * pitot)
 		delay(5);
 	}
 	ctx->dataValid = false;
-	ctx->nd005_up = (((rxbuf1[0] << 8) + rxbuf1[1]))+ND005_OFFSET_CORR;
+	ctx->nd005_up = (((rxbuf1[0] << 8) + rxbuf1[1]))-ND005_OFFSET_CORR;
 	ctx->nd005_ut = ((rxbuf1[2] << 8) + rxbuf1[3]);
     return true;
 }
@@ -144,7 +144,7 @@ static bool nd005_read(pitotDev_t * pitot){
 	}
 
 	ctx->dataValid = true;
-	ctx->nd005_up = (((rxbuf1[0] << 8) + rxbuf1[1]))+ND005_OFFSET_CORR;
+	ctx->nd005_up = (((rxbuf1[0] << 8) + rxbuf1[1]))-ND005_OFFSET_CORR;
 	ctx->nd005_ut = ((rxbuf1[2] << 8) + rxbuf1[3]);
 	if(nd005_modeControl.range != ND005_PSI50 && ctx->nd005_up>ND005_SWITCHUP_VALUE){
 
@@ -168,7 +168,9 @@ static void nd005_calculate(pitotDev_t * pitot, float *pressure, float *temperat
 		ctx->nd005_up = 0;
 	}
 
-
+	if(ctx->nd005_up<0){
+		ctx->nd005_up = 0;
+	}
 	*pressure = ((((int16_t)ctx->nd005_up) / 29491.2) * (nd005_pressureRange)); // divide by 90% of 2^15 and multiply by range value
 
 	uint8_t tempDec = (ctx->nd005_ut & 0xFF00) >> 8;

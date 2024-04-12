@@ -55,7 +55,7 @@
 #include "usbd_desc.h"
 #include "usbd_cdc.h"
 #include "usbd_cdc_interface.h"
-#include "usb_defines.h"
+#include "/Users/sandro.bottoni/Projects/Experiment/inav/lib/main/STM32_USB_OTG_Driver/inc/usb_defines.h"
 
 #include "platform.h"
 

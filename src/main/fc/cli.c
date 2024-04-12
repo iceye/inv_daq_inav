@@ -3948,6 +3948,21 @@ static void cliResource(char *cmdline)
     }
 }
 
+
+static void cliArm(char *cmdline)
+{
+    UNUSED(cmdline);
+    DISABLE_ARMING_FLAG(ARMING_DISABLED_ALL_FLAGS);
+	tryArmBypassable(true);
+}
+
+static void cliDisarm(char *cmdline)
+{
+    UNUSED(cmdline);
+	ENABLE_ARMING_FLAG(ARMING_DISABLED_CLI);
+	disarm(DISARM_SWITCH);
+}
+
 static void backupConfigs(void)
 {
     // make copies of configs to do differencing
@@ -4372,6 +4387,10 @@ const clicmd_t cmdTable[] = {
     CLI_COMMAND_DEF("osd_layout", "get or set the layout of OSD items", "[<layout> [<item> [<col> <row> [<visible>]]]]", cliOsdLayout),
 #endif
     CLI_COMMAND_DEF("timer_output_mode", "get or set the outputmode for a given timer.",  "[<timer> [<AUTO|MOTORS|SERVOS>]]", cliTimerOutputMode),
+
+	CLI_COMMAND_DEF("arm", "Force arming on FC", NULL, cliArm),
+
+	CLI_COMMAND_DEF("disarm", "Force disarming on FC", NULL, cliDisarm),
 };
 
 static void cliHelp(char *cmdline)

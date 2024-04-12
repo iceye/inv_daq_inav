@@ -52,16 +52,21 @@ typedef struct pito_s {
     float airSpeed;
     float airSpeedAux;
     float airSpeedTurbolence;
+    float airSpeedAuxTurbolence;
 
     zeroCalibrationScalar_t zeroCalibration;
     pt1Filter_t lpfState;
+    pt1Filter_t lpfStateAux;
     pt1Filter_t lpfStateTurbolence;
+    pt1Filter_t lpfStateAuxTurbolence;
     timeUs_t lastMeasurementUs;
     timeMs_t lastSeenHealthyMs;
 
     float pressureZero;
     float pressure;
+    float pressureAux;
     float pressureSpeedTurbolence;
+    float pressureSpeedAuxTurbolence;
     float temperature;
 } pitot_t;
 
@@ -75,6 +80,8 @@ void pitotStartCalibration(void);
 void pitotUpdate(void);
 float getAirspeedEstimate(void);
 float getAirspeedTurbolenceEstimate(void);
+float getAirspeedAuxEstimate(void);
+float getAirspeedAuxTurbolenceEstimate(void);
 bool pitotIsHealthy(void);
 
 #endif

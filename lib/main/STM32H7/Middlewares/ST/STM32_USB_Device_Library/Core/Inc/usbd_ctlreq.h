@@ -28,7 +28,6 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include  "usbd_def.h"
 
-
 /** @addtogroup STM32_USB_DEVICE_LIBRARY
   * @{
   */

@@ -204,7 +204,11 @@ static void updateArmingStatus(void)
     } else {
         /* CHECK: Run-time calibration */
         static bool calibratingFinishedBeep = false;
-        if (areSensorsCalibrating()) {
+		#ifndef ARMING_DISABLE_CALIBRATION_ERROR
+        	if (areSensorsCalibrating()) {
+		#else
+        	if (false) {
+		#endif
             ENABLE_ARMING_FLAG(ARMING_DISABLED_SENSORS_CALIBRATING);
             calibratingFinishedBeep = false;
         }
@@ -218,14 +222,19 @@ static void updateArmingStatus(void)
         }
 
         /* CHECK: RX signal */
-        if (!failsafeIsReceivingRxData()) {
-            ENABLE_ARMING_FLAG(ARMING_DISABLED_RC_LINK);
-        }
-        else {
-            DISABLE_ARMING_FLAG(ARMING_DISABLED_RC_LINK);
-        }
+		#ifndef ARMING_DISABLE_RXLINK_ERROR
 
+			if (!failsafeIsReceivingRxData()) {
+				ENABLE_ARMING_FLAG(ARMING_DISABLED_RC_LINK);
+			}
+			else {
+				DISABLE_ARMING_FLAG(ARMING_DISABLED_RC_LINK);
+			}
+		#else
+			DISABLE_ARMING_FLAG(ARMING_DISABLED_RC_LINK);
+		#endif
         /* CHECK: Throttle */
+#ifndef ARMING_DISABLE_LOWTHROTTLE_CHECK
         if (!armingConfig()->fixed_wing_auto_arm) {
             // Don't want this check if fixed_wing_auto_arm is in use - machine arms on throttle > LOW
             if (throttleStickIsLow()) {
@@ -234,7 +243,11 @@ static void updateArmingStatus(void)
                 ENABLE_ARMING_FLAG(ARMING_DISABLED_THROTTLE);
             }
         }
+#else
+        DISABLE_ARMING_FLAG(ARMING_DISABLED_THROTTLE);
+#endif
 
+#ifndef ARMING_DISABLE_LEVELED_ERROR
         /* CHECK: pitch / roll sticks centered when NAV_LAUNCH_MODE enabled */
         if (isNavLaunchEnabled()) {
             if (isRollPitchStickDeflected(rcControlsConfig()->control_deadband)) {
@@ -252,6 +265,12 @@ static void updateArmingStatus(void)
             DISABLE_ARMING_FLAG(ARMING_DISABLED_NOT_LEVEL);
         }
 
+#else
+        DISABLE_ARMING_FLAG(ARMING_DISABLED_ROLLPITCH_NOT_CENTERED);
+        DISABLE_ARMING_FLAG(ARMING_DISABLED_NOT_LEVEL);
+
+#endif
+
         /* CHECK: CPU load */
         if (isSystemOverloaded()) {
             ENABLE_ARMING_FLAG(ARMING_DISABLED_SYSTEM_OVERLOADED);
@@ -268,7 +287,8 @@ static void updateArmingStatus(void)
             DISABLE_ARMING_FLAG(ARMING_DISABLED_NAVIGATION_UNSAFE);
         }
 
-#if defined(USE_MAG)
+
+#if defined(USE_MAG) && !defined(ARMING_DISABLE_CALIBRATION_ERROR)
         /* CHECK: */
         if (sensors(SENSOR_MAG) && !STATE(COMPASS_CALIBRATED)) {
             ENABLE_ARMING_FLAG(ARMING_DISABLED_COMPASS_NOT_CALIBRATED);
@@ -276,8 +296,10 @@ static void updateArmingStatus(void)
         else {
             DISABLE_ARMING_FLAG(ARMING_DISABLED_COMPASS_NOT_CALIBRATED);
         }
+#else
+        DISABLE_ARMING_FLAG(ARMING_DISABLED_COMPASS_NOT_CALIBRATED);
 #endif
-
+#if !defined(ARMING_DISABLE_CALIBRATION_ERROR)
         /* CHECK: */
         if (
             sensors(SENSOR_ACC) &&
@@ -290,6 +312,9 @@ static void updateArmingStatus(void)
         else {
             DISABLE_ARMING_FLAG(ARMING_DISABLED_ACCELEROMETER_NOT_CALIBRATED);
         }
+#else
+        DISABLE_ARMING_FLAG(ARMING_DISABLED_ACCELEROMETER_NOT_CALIBRATED);
+#endif
 
         /* CHECK: */
         if (!isHardwareHealthy()) {
@@ -530,7 +555,11 @@ bool emergInflightRearmEnabled(void)
     return false;   // craft doesn't appear to be flying, don't allow emergency rearm
 }
 
-void tryArm(void)
+void tryArm(void){
+	tryArmBypassable(false);
+}
+
+void tryArmBypassable(bool force)
 {
     updateArmingStatus();
 
@@ -553,10 +582,10 @@ void tryArm(void)
 #endif
 
 #ifdef USE_PROGRAMMING_FRAMEWORK
-    if (emergInflightRearmEnabled() || !isArmingDisabled() || emergencyArmingIsEnabled() ||
-        LOGIC_CONDITION_GLOBAL_FLAG(LOGIC_CONDITION_GLOBAL_FLAG_OVERRIDE_ARMING_SAFETY)) {
+    if (force || (emergInflightRearmEnabled() || !isArmingDisabled() || emergencyArmingIsEnabled() ||
+        LOGIC_CONDITION_GLOBAL_FLAG(LOGIC_CONDITION_GLOBAL_FLAG_OVERRIDE_ARMING_SAFETY))) {
 #else
-    if (emergInflightRearmEnabled() || !isArmingDisabled() || emergencyArmingIsEnabled()) {
+    if (force || (emergInflightRearmEnabled() || !isArmingDisabled() || emergencyArmingIsEnabled())) {
 #endif
         // If nav_extra_arming_safety was bypassed we always
         // allow bypassing it even without the sticks set
@@ -564,7 +593,7 @@ void tryArm(void)
         // in case of a mid-air accidental disarm.
         bool usedBypass = false;
         navigationIsBlockingArming(&usedBypass);
-        if (usedBypass) {
+        if (force || usedBypass) {
             ENABLE_STATE(NAV_EXTRA_ARMING_SAFETY_BYPASSED);
         }
 

@@ -80,6 +80,8 @@ bool rotaxOilp5VSensorCalculator(invElement_t *el, void *val) ;
 bool rotaxFuelp5VSensorCalculator(invElement_t *el, void *val);
 bool rotaxVin12VSensorCalculator(invElement_t *el, void *val) ;
 
+bool invCalculatorIasAdcPressure(invElement_t *el, void *val);
+
 
 #ifdef __cplusplus
 }

@@ -15,7 +15,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define TASK_INV_ADC_HZ 10
+#define TASK_INV_ADC_HZ 20
 
 #define INV_ADCD_COUNT 3
 
