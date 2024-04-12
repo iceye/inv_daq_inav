@@ -250,7 +250,7 @@ static void updateArmingStatus(void)
 #ifndef ARMING_DISABLE_LEVELED_ERROR
         /* CHECK: pitch / roll sticks centered when NAV_LAUNCH_MODE enabled */
         if (isNavLaunchEnabled()) {
-            if (isRollPitchStickDeflected(rcControlsConfig()->control_deadband)) {
+            if (isRollPitchStickDeflected(CONTROL_DEADBAND)) {
                 ENABLE_ARMING_FLAG(ARMING_DISABLED_ROLLPITCH_NOT_CENTERED);
             } else {
                 DISABLE_ARMING_FLAG(ARMING_DISABLED_ROLLPITCH_NOT_CENTERED);
@@ -330,14 +330,6 @@ static void updateArmingStatus(void)
         }
         else {
             DISABLE_ARMING_FLAG(ARMING_DISABLED_BOXFAILSAFE);
-        }
-
-        /* CHECK: BOXKILLSWITCH */
-        if (IS_RC_MODE_ACTIVE(BOXKILLSWITCH)) {
-            ENABLE_ARMING_FLAG(ARMING_DISABLED_BOXKILLSWITCH);
-        }
-        else {
-            DISABLE_ARMING_FLAG(ARMING_DISABLED_BOXKILLSWITCH);
         }
 
         /* CHECK: Do not allow arming if Servo AutoTrim is enabled */
@@ -538,7 +530,7 @@ bool emergInflightRearmEnabled(void)
     timeMs_t currentTimeMs = millis();
     emergRearmStabiliseTimeout = 0;
 
-    if ((lastDisarmReason != DISARM_SWITCH && lastDisarmReason != DISARM_KILLSWITCH) ||
+    if ((lastDisarmReason != DISARM_SWITCH) ||
         (currentTimeMs > US2MS(lastDisarmTimeUs) + EMERGENCY_INFLIGHT_REARM_TIME_WINDOW_MS)) {
         return false;
     }
@@ -1047,6 +1039,10 @@ void taskUpdateRxMain(timeUs_t currentTimeUs)
 float getFlightTime(void)
 {
     return US2S(flightTime);
+}
+
+void resetFlightTime(void) {
+    flightTime = 0;
 }
 
 float getArmTime(void)

@@ -684,11 +684,6 @@ static bool mspFcProcessOutCommand(uint16_t cmdMSP, sbuf_t *dst, mspPostProcessF
         sbufWriteU16(dst, getRSSI());
         break;
 
-    case MSP_ARMING_CONFIG:
-        sbufWriteU8(dst, 0);
-        sbufWriteU8(dst, armingConfig()->disarm_kill_switch);
-        break;
-
     case MSP_LOOP_TIME:
         sbufWriteU16(dst, gyroConfig()->looptime);
         break;
@@ -907,13 +902,6 @@ static bool mspFcProcessOutCommand(uint16_t cmdMSP, sbuf_t *dst, mspPostProcessF
         sbufWriteU32(dst, currentBatteryProfile->capacity.warning);
         sbufWriteU32(dst, currentBatteryProfile->capacity.critical);
         sbufWriteU8(dst, currentBatteryProfile->capacity.unit);
-        break;
-
-    case MSP_MOTOR_PINS:
-        // FIXME This is hardcoded and should not be.
-        for (int i = 0; i < 8; i++) {
-            sbufWriteU8(dst, i + 1);
-        }
         break;
 
 #ifdef USE_GPS
@@ -1286,7 +1274,7 @@ static bool mspFcProcessOutCommand(uint16_t cmdMSP, sbuf_t *dst, mspPostProcessF
         sbufWriteU16(dst, accelerometerConfig()->acc_notch_cutoff);
 
         sbufWriteU16(dst, 0);    //Was gyroConfig()->gyro_stage2_lowpass_hz
-        break;
+        break; 
 
     case MSP_PID_ADVANCED:
         sbufWriteU16(dst, 0); // pidProfile()->rollPitchItermIgnoreRate
@@ -1296,7 +1284,7 @@ static bool mspFcProcessOutCommand(uint16_t cmdMSP, sbuf_t *dst, mspPostProcessF
         sbufWriteU8(dst, 0); //BF: pidProfile()->vbatPidCompensation
         sbufWriteU8(dst, 0); //BF: pidProfile()->setpointRelaxRatio
         sbufWriteU8(dst, 0);
-        sbufWriteU16(dst, pidProfile()->pidSumLimit);
+        sbufWriteU16(dst, 0); //Was pidsum limit
         sbufWriteU8(dst, 0); //BF: pidProfile()->itermThrottleGain
 
         /*
@@ -1314,7 +1302,7 @@ static bool mspFcProcessOutCommand(uint16_t cmdMSP, sbuf_t *dst, mspPostProcessF
         sbufWriteU8(dst, pidProfile()->heading_hold_rate_limit);
         sbufWriteU8(dst, HEADING_HOLD_ERROR_LPF_FREQ);
         sbufWriteU16(dst, 0);
-        sbufWriteU8(dst, gyroConfig()->gyro_lpf);
+        sbufWriteU8(dst, GYRO_LPF_256HZ);
         sbufWriteU8(dst, accelerometerConfig()->acc_lpf_hz);
         sbufWriteU8(dst, 0); //reserved
         sbufWriteU8(dst, 0); //reserved
@@ -1434,7 +1422,7 @@ static bool mspFcProcessOutCommand(uint16_t cmdMSP, sbuf_t *dst, mspPostProcessF
         sbufWriteU16(dst, positionEstimationConfig()->w_xy_gps_p * 100); // 2   inav_w_xy_gps_p float as value * 100
         sbufWriteU16(dst, positionEstimationConfig()->w_xy_gps_v * 100); // 2   inav_w_xy_gps_v float as value * 100
         sbufWriteU8(dst, gpsConfigMutable()->gpsMinSats);                // 1
-        sbufWriteU8(dst, positionEstimationConfig()->use_gps_velned);    // 1   inav_use_gps_velned ON/OFF
+        sbufWriteU8(dst, 1);    // 1   inav_use_gps_velned ON/OFF
 
         break;
 
@@ -1993,14 +1981,6 @@ static mspResult_e mspFcProcessInCommand(uint16_t cmdMSP, sbuf_t *src)
         break;
 #endif
 
-    case MSP_SET_ARMING_CONFIG:
-        if (dataSize == 2) {
-            sbufReadU8(src); //Swallow the first byte, used to be auto_disarm_delay
-            armingConfigMutable()->disarm_kill_switch = !!sbufReadU8(src);
-        } else
-            return MSP_RESULT_ERROR;
-        break;
-
     case MSP_SET_LOOP_TIME:
         if (sbufReadU16Safe(&tmp_u16, src))
             gyroConfigMutable()->looptime = tmp_u16;
@@ -2492,7 +2472,7 @@ static mspResult_e mspFcProcessInCommand(uint16_t cmdMSP, sbuf_t *src)
             sbufReadU8(src); //BF: pidProfileMutable()->vbatPidCompensation
             sbufReadU8(src); //BF: pidProfileMutable()->setpointRelaxRatio
             sbufReadU8(src);
-            pidProfileMutable()->pidSumLimit = sbufReadU16(src);
+            sbufReadU16(src); // Was pidsumLimit
             sbufReadU8(src); //BF: pidProfileMutable()->itermThrottleGain
 
             /*
@@ -2513,7 +2493,7 @@ static mspResult_e mspFcProcessInCommand(uint16_t cmdMSP, sbuf_t *src)
             pidProfileMutable()->heading_hold_rate_limit = sbufReadU8(src);
             sbufReadU8(src); //HEADING_HOLD_ERROR_LPF_FREQ
             sbufReadU16(src); //Legacy yaw_jump_prevention_limit
-            gyroConfigMutable()->gyro_lpf = sbufReadU8(src);
+            sbufReadU8(src); // was gyro lpf
             accelerometerConfigMutable()->acc_lpf_hz = sbufReadU8(src);
             sbufReadU8(src); //reserved
             sbufReadU8(src); //reserved
@@ -2654,7 +2634,7 @@ static mspResult_e mspFcProcessInCommand(uint16_t cmdMSP, sbuf_t *src)
             positionEstimationConfigMutable()->w_xy_gps_p = constrainf(sbufReadU16(src) / 100.0f, 0.0f, 10.0f);
             positionEstimationConfigMutable()->w_xy_gps_v = constrainf(sbufReadU16(src) / 100.0f, 0.0f, 10.0f);
             gpsConfigMutable()->gpsMinSats = constrain(sbufReadU8(src), 5, 10);
-            positionEstimationConfigMutable()->use_gps_velned = constrain(sbufReadU8(src), 0, 1);
+            sbufReadU8(src); // was positionEstimationConfigMutable()->use_gps_velned
         } else
             return MSP_RESULT_ERROR;
         break;

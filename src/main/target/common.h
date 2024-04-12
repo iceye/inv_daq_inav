@@ -80,6 +80,7 @@
 #define USE_EXTENDED_CMS_MENUS
 
 // Allow default rangefinders
+
 //#define USE_RANGEFINDER
 //#define USE_RANGEFINDER_MSP
 //#define USE_RANGEFINDER_BENEWAKE
@@ -87,6 +88,7 @@
 //#define USE_RANGEFINDER_VL53L1X
 //#define USE_RANGEFINDER_US42
 //#define USE_RANGEFINDER_TOF10120_I2C
+//#define USE_RANGEFINDER_TERARANGER_EVO_I2C
 
 // Allow default optic flow boards
 //#define USE_OPFLOW
@@ -115,7 +117,7 @@
 //#define USE_FRSKYOSD
 //#define USE_DJI_HD_OSD
 //#define USE_MSP_OSD
-#define USE_SMARTPORT_MASTER
+//#define USE_SMARTPORT_MASTER
 
 #define NAV_NON_VOLATILE_WAYPOINT_CLI
 
@@ -203,9 +205,17 @@
 //#define USE_HOTT_TEXTMODE
 //#define USE_24CHANNELS
 #define MAX_MIXER_PROFILE_COUNT 2
+#define USE_SMARTPORT_MASTER
 #elif !defined(STM32F7)
 #define MAX_MIXER_PROFILE_COUNT 1
 #endif
+
+#if (MCU_FLASH_SIZE <= 512)
+    #define SKIP_CLI_COMMAND_HELP
+    #undef USE_SERIALRX_SPEKTRUM
+    #undef USE_TELEMETRY_SRXL
+#endif
+
 #define USE_EZ_TUNE
 
 
