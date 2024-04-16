@@ -140,12 +140,16 @@ unsigned settingGetIndex(const setting_t *val)
 
 bool settingsValidate(unsigned *invalidIndex)
 {
+	uint8_t reached = 0;
 	for (unsigned ii = 0; ii < SETTINGS_TABLE_COUNT; ii++) {
 		const setting_t *setting = settingGet(ii);
 		setting_min_t min = settingGetMin(setting);
 		setting_max_t max = settingGetMax(setting);
 		void *ptr = settingGetValuePointer(setting);
 		bool isValid = false;
+		if (ii == 430) {
+			reached = 1;
+		}
 		switch (SETTING_TYPE(setting)) {
 		case VAR_UINT8:
 		{

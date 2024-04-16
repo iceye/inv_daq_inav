@@ -80,7 +80,11 @@ void EXTIHandlerInit(extiCallbackRec_t *self, extiHandlerCallback *fn)
 }
 
 #if defined(STM32F7) || defined(STM32H7)
-void EXTIConfig(IO_t io, extiCallbackRec_t *cb, int irqPriority, ioConfig_t config)
+void EXTIConfig(IO_t io, extiCallbackRec_t *cb, int irqPriority, ioConfig_t config){
+	EXTIConfigDetail(io, cb, irqPriority, config, GPIO_MODE_IT_FALLING, GPIO_SPEED_FREQ_LOW, GPIO_NOPULL);
+}
+
+void EXTIConfigDetail(IO_t io, extiCallbackRec_t *cb, int irqPriority, ioConfig_t config, uint32_t GPIO_MODE_IT, uint32_t GPIO_SPEED_FREQ, uint32_t GPIO_PULL)
 {
     (void)config;
     int chIdx;
@@ -92,9 +96,9 @@ void EXTIConfig(IO_t io, extiCallbackRec_t *cb, int irqPriority, ioConfig_t conf
 
     GPIO_InitTypeDef init = {
         .Pin = IO_Pin(io),
-        .Mode = GPIO_MODE_IT_RISING,
-        .Speed = GPIO_SPEED_FREQ_LOW,
-        .Pull = GPIO_NOPULL,
+        .Mode = GPIO_MODE_IT,
+        .Speed = GPIO_SPEED_FREQ,
+        .Pull = GPIO_PULL,
     };
     HAL_GPIO_Init(IO_GPIO(io), &init);
 

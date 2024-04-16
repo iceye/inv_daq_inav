@@ -91,6 +91,7 @@
 
 #include "telemetry/telemetry.h"
 
+#include "innovavionics/inv_digital_io.h"
 #include "innovavionics/inv_adc.h"
 #include "innovavionics/inv_data_calculators.h"
 #include "drivers/egt/max31855.h"
@@ -337,6 +338,13 @@ void taskUpdateAux(timeUs_t currentTimeUs)
 #endif
 }
 
+#if defined(USE_INNOVAVIONICS)
+void taskInvDigitalIO(timeUs_t currentTimeUs)
+{
+	invDigitalIOCheck();
+}
+#endif
+
 
 #if defined(USE_INNOVAVIONICS_ADC)
 void taskInvAdc(timeUs_t currentTimeUs)
@@ -437,6 +445,10 @@ void fcTasksInit(void)
 #endif
 #ifdef USE_IRLOCK
     setTaskEnabled(TASK_IRLOCK, irlockHasBeenDetected());
+#endif
+#ifdef USE_INNOVAVIONICS
+    invDigitalIOInit();
+    setTaskEnabled(TASK_INV_DIGITALIO, invDigitalIOStart());
 #endif
 #ifdef USE_INNOVAVIONICS_ADC
     initInvDataCalculators();
@@ -701,11 +713,19 @@ cfTask_t cfTasks[TASK_COUNT] = {
         .desiredPeriod = TASK_PERIOD_HZ(TASK_AUX_RATE_HZ),          // 100Hz @10ms
         .staticPriority = TASK_PRIORITY_HIGH,
     },
+#ifdef USE_INNOVAVIONICS
+	[TASK_INV_DIGITALIO] = {
+		.taskName = "INV_DIGITALIO",
+		.taskFunc = taskInvDigitalIO,
+		.desiredPeriod = TASK_PERIOD_HZ(TASK_INV_DIGITALIO_HZ),          // 20Hz @100ms
+		.staticPriority = TASK_PRIORITY_MEDIUM,
+	},
+#endif
 #ifdef USE_INNOVAVIONICS_ADC
 	[TASK_INV_ADC] = {
 		.taskName = "INV_ADC",
 		.taskFunc = taskInvAdc,
-		.desiredPeriod = TASK_PERIOD_HZ(TASK_INV_ADC_HZ),          // 10Hz @100ms
+		.desiredPeriod = TASK_PERIOD_HZ(TASK_INV_ADC_HZ),          // 20Hz @100ms
 		.staticPriority = TASK_PRIORITY_MEDIUM,
 	},
 #endif

@@ -52,35 +52,35 @@ extern "C" {
 
 void initInvDataCalculators();
 
-bool invCalculatorIntPlain(invElement_t *el, void *val);
+bool invCalculatorIntPlain(invElement_t *el, void *val, float dtMicros);
 
-bool invCalculatorUIntPlain(invElement_t *el, void *val);
+bool invCalculatorUIntPlain(invElement_t *el, void *val, float dtMicros);
 
-bool invCalculatorBytePlain(invElement_t *el, void *val);
+bool invCalculatorBytePlain(invElement_t *el, void *val, float dtMicros);
 
-bool invCalculatorBoolPlain(invElement_t *el, void *val);
+bool invCalculatorBoolPlain(invElement_t *el, void *val, float dtMicros);
 
-bool invVrefCalculator(invElement_t *el, void *val);
+bool invVrefCalculator(invElement_t *el, void *val, float dtMicros);
 
-bool invVanCalculator(invElement_t *el, void *val);
+bool invVanCalculator(invElement_t *el, void *val, float dtMicros);
 
-bool invMcuTempCalculator(invElement_t *el, void *val);
+bool invMcuTempCalculator(invElement_t *el, void *val, float dtMicros);
 
-bool invMicroVoltCalculator(invElement_t *el, void *val);
+bool invMicroVoltCalculator(invElement_t *el, void *val, float dtMicros);
 
-bool general12VSensorCalculator(invElement_t *el, void *val);
-bool general5VSensorCalculator(invElement_t *el, void *val) ;
-bool generalRLowSensorCalculator(invElement_t *el, void *val);
-bool generalRHighSensorCalculator(invElement_t *el, void *val);
-bool rotaxChtRSensorCalculator(invElement_t *el, void *val);
+bool general12VSensorCalculator(invElement_t *el, void *val, float dtMicros);
+bool general5VSensorCalculator(invElement_t *el, void *val, float dtMicros) ;
+bool generalRLowSensorCalculator(invElement_t *el, void *val, float dtMicros);
+bool generalRHighSensorCalculator(invElement_t *el, void *val, float dtMicros);
+bool rotaxChtRSensorCalculator(invElement_t *el, void *val, float dtMicros);
 
-bool rotaxOiltRSensorCalculator(invElement_t *el, void *val);
-bool rotaxOilpRSensorCalculator(invElement_t *el, void *val) ;
-bool rotaxOilp5VSensorCalculator(invElement_t *el, void *val) ;
-bool rotaxFuelp5VSensorCalculator(invElement_t *el, void *val);
-bool rotaxVin12VSensorCalculator(invElement_t *el, void *val) ;
+bool rotaxOiltRSensorCalculator(invElement_t *el, void *val, float dtMicros);
+bool rotaxOilpRSensorCalculator(invElement_t *el, void *val, float dtMicros) ;
+bool rotaxOilp5VSensorCalculator(invElement_t *el, void *val, float dtMicros) ;
+bool rotaxFuelp5VSensorCalculator(invElement_t *el, void *val, float dtMicros);
+bool rotaxVin12VSensorCalculator(invElement_t *el, void *val, float dtMicros) ;
 
-bool invCalculatorIasAdcPressure(invElement_t *el, void *val);
+bool invCalculatorIasAdcPressure(invElement_t *el, void *val, float dtMicros);
 
 
 #ifdef __cplusplus

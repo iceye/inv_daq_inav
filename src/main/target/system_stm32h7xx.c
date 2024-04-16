@@ -220,6 +220,20 @@ pllConfig_t pll1ConfigRevY = {
 
 // 480MHz for Rev.V
 pllConfig_t pll1ConfigRevV = {
+    .clockMhz = 360,
+    .m = 4,
+    .n = 360,
+    .p = 2,
+    .q = 8,
+    .r = 5,
+    .vos = PWR_REGULATOR_VOLTAGE_SCALE0
+};
+/**
+ * VALID CONFIGURATIONS:
+ *
+ *
+ //500Mhz (OVERCLOCKED!)
+ pllConfig_t pll1ConfigRevV = {
     .clockMhz = 480,
     .m = 4,
     .n = 480,
@@ -228,6 +242,30 @@ pllConfig_t pll1ConfigRevV = {
     .r = 5,
     .vos = PWR_REGULATOR_VOLTAGE_SCALE0
 };
+
+ //375Mhz
+pllConfig_t pll1ConfigRevV = {
+    .clockMhz = 360,
+    .m = 4,
+    .n = 360,
+    .p = 2,
+    .q = 8,
+    .r = 5,
+    .vos = PWR_REGULATOR_VOLTAGE_SCALE0
+};
+
+//250Mhz
+pllConfig_t pll1ConfigRevV = {
+    .clockMhz = 240,
+    .m = 4,
+    .n = 240,
+    .p = 2,
+    .q = 8,
+    .r = 5,
+    .vos = PWR_REGULATOR_VOLTAGE_SCALE0
+};
+ */
+
 /*
 // 480MHz for Rev.V
 pllConfig_t pll1ConfigRevV = {
@@ -376,7 +414,7 @@ static void SystemClockHSE_Config(void)
     // For higher HCLK frequency, VOS0 is available on RevV silicons, with FLASH wait states 4WS
     // AN5312 (Rev.1) Section 1.2.1 Voltage scaling Table.1
 
-    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK) {
+    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK) {
         /* Initialization Error */
         Error_Handler();
     }
@@ -524,7 +562,7 @@ void SystemClock_Config(void)
     RCC_PeriphClkInit.PLL2.PLL2P = 10; // 500Mhz
     RCC_PeriphClkInit.PLL2.PLL2Q = 10; // 266Mhz - 133Mhz can be derived from this for for QSPI if flash chip supports the speed.
     RCC_PeriphClkInit.PLL2.PLL2R = 25; // 200Mhz HAL LIBS REQUIRE 200MHZ SDMMC CLOCK, see HAL_SD_ConfigWideBusOperation, SDMMC_HSpeed_CLK_DIV, SDMMC_NSpeed_CLK_DIV
-    RCC_PeriphClkInit.PLL2.PLL2RGE = RCC_PLL2VCIRANGE_0;
+    RCC_PeriphClkInit.PLL2.PLL2RGE = RCC_PLL2VCIRANGE_2;
     RCC_PeriphClkInit.PLL2.PLL2VCOSEL = RCC_PLL2VCOWIDE;
     RCC_PeriphClkInit.PLL2.PLL2FRACN = 0;
     RCC_PeriphClkInit.SdmmcClockSelection = RCC_SDMMCCLKSOURCE_PLL2;

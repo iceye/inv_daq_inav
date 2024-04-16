@@ -127,6 +127,9 @@ TCH_t * timerGetTCH(const timerHardware_t * timHw)
         timerCtx[timerIndex]->ch[1].timCtx = timerCtx[timerIndex];
         timerCtx[timerIndex]->ch[2].timCtx = timerCtx[timerIndex];
         timerCtx[timerIndex]->ch[3].timCtx = timerCtx[timerIndex];
+		for (uint8_t i = 0; i < 4; i++) {
+			timerCtx[timerIndex]->ch[i].hasCb = false;
+		}
 
         // Implementation-specific init
         impl_timerInitContext(timerCtx[timerIndex]);
@@ -136,6 +139,7 @@ TCH_t * timerGetTCH(const timerHardware_t * timHw)
     timerCtx[timerIndex]->ch[timHw->channelIndex].timHw = timHw;
     timerCtx[timerIndex]->ch[timHw->channelIndex].dma = NULL;
     timerCtx[timerIndex]->ch[timHw->channelIndex].cb = NULL;
+    timerCtx[timerIndex]->ch[timHw->channelIndex].hasCb = false;
     timerCtx[timerIndex]->ch[timHw->channelIndex].dmaState = TCH_DMA_IDLE;
 
     return &timerCtx[timerIndex]->ch[timHw->channelIndex];
@@ -164,6 +168,7 @@ void timerChConfigCallbacks(TCH_t * tch, timerCallbacks_t * cb)
     }
 
     tch->cb = cb;
+    tch->hasCb = true;
 
     if (cb->callbackEdge) {
         impl_timerEnableIT(tch, TIM_IT_CCx(tch->timHw->channelIndex));

@@ -122,7 +122,9 @@ typedef enum {
 #ifdef USE_IRLOCK
     TASK_IRLOCK,
 #endif
-
+#ifdef USE_INNOVAVIONICS
+	TASK_INV_DIGITALIO,
+#endif
 #ifdef USE_INNOVAVIONICS_ADC
 	TASK_INV_ADC,
 #endif

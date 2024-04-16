@@ -117,6 +117,7 @@ typedef enum {
     //TIM_USE_FW_SERVO        = (1 << 6),
     TIM_USE_LED             = (1 << 24),
     TIM_USE_BEEPER          = (1 << 25),
+	TIM_USE_COUNTER			= (1 << 28)
 } timerUsageFlag_e;
 
 #define TIM_USE_OUTPUT_AUTO (TIM_USE_MOTOR | TIM_USE_SERVO)
@@ -126,6 +127,8 @@ typedef enum {
 
 #define TIM_IS_MOTOR_ONLY(flags) (TIM_IS_MOTOR(flags) && !TIM_IS_SERVO(flags))
 #define TIM_IS_SERVO_ONLY(flags) (!TIM_IS_MOTOR(flags) && TIM_IS_SERVO(flags))
+
+#define TIM_IS_COUNTER(flags) ((flags) & TIM_USE_COUNTER)
 
 enum {
     TIMER_OUTPUT_NONE = 0x00,
@@ -157,6 +160,7 @@ typedef struct TCH_s {
     struct timHardwareContext_s *   timCtx;         // Run-time initialized to parent timer
     const timerHardware_t *         timHw;          // Link to timerHardware_t definition (target-specific)
     const timerCallbacks_t *        cb;
+    bool 							hasCb;
     DMA_t                           dma;            // Timer channel DMA handle
     volatile tchDmaState_e          dmaState;
     void *                          dmaBuffer;

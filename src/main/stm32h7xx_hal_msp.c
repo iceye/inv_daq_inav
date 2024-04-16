@@ -1322,6 +1322,52 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
 
   /* USER CODE END TIM17_MspInit 1 */
   }
+  if(htim_base->Instance==TIM8)
+  {
+	/* USER CODE BEGIN TIM8_MspInit 0 */
+
+	/* USER CODE END TIM8_MspInit 0 */
+	/* Peripheral clock enable */
+	__HAL_RCC_TIM8_CLK_ENABLE();
+
+	__HAL_RCC_GPIOI_CLK_ENABLE();
+	/**TIM8 GPIO Configuration
+	PI7     ------> TIM8_CH3
+	*/
+	GPIO_InitStruct.Pin = AUXCOUNTER_3_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+	GPIO_InitStruct.Pull = GPIO_PULLUP;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+	GPIO_InitStruct.Alternate = GPIO_AF3_TIM8;
+	HAL_GPIO_Init(AUXCOUNTER_3_GPIO_Port, &GPIO_InitStruct);
+
+	/* USER CODE BEGIN TIM8_MspInit 1 */
+
+	/* USER CODE END TIM8_MspInit 1 */
+  }
+  else if(htim_base->Instance==TIM12)
+  {
+	/* USER CODE BEGIN TIM12_MspInit 0 */
+
+	/* USER CODE END TIM12_MspInit 0 */
+	/* Peripheral clock enable */
+	__HAL_RCC_TIM12_CLK_ENABLE();
+
+	__HAL_RCC_GPIOH_CLK_ENABLE();
+	/**TIM12 GPIO Configuration
+	PH9     ------> TIM12_CH2
+	*/
+	GPIO_InitStruct.Pin = RPM_CH_A_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+	GPIO_InitStruct.Pull = GPIO_PULLUP;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+	GPIO_InitStruct.Alternate = GPIO_AF2_TIM12;
+	HAL_GPIO_Init(RPM_CH_A_GPIO_Port, &GPIO_InitStruct);
+
+	/* USER CODE BEGIN TIM12_MspInit 1 */
+
+	/* USER CODE END TIM12_MspInit 1 */
+  }
 
 }
 

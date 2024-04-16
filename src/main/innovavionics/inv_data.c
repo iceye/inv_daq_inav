@@ -10,22 +10,36 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
+/*
+
+#define invDataStoreValBool(_data, _val)  {bool __invValTmp = (bool)_val; (*_invData[_data]._calc)(&_invData[_data], &(__invValTmp));}
+#define invDataStoreValUInt(_data, _val)  {uint32_t __invValTmp = (uint32_t)_val; (*_invData[_data]._calc)(&_invData[_data], &(__invValTmp));}
+#define invDataStoreValInt(_data, _val)  {int32_t __invValTmp = (int32_t)_val; (*_invData[_data]._calc)(&_invData[_data], &(__invValTmp));}
+#define invDataStoreValByte(_data, _val) {uint8_t __invValTmp = (uint8_t)_val; (*_invData[_data]._calc)(&_invData[_data], &(__invValTmp));}
+*/
 
 void invDataStoreValByConf(invElementDataType_t _data, void* _val)  {
+		uint32_t nowMicros = micros();
+		float dt = US2S(nowMicros - _invData[_data]._lastUpdate);
         if(_invData[_data]._boolvalue == 1){
-            invDataStoreValBool(_data, _val);
+        	//bool __invValTmp = (bool)(*((bool*)_val));
+        	(*_invData[_data]._calc)(&_invData[_data],_val,dt);
         } else
-		if(_invData[_data]
-		._intvalue == 1){
-            if(_invData[_data]
-		._unsigned == 1) {
-				invDataStoreValUInt(_data, _val);
+		if(_invData[_data]._intvalue == 1){
+
+
+            if(_invData[_data]._unsigned == 1) {
+            	//uint32_t __invValTmp = (uint32_t)(*((uint32_t*)_val));
+            	(*_invData[_data]._calc)(&_invData[_data],_val,dt);
             }else{
-				invDataStoreValInt(_data, _val);
+            	//int32_t __invValTmp = (int32_t)(*((int32_t*)_val));
+            	(*_invData[_data]._calc)(&_invData[_data], _val,dt);
             }
         } else if(_invData[_data]._bytevalue == 1){
-            invDataStoreValByte(_data, _val);
+        	//uint8_t __invValTmp = (uint8_t)(*((uint8_t*)_val));
+        	(*_invData[_data]._calc)(&_invData[_data], _val,dt);
         }
+        _invData[_data]._lastUpdate = nowMicros;
 }
 
 //invElement_t _invData [INV_DATA_COUNT];
@@ -505,25 +519,25 @@ volatile invElement_t _invData [INV_DATA_COUNT] = {
 	{
 		.dataType = INV_RPM_ENGINE,			._enabled = 1, ._timeout = 0, ._hasTimeout = 0, ._readable = 1, ._writable = 0,
 		._intvalue = 1, ._bytevalue = 0, ._boolvalue = 0,
-		._unsigned = 1, ._flags = 0, ._filter = LPF_PT1_FAST,
+		._unsigned = 1, ._flags = 0, ._filter = LPF_PT1_SLOW,
 		._calc = invCalculatorUIntPlain,
-		._valueUI = 0,
+		._valueUI = 8,
 
 	},
 	{
-		.dataType = INV_RPM_PROP,			._enabled = 0, ._timeout = 0, ._hasTimeout = 0, ._readable = 1, ._writable = 0,
+		.dataType = INV_RPM_PROP,			._enabled = 1, ._timeout = 0, ._hasTimeout = 0, ._readable = 1, ._writable = 0,
 		._intvalue = 1, ._bytevalue = 0, ._boolvalue = 0,
-		._unsigned = 1, ._flags = 0, ._filter = LPF_PT1_FAST,
+		._unsigned = 1, ._flags = 0, ._filter = NO_FILTER,
 		._calc = invCalculatorUIntPlain,
-		._valueUI = 0,
+		._valueUI = 9,
 
 	},
 	{
-		.dataType = INV_RPM_ROTOR,			._enabled = 0, ._timeout = 0, ._hasTimeout = 0, ._readable = 1, ._writable = 0,
+		.dataType = INV_RPM_ROTOR,			._enabled = 1, ._timeout = 0, ._hasTimeout = 0, ._readable = 1, ._writable = 0,
 		._intvalue = 1, ._bytevalue = 0, ._boolvalue = 0,
-		._unsigned = 1, ._flags = 0, ._filter = LPF_PT1_FAST,
+		._unsigned = 1, ._flags = 0, ._filter = NO_FILTER,
 		._calc = invCalculatorUIntPlain,
-		._valueUI = 0,
+		._valueUI = 10,
 
 	},
 	{

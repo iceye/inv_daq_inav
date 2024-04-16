@@ -26,6 +26,8 @@
 	#include "stm32h7xx_hal.h"
 	#include "target.h"
 #endif
+#include "scheduler/protothreads.h"
+
 #ifdef USE_INNOVAVIONICS_ADC
 
 
@@ -238,7 +240,9 @@ static void invCleanCache(uint32_t* buffer, uint8_t size){
 }
 
 
-void invAdcCheckNewData(){
+PROTOTHREAD(invAdcCheckNewData)
+{
+	//ptBegin(invAdcCheckNewData);
 	if (invAdc1Error) {
 		invAdc1Error = true;
 		invAdc1ValuesReady = false;
@@ -264,7 +268,7 @@ void invAdcCheckNewData(){
 	if (invAdc1ValuesReady) {
 		for (uint8_t i=0; i < INV_ADC1_CHANNELS; i++) {
 			if (invAdc1ValueMap[i] != INV_DATA_NONE) {
-				invDataStoreValByConf(invAdc1ValueMap[i], invAdcValues[INV_ADC1_BUFFER_START + i]);
+				invDataStoreValByConf(invAdc1ValueMap[i], &invAdcValues[INV_ADC1_BUFFER_START + i]);
 			}
 		}
 		invAdc1ValuesReady = false;
@@ -283,7 +287,7 @@ void invAdcCheckNewData(){
 	if (invAdc2ValuesReady) {
 		for (uint8_t i=0; i < INV_ADC2_CHANNELS; i++) {
 			if (invAdc2ValueMap[i] != INV_DATA_NONE) {
-				invDataStoreValByConf(invAdc2ValueMap[i],invAdcValues[INV_ADC2_BUFFER_START + i]);
+				invDataStoreValByConf(invAdc2ValueMap[i],&invAdcValues[INV_ADC2_BUFFER_START + i]);
 			}
 		}
 		#ifdef INNOVAVIONICS_ADC_DEBUG
@@ -306,7 +310,7 @@ void invAdcCheckNewData(){
 	if (invAdc3ValuesReady) {
 		for (uint8_t i=0; i < INV_ADC3_CHANNELS; i++) {
 			if (invAdc3ValueMap[i] != INV_DATA_NONE) {
-				invDataStoreValByConf(invAdc3ValueMap[i],invAdcValues[INV_ADC3_BUFFER_START + i]);
+				invDataStoreValByConf(invAdc3ValueMap[i],&invAdcValues[INV_ADC3_BUFFER_START + i]);
 			}
 		}
 		#ifdef INNOVAVIONICS_ADC_DEBUG
@@ -333,6 +337,7 @@ void invAdcCheckNewData(){
 		invAdc3Timeout = (millis() - invAdc3LastSeen) > 1000;
 	}
 
+	//ptYeld();
 }
 
 

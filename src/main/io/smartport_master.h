@@ -29,14 +29,16 @@
 
 #include <telemetry/smartport.h>
 
-#if defined(USE_SMARTPORT_MASTER)
-
 typedef struct {
     bool halfDuplex;
     bool inverted;
 } smartportMasterConfig_t;
 
 PG_DECLARE(smartportMasterConfig_t, smartportMasterConfig);
+
+#if defined(USE_SMARTPORT_MASTER)
+
+
 
 typedef struct {
     int8_t count;

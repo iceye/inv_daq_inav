@@ -355,10 +355,10 @@ int32_t baroCalculateAltitude(void)
         baro.BaroAlt = pressureToAltitude(baro.baroPressure) - baroGroundAltitude;
         baro.BaroAltQnh = pressureToAltitudeQNH(baro.baroPressure, invDataGetUInt(INV_QNH));
    }
-    invDataStoreValUInt(INV_QNH, 101325);
-    invDataStoreValUInt(INV_ALTITUDE, baro.BaroAltQnh);
-    invDataStoreValUInt(INV_DENSITYALT, baro.BaroAltQnh);
-    invDataStoreValUInt(INV_STATIC_PRESSURE, baro.baroPressure);
+    invDataStoreValByConf(INV_QNH, &baro.BaroQnh);
+    invDataStoreValByConf(INV_ALTITUDE, &baro.BaroAltQnh);
+    invDataStoreValByConf(INV_DENSITYALT, &baro.BaroAltQnh);
+    invDataStoreValByConf(INV_STATIC_PRESSURE, &baro.baroPressure);
     return baro.BaroAlt;
 }
 

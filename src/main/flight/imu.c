@@ -832,10 +832,15 @@ static void imuCalculateEstimatedAttitude(float dT)
     imuUpdateTailSitter();
     imuUpdateEulerAngles();
 
-    invDataStoreValInt(INV_ROLL, attitude.values.roll);
-	invDataStoreValInt(INV_PITCH, attitude.values.pitch);
-	invDataStoreValInt(INV_YAW, attitude.values.yaw);
-	invDataStoreValInt(INV_HEADING, courseOverGround);
+    int32_t roll = attitude.values.roll;
+    int32_t pitch = attitude.values.pitch;
+    int32_t yaw = attitude.values.yaw;
+    int32_t course = RADIANS_TO_DECIDEGREES(courseOverGround);
+
+    invDataStoreValByConf(INV_ROLL, &roll);
+    invDataStoreValByConf(INV_PITCH, &pitch);
+    invDataStoreValByConf(INV_YAW, &yaw);
+    invDataStoreValByConf(INV_HEADING, &course);
 }
 
 void imuUpdateAccelerometer(void)

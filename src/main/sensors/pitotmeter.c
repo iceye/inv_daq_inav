@@ -306,11 +306,16 @@ STATIC_PROTOTHREAD(pitotThread)
            // invDataStoreValUInt(INV_IAS, pitot.airSpeed*10);
             pitot.temperature = pitotTemperatureTmp;   // Kelvin
 
+            int32_t temperature = (int32_t) (pitot.temperature*1000.0f);
+            int32_t pressure = (int32_t) (pitot.pressure*1000.0f);
+            uint32_t airSpeed = (uint32_t) (pitot.airSpeed*10.0f);
+            uint32_t airSpeedTurbolence = (uint32_t) (pitot.airSpeedTurbolence*10.0f);
 
-            invDataStoreValInt(INV_IAS_TEMPERATURE, (uint32_t) pitot.temperature*1000); //mdegC
-            invDataStoreValInt(INV_IAS_PRESSURE, (int32_t) pitot.pressure*1000); //mPa
-            invDataStoreValUInt(INV_IAS, (uint32_t) pitot.airSpeed*10); // mm/s
-            invDataStoreValUInt(INV_IAS_TURBOLENCE, (uint32_t) pitot.airSpeedTurbolence*10); // mm/s
+
+            invDataStoreValByConf(INV_IAS_TEMPERATURE, &temperature); //mdegC
+            invDataStoreValByConf(INV_IAS_PRESSURE, &pressure); //mPa
+            invDataStoreValByConf(INV_IAS, &airSpeed); // mm/s
+            invDataStoreValByConf(INV_IAS_TURBOLENCE,&airSpeedTurbolence); // mm/s
 
 
 
@@ -321,9 +326,11 @@ STATIC_PROTOTHREAD(pitotThread)
             pitot.pressure = pitotPressureTmp;
             performPitotCalibrationCycle();
             pitot.airSpeed = 0.0f;
-            invDataStoreValInt(INV_IAS_PRESSURE, 0);
-            invDataStoreValUInt(INV_IAS, 0);
-            invDataStoreValUInt(INV_IAS_TEMPERATURE, 0); //mdegC
+            int32_t zero = (int32_t) 0;
+            invDataStoreValByConf(INV_IAS_PRESSURE, &zero);
+            invDataStoreValByConf(INV_IAS, &zero);
+            invDataStoreValByConf(INV_IAS_TEMPERATURE, &zero); //mdegC
+            invDataStoreValByConf(INV_IAS_TURBOLENCE,&zero); // mm/s
         }
 
 #if defined(USE_PITOT_FAKE)

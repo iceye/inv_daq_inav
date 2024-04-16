@@ -51,14 +51,14 @@ void impl_timerCaptureCompareHandler(tmr_type *tim, timHardwareContext_t * timer
 #define _TIM_IRQ_HANDLER2(name, i, j)                                   \
     void name(void)                                                     \
     {                                                                   \
-        impl_timerCaptureCompareHandler(TIM ## i, timerCtx[i - 1]); \
-        impl_timerCaptureCompareHandler(TIM ## j, timerCtx[j - 1]); \
+        impl_timerCaptureCompareHandler(TIM ## i, timerCtx[i<=8?i - 1:i - 4]); \
+        impl_timerCaptureCompareHandler(TIM ## j, timerCtx[j<=8?j - 1:j - 4]); \
     } struct dummy
 
 #define _TIM_IRQ_HANDLER(name, i)                                       \
     void name(void)                                                     \
     {                                                                   \
-        impl_timerCaptureCompareHandler(TIM ## i, timerCtx[i - 1]); \
+        impl_timerCaptureCompareHandler(TIM ## i, timerCtx[i<=8?i - 1:i - 4]); \
     } struct dummy
 
 uint8_t lookupTimerIndex(const TIM_TypeDef *tim);

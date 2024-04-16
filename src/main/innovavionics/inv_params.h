@@ -162,7 +162,7 @@ typedef enum {
 
 typedef struct invElement_t invElement_t;
 
-typedef bool (*invElementCalculator_t)(invElement_t *el, void* value);
+typedef bool (*invElementCalculator_t)(invElement_t *el, void* value, float dtMicros);
 
 struct invElement_t{
 	invElementDataType_t dataType;
@@ -187,6 +187,7 @@ struct invElement_t{
 	uint8_t _valueBy;
 	bool _valueB;
 	pt1Filter_t _pt1FilterState;
+	uint32_t _lastUpdate;
 };
 
 typedef struct invElement_t invElement_t;

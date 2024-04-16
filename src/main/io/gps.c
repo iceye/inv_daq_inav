@@ -453,7 +453,7 @@ void gpsPreInit(void)
 void gpsInit(void)
 {
 #ifdef GPS_RESET_PIN
-	gpsReset = IOGetByTag(GPS_RESET_PIN);
+	gpsReset = IOGetByTag(DEFIO_TAG(GPS_RESET_PIN));
 	IOInit(gpsReset, OWNER_SYSTEM, RESOURCE_OUTPUT, RESOURCE_INDEX(20));
 	IOConfigGPIO(gpsReset, GPS_RESET_PIN_CFG);
 	delay(10);

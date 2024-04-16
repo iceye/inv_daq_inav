@@ -33,10 +33,7 @@ extern volatile invElement_t _invData [];
 
 void invDataStoreValByConf(invElementDataType_t _data, void* _val) ;
 
-#define invDataStoreValBool(_data, _val)  {bool __invValTmp = (bool)_val; (*_invData[_data]._calc)(&_invData[_data], &(__invValTmp));}
-#define invDataStoreValUInt(_data, _val)  {uint32_t __invValTmp = (uint32_t)_val; (*_invData[_data]._calc)(&_invData[_data], &(__invValTmp));}
-#define invDataStoreValInt(_data, _val)  {int32_t __invValTmp = (int32_t)_val; (*_invData[_data]._calc)(&_invData[_data], &(__invValTmp));}
-#define invDataStoreValByte(_data, _val) {uint8_t __invValTmp = (uint8_t)_val; (*_invData[_data]._calc)(&_invData[_data], &(__invValTmp));}
+
 //#define invDataStoreValFromAdc_uV(_data, _val) {uint8_t __invValTmp = (uint8_t)_val; (*_invData[_data]._calcAdc)(&_invData[_data], &(__invValTmp));}
 #define invDataIsEnabled(_data) _isInvElementEnabled(&(_invData[_data]))
 #define invDataIsTimeout(_data) _isInvElementTimeout(&(_invData[_data]))
@@ -64,29 +61,98 @@ void invDataStoreValByConf(invElementDataType_t _data, void* _val) ;
 
 #define invGetDaqStatus() (_invData[INV_DAQ_STATUS]._valueBy)
 
-#define invSetMcuSensorError() invDataStoreValByte(INV_DAQ_STATUS, invGetDaqStatus() & ~INV_DAQ_MCU_STATUS_FLAG )
-#define invSetMcuSensorHealty() invDataStoreValByte(INV_DAQ_STATUS, invGetDaqStatus() | INV_DAQ_MCU_STATUS_FLAG )
 
-#define invSetAccSensorError() invDataStoreValByte(INV_DAQ_STATUS, invGetDaqStatus() & ~INV_DAQ_ACC_STATUS_FLAG )
-#define invSetAccSensorHealty() invDataStoreValByte(INV_DAQ_STATUS, invGetDaqStatus() | INV_DAQ_ACC_STATUS_FLAG )
+#define invSetMcuSensorError() { \
+		uint8_t newDaqStatus = invGetDaqStatus() & ~INV_DAQ_MCU_STATUS_FLAG ;	\
+		invDataStoreValByConf(INV_DAQ_STATUS, &newDaqStatus); 					\
+	}
+#define invSetMcuSensorHealty() { \
+		uint8_t newDaqStatus = invGetDaqStatus() | INV_DAQ_MCU_STATUS_FLAG ;	\
+		invDataStoreValByConf(INV_DAQ_STATUS, &newDaqStatus); 					\
+	}
 
-#define invSetGyroSensorError() invDataStoreValByte(INV_DAQ_STATUS, invGetDaqStatus() & ~INV_DAQ_GYRO_STATUS_FLAG )
-#define invSetGyroSensorHealty() invDataStoreValByte(INV_DAQ_STATUS, invGetDaqStatus() | INV_DAQ_GYRO_STATUS_FLAG )
 
-#define invSetMagSensorError() invDataStoreValByte(INV_DAQ_STATUS, invGetDaqStatus() & ~INV_DAQ_MAG_STATUS_FLAG )
-#define invSetMagSensorHealty() invDataStoreValByte(INV_DAQ_STATUS, invGetDaqStatus() | INV_DAQ_MAG_STATUS_FLAG )
+#define invSetAccSensorError() { \
+		uint8_t newDaqStatus = invGetDaqStatus() & ~INV_DAQ_ACC_STATUS_FLAG ;	\
+		invDataStoreValByConf(INV_DAQ_STATUS, &newDaqStatus); 					\
+	}
+#define invSetAccSensorHealty() { \
+		uint8_t newDaqStatus = invGetDaqStatus() | INV_DAQ_ACC_STATUS_FLAG ;	\
+		invDataStoreValByConf(INV_DAQ_STATUS, &newDaqStatus); 					\
+	}
 
-#define invSetGpsSensorError() invDataStoreValByte(INV_DAQ_STATUS, invGetDaqStatus() & ~INV_DAQ_GPS_STATUS_FLAG )
-#define invSetGpsSensorHealty() invDataStoreValByte(INV_DAQ_STATUS, invGetDaqStatus() | INV_DAQ_GPS_STATUS_FLAG )
 
-#define invSetPitotSensorError() invDataStoreValByte(INV_DAQ_STATUS, invGetDaqStatus() & ~INV_DAQ_PITOT_STATUS_FLAG )
-#define invSetPitotSensorHealty() invDataStoreValByte(INV_DAQ_STATUS, invGetDaqStatus() | INV_DAQ_PITOT_STATUS_FLAG )
 
-#define invSetBaroSensorError() invDataStoreValByte(INV_DAQ_STATUS, invGetDaqStatus() & ~INV_DAQ_BARO_STATUS_FLAG )
-#define invSetBaroSensorHealty() invDataStoreValByte(INV_DAQ_STATUS, invGetDaqStatus() | INV_DAQ_BARO_STATUS_FLAG )
+#define invSetGyroSensorError() { \
+		uint8_t newDaqStatus = invGetDaqStatus() & ~INV_DAQ_GYRO_STATUS_FLAG ;	\
+		invDataStoreValByConf(INV_DAQ_STATUS, &newDaqStatus); 					\
+	}
 
-#define invSetPitotAltSensorError() invDataStoreValByte(INV_DAQ_STATUS, invGetDaqStatus() & ~INV_DAQ_PITOT_ALT_STATUS_FLAG )
-#define invSetPitoAlttSensorHealty() invDataStoreValByte(INV_DAQ_STATUS, invGetDaqStatus() | INV_DAQ_PITOT_ALT_STATUS_FLAG )
+#define invSetGyroSensorHealty() { \
+		uint8_t newDaqStatus = invGetDaqStatus() | INV_DAQ_GYRO_STATUS_FLAG ;	\
+		invDataStoreValByConf(INV_DAQ_STATUS, &newDaqStatus); 					\
+	}
+
+
+
+
+#define invSetMagSensorError() { \
+        uint8_t newDaqStatus = invGetDaqStatus() & ~INV_DAQ_MAG_STATUS_FLAG ;	\
+        invDataStoreValByConf(INV_DAQ_STATUS, &newDaqStatus); 					\
+    }
+#define invSetMagSensorHealty() { \
+        uint8_t newDaqStatus = invGetDaqStatus() | INV_DAQ_MAG_STATUS_FLAG ;	\
+        invDataStoreValByConf(INV_DAQ_STATUS, &newDaqStatus); 					\
+    }
+
+
+
+#define invSetGpsSensorError() { \
+        uint8_t newDaqStatus = invGetDaqStatus() & ~INV_DAQ_GPS_STATUS_FLAG ;	\
+        invDataStoreValByConf(INV_DAQ_STATUS, &newDaqStatus); 					\
+    }
+
+#define invSetGpsSensorHealty() { \
+        uint8_t newDaqStatus = invGetDaqStatus() | INV_DAQ_GPS_STATUS_FLAG ;	\
+        invDataStoreValByConf(INV_DAQ_STATUS, &newDaqStatus); 					\
+    }
+
+
+
+#define invSetPitotSensorError() { \
+        uint8_t newDaqStatus = invGetDaqStatus() & ~INV_DAQ_PITOT_STATUS_FLAG ;	\
+        invDataStoreValByConf(INV_DAQ_STATUS, &newDaqStatus); 					\
+    }
+
+#define invSetPitotSensorHealty() { \
+        uint8_t newDaqStatus = invGetDaqStatus() | INV_DAQ_PITOT_STATUS_FLAG ;	\
+        invDataStoreValByConf(INV_DAQ_STATUS, &newDaqStatus); 					\
+    }
+
+
+
+
+#define invSetBaroSensorError() { \
+        uint8_t newDaqStatus = invGetDaqStatus() & ~INV_DAQ_BARO_STATUS_FLAG ;	\
+        invDataStoreValByConf(INV_DAQ_STATUS, &newDaqStatus); 					\
+    }
+
+#define invSetBaroSensorHealty() { \
+        uint8_t newDaqStatus = invGetDaqStatus() | INV_DAQ_BARO_STATUS_FLAG ;	\
+        invDataStoreValByConf(INV_DAQ_STATUS, &newDaqStatus); 					\
+    }
+
+
+
+#define invSetPitotAltSensorError() { \
+        uint8_t newDaqStatus = invGetDaqStatus() & ~INV_DAQ_PITOT_ALT_STATUS_FLAG ;	\
+        invDataStoreValByConf(INV_DAQ_STATUS, &newDaqStatus); 					\
+    }
+
+#define invSetPitotAltSensorHealty() { \
+        uint8_t newDaqStatus = invGetDaqStatus() | INV_DAQ_PITOT_ALT_STATUS_FLAG ;	\
+        invDataStoreValByConf(INV_DAQ_STATUS, &newDaqStatus); 					\
+    }
 
 
 

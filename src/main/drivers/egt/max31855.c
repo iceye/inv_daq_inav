@@ -143,7 +143,7 @@ bool readEgts(){
 	for (uint8_t i = 0; i < 4; i++) {
 		//if (egtDevice[i].lastReadFault==MAX31855_2WIRE_NO_FAULT ||  now - egtDevice[i].lastReadTime > 30000) {
 			readTempCThermoTypeK(&egtDevice[i]);
-			invDataStoreValInt(egtDevice[i].deviceID, egtDevice[i].milliCelsiusProbe);
+			invDataStoreValByConf(egtDevice[i].deviceID, &egtDevice[i].milliCelsiusProbe);
 		//}
 	}
 

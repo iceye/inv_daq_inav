@@ -96,7 +96,7 @@ void impl_timerConfigBase(TCH_t * tch, uint16_t period, uint32_t hz)
     timHandle->Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
     timHandle->Init.CounterMode = TIM_COUNTERMODE_UP;
     timHandle->Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
-
+    //__HAL_TIM_SET_COUNTER(timHandle, 0);
     HAL_TIM_Base_Init(timHandle);
     
 #if defined(STM32H7) || defined(STM32G4)
@@ -221,7 +221,7 @@ void impl_timerChConfigIC(TCH_t * tch, bool polarityRising, unsigned inputFilter
     HAL_TIM_IC_ConfigChannel(tch->timCtx->timHandle, &TIM_ICInitStructure, lookupTIMChannelTable[tch->timHw->channelIndex]);
 }
 
-void impl_timerCaptureCompareHandler(TIM_TypeDef *tim, timHardwareContext_t *timerCtx)
+void impl_timerCaptureCompareHandler(TIM_TypeDef *tim, timHardwareContext_t *timerCapCtx)
 {
     unsigned tim_status = tim->SR & tim->DIER;
 
@@ -233,35 +233,35 @@ void impl_timerCaptureCompareHandler(TIM_TypeDef *tim, timHardwareContext_t *tim
         tim->SR = mask;
         tim_status &= mask;
 
-        if (timerCtx) {
+        if (timerCapCtx) {
             switch (bit) {
                 case __builtin_clz(TIM_IT_UPDATE): {
                     const uint16_t capture = tim->ARR;
-                    if (timerCtx->ch[0].cb && timerCtx->ch[0].cb->callbackOvr) {
-                        timerCtx->ch[0].cb->callbackOvr(&timerCtx->ch[0], capture);
+                    if (timerCapCtx->ch[0].hasCb && timerCapCtx->ch[0].cb->callbackOvr) {
+                    	timerCapCtx->ch[0].cb->callbackOvr(&timerCapCtx->ch[0], capture);
                     }
-                    if (timerCtx->ch[1].cb && timerCtx->ch[1].cb->callbackOvr) {
-                        timerCtx->ch[1].cb->callbackOvr(&timerCtx->ch[1], capture);
+                    if (timerCapCtx->ch[1].hasCb && timerCapCtx->ch[1].cb->callbackOvr) {
+                    	timerCapCtx->ch[1].cb->callbackOvr(&timerCapCtx->ch[1], capture);
                     }
-                    if (timerCtx->ch[2].cb && timerCtx->ch[2].cb->callbackOvr) {
-                        timerCtx->ch[2].cb->callbackOvr(&timerCtx->ch[2], capture);
+                    if (timerCapCtx->ch[2].hasCb && timerCapCtx->ch[2].cb->callbackOvr) {
+                    	timerCapCtx->ch[2].cb->callbackOvr(&timerCapCtx->ch[2], capture);
                     }
-                    if (timerCtx->ch[3].cb && timerCtx->ch[3].cb->callbackOvr) {
-                        timerCtx->ch[3].cb->callbackOvr(&timerCtx->ch[3], capture);
+                    if (timerCapCtx->ch[3].hasCb && timerCapCtx->ch[3].cb->callbackOvr) {
+                    	timerCapCtx->ch[3].cb->callbackOvr(&timerCapCtx->ch[3], capture);
                     }
                     break;
                 }
                 case __builtin_clz(TIM_IT_CC1):
-                    timerCtx->ch[0].cb->callbackEdge(&timerCtx->ch[0], tim->CCR1);
+						timerCapCtx->ch[0].cb->callbackEdge(&timerCapCtx->ch[0], tim->CCR1);
                     break;
                 case __builtin_clz(TIM_IT_CC2):
-                    timerCtx->ch[1].cb->callbackEdge(&timerCtx->ch[1], tim->CCR2);
+						timerCapCtx->ch[1].cb->callbackEdge(&timerCapCtx->ch[1], tim->CCR2);
                     break;
                 case __builtin_clz(TIM_IT_CC3):
-                    timerCtx->ch[2].cb->callbackEdge(&timerCtx->ch[2], tim->CCR3);
+						timerCapCtx->ch[2].cb->callbackEdge(&timerCapCtx->ch[2], tim->CCR3);
                     break;
                 case __builtin_clz(TIM_IT_CC4):
-                    timerCtx->ch[3].cb->callbackEdge(&timerCtx->ch[3], tim->CCR4);
+						timerCapCtx->ch[3].cb->callbackEdge(&timerCapCtx->ch[3], tim->CCR4);
                     break;
             }
         }

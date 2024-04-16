@@ -194,17 +194,20 @@
 #define SERIALRX_PROVIDER       SERIALRX_CRSF
 #define SERIALRX_UART           SERIAL_PORT_USART1
 
-
+//Enable the INV main features
+#define USE_INNOVAVIONICS
 // *************** ADC *****************************
+
 #define USE_INNOVAVIONICS_ADC
 //No configuration yet
 
 
 // *************** COUNTERS/FREQ METERS ************************
 
-#define RPMA_PIN                    PE9
+#define RPMA_PIN                    PH9
 #define RPMA_TIM                    TIM12    //TIM1, TIM2, TIM3, TIM4, TIM5, TIM8, TIM12, TIM13, TIM14, ...
-#define RPMA_TIM_CH                 2       //1,2,3,4   
+#define RPMA_TIM_CH                 CH2       //1,2,3,4
+#define RPMA_PIN_FUNCTION 			INV_RPM_ENGINE // RPMA PIN IS FOR ENGINE RPM INV DATA
 #define RPMA_TIM_PRSC               65535   //16bit
 #define RPMA_TIM_COUNT              65535   //16bit
 #define RPMA_TIM_CLK_DIV            1       //1,2,4
@@ -216,7 +219,7 @@
 
 #define FUELFLOWA_PIN               PB9
 #define FUELFLOWA_TIM               TIM17    //TIM1, TIM2, TIM3, TIM4, TIM5, TIM8, TIM12, TIM13, TIM14, ...
-#define FUELFLOWA_TIM_CH            1       //1,2,3,4   
+#define FUELFLOWA_TIM_CH            CH1       //1,2,3,4
 #define FUELFLOWA_TIM_PRSC          65535   //16bit
 #define FUELFLOWA_TIM_COUNT         65535   //16bit
 #define FUELFLOWA_TIM_CLK_DIV       1       //1,2,4
@@ -228,7 +231,7 @@
 
 #define AUXCOUNTER3_PIN             PI7
 #define AUXCOUNTER3_TIM             TIM8    //TIM1, TIM2, TIM3, TIM4, TIM5, TIM8, TIM12, TIM13, TIM14, ...
-#define AUXCOUNTER3_TIM_CH          3       //1,2,3,4
+#define AUXCOUNTER3_TIM_CH          CH3       //1,2,3,4
 #define AUXCOUNTER3_TIM_PRSC        65535   //16bit
 #define AUXCOUNTER3_TIM_COUNT       65535   //16bit
 #define AUXCOUNTER3_TIM_CLK_DIV     1       //1,2,4
@@ -239,7 +242,7 @@
 
 #define AUXCOUNTER4_PIN             PH10
 #define AUXCOUNTER4_TIM             TIM5    //TIM1, TIM2, TIM3, TIM4, TIM5, TIM8, TIM12, TIM13, TIM14, ...
-#define AUXCOUNTER4_TIM_CH          1       //1,2,3,4
+#define AUXCOUNTER4_TIM_CH          CH1       //1,2,3,4
 #define AUXCOUNTER4_TIM_PRSC        65535   //16bit
 #define AUXCOUNTER4_TIM_COUNT       65535   //16bit
 #define AUXCOUNTER4_TIM_CLK_DIV     1       //1,2,4
@@ -268,7 +271,7 @@
 //#define USE_PINIOBOX
 //#define PINIO1_PIN                  PG12
 
-#define GPS_RESET_PIN				DEFIO_TAG__PG12
+#define GPS_RESET_PIN				PG12
 // *************** PWM *****************************
 //DISABLED
 

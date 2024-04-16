@@ -31,14 +31,14 @@ extern "C" {
 #endif
 
 
-void invAdcInit();
-bool invAdcStart();
-void invDeAdcInit();
-void invAdcCheckNewData();
+void invAdcInit(void);
+bool invAdcStart(void);
+void invDeAdcInit(void);
+void invAdcCheckNewData(void);
 
-void invAdc1DMAHandler();
-void invAdc2DMAHandler();
-void invAdc3DMAHandler();
+void invAdc1DMAHandler(void);
+void invAdc2DMAHandler(void);
+void invAdc3DMAHandler(void);
 
 
 extern ADC_HandleTypeDef invHadc1;

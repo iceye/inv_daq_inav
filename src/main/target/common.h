@@ -117,7 +117,7 @@
 //#define USE_FRSKYOSD
 //#define USE_DJI_HD_OSD
 //#define USE_MSP_OSD
-//#define USE_SMARTPORT_MASTER
+#define USE_SMARTPORT_MASTER
 
 #define NAV_NON_VOLATILE_WAYPOINT_CLI
 
@@ -161,7 +161,7 @@
 //#define USE_TELEMETRY_JETIEXBUS
 // These are rather exotic serial protocols
 #define USE_RX_MSP
-//#define USE_MSP_RC_OVERRIDE
+#define USE_MSP_RC_OVERRIDE
 #define USE_SERIALRX_CRSF
 #define USE_SERIAL_PASSTHROUGH
 #define NAV_MAX_WAYPOINTS       120

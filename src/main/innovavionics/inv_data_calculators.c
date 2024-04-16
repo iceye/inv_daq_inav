@@ -30,9 +30,9 @@ pt1Filter_t cht2LpfState;
 pt1Filter_t oiltLpfState;
 
 void initInvDataCalculators() {
-
+	uint32_t now = micros();
 	for (int i = 0; i < INV_DATA_COUNT; i++) {
-
+		_invData[i]._lastUpdate = now;
 		if (invDataHasLpfMid(i)) {
 			pt1FilterInit((pt1Filter_t *)&invData(i)._pt1FilterState,2, MS2S(100));
 		}
@@ -42,9 +42,8 @@ void initInvDataCalculators() {
 		}
 		else
 		if (invDataHasLpfSlow(i)) {
-			pt1FilterInit((pt1Filter_t *)&invData(i)._pt1FilterState,2, MS2S(100));
+			pt1FilterInit((pt1Filter_t *)&invData(i)._pt1FilterState,0.5f, MS2S(100));
 		}
-
 	}
 }
 
@@ -165,41 +164,43 @@ uint32_t adc_uV(uint32_t adcRaw){
 }
 
 
-bool invCalculatorIntPlain(invElement_t *el, void *val){
+
+// PUBLIC CALCULATORS
+bool invCalculatorIntPlain(invElement_t *el, void *val , float dtMicros) {
 	if (el->_filter != NO_FILTER)
-		el->_valueI = pt1FilterApply(&el->_pt1FilterState, (float)(*((int32_t*) val)));
+		el->_valueI = pt1FilterApply3(&el->_pt1FilterState, (float)(*((int32_t*) val)), dtMicros);
 	else if (el->_filter == NO_FILTER)
 		el->_valueI = *((int32_t*) val);
 	return true;
 }
 
-bool invCalculatorUIntPlain(invElement_t *el, void *val){
+bool invCalculatorUIntPlain(invElement_t *el, void *val , float dtMicros) {
 	if (el->_filter != NO_FILTER)
-		el->_valueUI = pt1FilterApply(&el->_pt1FilterState, (float)(*((uint32_t*) val)));
+		el->_valueUI = pt1FilterApply3(&el->_pt1FilterState, (float)(*((uint32_t*) val)), dtMicros);
 	else if (el->_filter == NO_FILTER)
 		el->_valueUI = *((uint32_t*) val);
 	return true;
 }
 
-bool invCalculatorBytePlain(invElement_t *el, void *val) {
+bool invCalculatorBytePlain(invElement_t *el, void *val , float dtMicros) {
 	el->_valueBy = *((uint8_t*)val);
 	return true;
 }
 
-bool invCalculatorBoolPlain(invElement_t *el, void *val) {
+bool invCalculatorBoolPlain(invElement_t *el, void *val , float dtMicros) {
 	el->_valueB = *((bool*)val);
 	return true;
 }
 
 
-bool invVrefCalculator(invElement_t *el, void *val) {
+bool invVrefCalculator(invElement_t *el, void *val , float dtMicros) {
 	invVref_mV = __HAL_ADC_CALC_VREFANALOG_VOLTAGE(*((uint32_t*) val),ADC_RESOLUTION_16B);
 	invVref_uV = (uint32_t) (invVref_mV * 1000);
 	el->_valueUI = (invVref_uV);
 	return true;
 }
 
-bool invVanCalculator(invElement_t *el, void *val) {
+bool invVanCalculator(invElement_t *el, void *val , float dtMicros) {
 	invVan_mV = __HAL_ADC_CALC_DATA_TO_VOLTAGE(invVref_mV,*((uint32_t*) val), ADC_RESOLUTION_16B);
 	invVan_uV = (uint32_t) (invVan_mV * 1000);
 	el->_valueUI =invVan_uV;
@@ -207,52 +208,52 @@ bool invVanCalculator(invElement_t *el, void *val) {
 }
 
 
-bool invMcuTempCalculator(invElement_t *el, void *val) {
+bool invMcuTempCalculator(invElement_t *el, void *val , float dtMicros) {
 	mcuTemp_mdegC =  __LL_ADC_CALC_TEMPERATURE_FLOAT(invVref_mV, *((uint32_t*) val), ADC_RESOLUTION_16B);
 	if (el->_filter != NO_FILTER)
-		el->_valueI = pt1FilterApply(&el->_pt1FilterState,(float) (mcuTemp_mdegC * 1000.0f));
+		el->_valueI = pt1FilterApply3(&el->_pt1FilterState,(float) (mcuTemp_mdegC * 1000.0f), dtMicros);
 	else
 		el->_valueI = (uint32_t)(mcuTemp_mdegC*1000.0f);
 	return true;
 }
 
 
-bool invMicroVoltCalculator(invElement_t *el, void *val) {
+bool invMicroVoltCalculator(invElement_t *el, void *val , float dtMicros) {
 	el->_valueUI = (uint32_t)(__HAL_ADC_CALC_DATA_TO_VOLTAGE(invVref_mV, *((uint32_t*) val), ADC_RESOLUTION_16B) * 1000.0f);
 	return true;
 }
 
 
 
-bool general12VSensorCalculator(invElement_t *el, void *val) {
+bool general12VSensorCalculator(invElement_t *el, void *val , float dtMicros) {
 	if (el->_filter != NO_FILTER)
-		el->_valueUI = pt1FilterApply(&el->_pt1FilterState,(float)to12VInMicroVolt(adc_uV(*((uint32_t*) val))));
+		el->_valueUI = pt1FilterApply3(&el->_pt1FilterState,(float)to12VInMicroVolt(adc_uV(*((uint32_t*) val))), dtMicros);
 	else
 		el->_valueUI = to12VInMicroVolt(adc_uV(*((uint32_t*) val)));
 	return true;
 }
 
-bool general5VSensorCalculator(invElement_t *el, void *val) {
+bool general5VSensorCalculator(invElement_t *el, void *val , float dtMicros) {
 	if (el->_filter != NO_FILTER)
-		el->_valueUI = pt1FilterApply(&el->_pt1FilterState,(float)to5VInMicroVolt(adc_uV(*((uint32_t*) val))));
+		el->_valueUI = pt1FilterApply3(&el->_pt1FilterState,(float)to5VInMicroVolt(adc_uV(*((uint32_t*) val))), dtMicros);
 	else
 		el->_valueUI = to5VInMicroVolt(adc_uV(*((uint32_t*) val)));
 	return true;
 }
 
 
-bool generalRLowSensorCalculator(invElement_t *el, void *val) {
+bool generalRLowSensorCalculator(invElement_t *el, void *val , float dtMicros) {
 	if (el->_filter != NO_FILTER)
-		el->_valueI = pt1FilterApply(&el->_pt1FilterState,(float)toRLowMilliohm(adc_uV(*((uint32_t*) val))));
+		el->_valueI = pt1FilterApply3(&el->_pt1FilterState,(float)toRLowMilliohm(adc_uV(*((uint32_t*) val))), dtMicros);
 	else
 		el->_valueI = toRLowMilliohm(adc_uV(*((uint32_t*) val)));
 	return true;
 }
 
 
-bool generalRHighSensorCalculator(invElement_t *el, void *val) {
+bool generalRHighSensorCalculator(invElement_t *el, void *val , float dtMicros) {
 	if (el->_filter != NO_FILTER)
-		el->_valueI = pt1FilterApply(&el->_pt1FilterState,(float)toRHighMilliohm(adc_uV(*((uint32_t*) val))));
+		el->_valueI = pt1FilterApply3(&el->_pt1FilterState,(float)toRHighMilliohm(adc_uV(*((uint32_t*) val))), dtMicros);
 	else
 		el->_valueI = toRHighMilliohm(adc_uV(*((uint32_t*) val)));
 	return true;
@@ -260,10 +261,10 @@ bool generalRHighSensorCalculator(invElement_t *el, void *val) {
 
 
 
-bool rotaxChtRSensorCalculator(invElement_t *el, void *val) {
+bool rotaxChtRSensorCalculator(invElement_t *el, void *val , float dtMicros) {
 	float milliCelsius = r2tempRotaxCht(toRLowMilliohm(adc_uV(*((uint32_t*) val))));
 	if (el->_filter != NO_FILTER)
-		el->_valueI = pt1FilterApply(&el->_pt1FilterState,milliCelsius);
+		el->_valueI = pt1FilterApply3(&el->_pt1FilterState,milliCelsius, dtMicros);
 	else
 		el->_valueI = milliCelsius;
 	return true;
@@ -271,10 +272,10 @@ bool rotaxChtRSensorCalculator(invElement_t *el, void *val) {
 
 
 
-bool rotaxOiltRSensorCalculator(invElement_t *el, void *val) {
+bool rotaxOiltRSensorCalculator(invElement_t *el, void *val , float dtMicros) {
 	float milliCelsius = r2tempRotaxOilt(toRLowMilliohm(adc_uV(*((uint32_t*) val))));
 	if (el->_filter != NO_FILTER)
-		el->_valueI = pt1FilterApply(&el->_pt1FilterState,milliCelsius);
+		el->_valueI = pt1FilterApply3(&el->_pt1FilterState,milliCelsius, dtMicros);
 	else
 		el->_valueI = milliCelsius;
 	return true;
@@ -282,10 +283,10 @@ bool rotaxOiltRSensorCalculator(invElement_t *el, void *val) {
 
 
 
-bool rotaxOilpRSensorCalculator(invElement_t *el, void *val) {
+bool rotaxOilpRSensorCalculator(invElement_t *el, void *val , float dtMicros) {
 	float milliBar = r2pressRotaxPressure(toRLowMilliohm(adc_uV(*((uint32_t*) val))));
 	if (el->_filter != NO_FILTER)
-		el->_valueI = pt1FilterApply(&el->_pt1FilterState,milliBar);
+		el->_valueI = pt1FilterApply3(&el->_pt1FilterState,milliBar, dtMicros);
 	else
 		el->_valueI = milliBar;
 	return true;
@@ -293,30 +294,30 @@ bool rotaxOilpRSensorCalculator(invElement_t *el, void *val) {
 
 
 
-bool rotaxOilp5VSensorCalculator(invElement_t *el, void *val) {
+bool rotaxOilp5VSensorCalculator(invElement_t *el, void *val , float dtMicros) {
 	float milliBar = mV2press5VPressure(to5VInMicroVolt(adc_uV(*((uint32_t*) val))));
 	if (el->_filter != NO_FILTER)
-		el->_valueI = pt1FilterApply(&el->_pt1FilterState,milliBar);
+		el->_valueI = pt1FilterApply3(&el->_pt1FilterState,milliBar, dtMicros);
 	else
 		el->_valueI = milliBar;
 	return true;
 }
 
 
-bool rotaxFuelp5VSensorCalculator(invElement_t *el, void *val) {
+bool rotaxFuelp5VSensorCalculator(invElement_t *el, void *val , float dtMicros) {
 	float milliBar = mV2press5VPressure(to5VInMicroVolt(adc_uV(*((uint32_t*) val))));
 	if (el->_filter != NO_FILTER)
-		el->_valueI = pt1FilterApply(&el->_pt1FilterState,milliBar);
+		el->_valueI = pt1FilterApply3(&el->_pt1FilterState,milliBar, dtMicros);
 	else
 		el->_valueI = milliBar;
 	return true;
 }
 
 
-bool rotaxVin12VSensorCalculator(invElement_t *el, void *val) {
+bool rotaxVin12VSensorCalculator(invElement_t *el, void *val , float dtMicros) {
 	float milliVolt = to12VInMicroVolt(adc_uV(*((uint32_t*) val)));
 	if (el->_filter != NO_FILTER)
-		el->_valueI = pt1FilterApply(&el->_pt1FilterState,milliVolt);
+		el->_valueI = pt1FilterApply3(&el->_pt1FilterState,milliVolt, dtMicros);
 	else
 		el->_valueI = milliVolt;
 	return true;
@@ -328,7 +329,7 @@ uint32_t invCalculatorIasAdcPressureCurrentTimeUsLastMeasurementUs = 0;
 #define ADC_IAS_AUX_MICROV_ZERO 735400
 #define ADC_IAS_AUX_MICROV_PA 662.0f
 
-bool invCalculatorIasAdcPressure(invElement_t *el, void *val){
+bool invCalculatorIasAdcPressure(invElement_t *el, void *val , float dtMicros) {
 
 #ifdef USE_PITOT_AUX
 
@@ -337,9 +338,9 @@ bool invCalculatorIasAdcPressure(invElement_t *el, void *val){
 	if(adcuV > ADC_IAS_AUX_MICROV_ZERO){
 		pitotPressureTmp = (float)(adcuV-ADC_IAS_AUX_MICROV_ZERO)/ADC_IAS_AUX_MICROV_PA;
 	}
-	invCalculatorIasAdcPressureCurrentTimeUs = micros();
-	pitot.pressureAux = pt1FilterApply3(&pitot.lpfStateAux, pitotPressureTmp, US2S(invCalculatorIasAdcPressureCurrentTimeUs - invCalculatorIasAdcPressureCurrentTimeUsLastMeasurementUs));
-	pitot.pressureSpeedAuxTurbolence = pt1FilterApply3(&pitot.lpfStateAuxTurbolence, fabsf(pitotPressureTmp - pitot.pressureAux), US2S(invCalculatorIasAdcPressureCurrentTimeUs - invCalculatorIasAdcPressureCurrentTimeUsLastMeasurementUs));
+
+	pitot.pressureAux = pt1FilterApply3(&pitot.lpfStateAux, pitotPressureTmp, dtMicros);
+	pitot.pressureSpeedAuxTurbolence = pt1FilterApply3(&pitot.lpfStateAuxTurbolence, fabsf(pitotPressureTmp - pitot.pressureAux), dtMicros);
 	invCalculatorIasAdcPressureCurrentTimeUsLastMeasurementUs = invCalculatorIasAdcPressureCurrentTimeUs;
 	el->_valueI = pitot.pressureAux*1000;
 
@@ -354,8 +355,11 @@ bool invCalculatorIasAdcPressure(invElement_t *el, void *val){
 	pitot.airSpeedAux = 0;
 	pitot.airSpeedAuxTurbolence = 0;
 
-	invDataStoreValUInt(INV_IAS_AUX, (int32_t) pitot.airSpeedAux); // mm/s
-	invDataStoreValUInt(INV_IAS_AUX_TURBOLENCE, (int32_t) pitot.airSpeedTurbolence); // mm/s
+	int32_t airSpeedAux = (int32_t) pitot.airSpeedAux;
+	int32_t airSpeedAuxTurbolence = (int32_t) pitot.airSpeedTurbolence;
+
+	invDataStoreValByConf(INV_IAS_AUX, &airSpeedAux); // mm/s
+	invDataStoreValByConf(INV_IAS_AUX_TURBOLENCE, &airSpeedAuxTurbolence); // mm/s
 #endif
     return true;
 }
